@@ -6,3 +6,7 @@ export const db = mysql.createConnection({
     password:"MemAkshay123",
     database:"memories_ar"
 })
+if(db)
+{
+    console.log("Hllo")
+}
