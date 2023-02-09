@@ -6,14 +6,18 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 
 app.use(express.json())
-app.use(cors())
-app.use(cookieParser)
+// app.use(cors())
+// app.use(cookieParser)
 
+app.get("/", (req, res) => 
+{
+    res.send('Hello World!')
+})
 app.use("/api/auth",authRoutes)
 app.use("/api/users",userRoutes)
 
 
-app.listen(8900,()=>
+app.listen(3000,()=>
 {
     console.log("Server Started")
 })

@@ -35,39 +35,32 @@ export const registerFunc = (req,res)=>{
 
 
 export const loginFunc = (req,res)=>{
-    console.log("hello")
-    // const loginQuery = "SELECT * FROM users WHERE email=?";
-    // db.query(loginQuery,[req.body.email],(err,data)=>{
-    //     if(err){
-    //         console.log("In3")
-    //         return res.status(500).json(err)
-    //     }
-    //     else if(data.length===0)
-    //     {
-    //         console.log("In2")
-    //         return res.status(404).json("User Does Not Exists!")
-    //     }
-    //     else{
-    //         const checkPass = bcrypt.compareSync(req.body.password,data[0].password)
-    //         !checkPass ? 
-    //         ()=>{
-    //             console.log("In1")
-    //             return res.status(400).json("Wrong Credentials!")}
-    //             :
-    //         ()=>{
-    //                 console.log("In")
-    //                 const token = jwt.sign({id:data[0].id},"secretkey")
-    //                 console.log("In4")
-    //                 const {password, ...others} = data[0]
-    //                 console.log("In5")
-    //                 res.cookie("accessToken", token).status(200).json()
-    //                 console.log("In6")
-    //             }
+    const loginQuery = "SELECT * FROM users WHERE email=?";
+    db.query(loginQuery,[req.body.email],(err,data)=>{
+        if(err){
+            return res.status(500).json(err)
+        }
+        else if(data.length===0)
+        {
+            return res.status(404).json("User Does Not Exists!")
+        }
+        else{
+            const checkPass = bcrypt.compareSync(req.body.password,data[0].password)
+            ! checkPass ? 
+            ()=>{
+                return res.status(400).json("Wrong Credentials!")}
+                :
+            ()=>{
+                    // const token = jwt.sign({id:data[0].id},"secretkey")
+                    // const {password, ...others} = data[0]
+                    // res.cookie("accessToken", token).status(200).json()
+                    res.send("User Logged In")
+                }
 
-    //     }
+        }
 
         
-    // })
+    })
 }
 
 export const logoutFunc = (req,res)=>{
