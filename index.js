@@ -8,7 +8,7 @@ const cookieParser = require("cookie-parser")
 
 //Importing all the routes
 // const userRoutes = require("./routes/Users/users.js")
-// const authRoutes = require("./routes/Users/auth.js")
+const authRoutes = require("./routes/Users/auth.js")
 
 const app = express()
 
@@ -18,9 +18,10 @@ app.use(cors())
 app.use(cookieParser())
 
 //Using all the routes
-app.use("/",(req,res)=>{
-    res.send("Hello World")
-})
+// app.use("/",(req,res)=>{
+//     res.send("Hello World")
+// })
+app.use("/api/auth",authRoutes)
 // app.use("/api/users",userRoutes)
 
 //Telling app to listen to specific port
