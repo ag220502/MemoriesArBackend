@@ -1,2 +1,1 @@
-//Save Post
-//Unsave Post
+//Routes for save post and unsavve post
