@@ -6,8 +6,8 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 
 app.use(express.json())
-// app.use(cors())
-// app.use(cookieParser)
+app.use(cors())
+app.use(cookieParser())
 
 app.get("/", (req, res) => 
 {
@@ -17,7 +17,4 @@ app.use("/api/auth",authRoutes)
 app.use("/api/users",userRoutes)
 
 
-app.listen(3000,()=>
-{
-    console.log("Server Started")
-})
+app.listen(3000)
