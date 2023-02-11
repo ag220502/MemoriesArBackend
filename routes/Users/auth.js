@@ -5,6 +5,7 @@ const func = require("../../controllers/Users/auth.js")
 router.post("/login",func.loginFunc)
 router.post("/register",func.registerFunc)
 router.post("/logout",func.logoutFunc)
+router.post("/forgotPass",func.forgotFunc)
 
 
 module.exports = router
