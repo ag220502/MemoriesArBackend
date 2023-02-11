@@ -10,6 +10,8 @@ const cookieParser = require("cookie-parser")
 // const userRoutes = require("./routes/Users/users.js")
 const authRoutes = require("./routes/Users/auth.js")
 const repAccRoutes = require("./routes/Users/Profile/reportAcc.js")
+const userRequests = require("./routes/Users/userRequests.js")
+
 
 const app = express()
 
@@ -24,6 +26,7 @@ app.use(cookieParser())
 // })
 app.use("/api/auth",authRoutes)
 app.use("/api/report",repAccRoutes)
+app.use("/api/requests",userRequests)
 
 // app.use("/api/users",userRoutes)
 
