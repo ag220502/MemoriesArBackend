@@ -1,7 +1,7 @@
-const db = require("../../connect.js")
 const quries = require("../../crudOperations/Users/users")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
+const mailer = require("nodemailer")
 
 //Functin to login to the account
 const loginFunc = async (req,res)=>{
@@ -67,6 +67,7 @@ const registerFunc = async (req,res)=>{
     }
 }
 
+//Function to logout user
 const logoutFunc = (req,res)=>{
     res.clearCookie("accessToken",{
         secure:true,
@@ -74,6 +75,43 @@ const logoutFunc = (req,res)=>{
     }).status(200).json("User Logged Out Successfully.")
 }
 
+//Function to very whether user is logged in or not
+async function verifyUser(req,res,next){
+    const token = req.cookies.token
+    if(token === undefined)
+    {
+        return res.status(404).json("Access Denied! User Not Logged In")
+    }
+    else
+    {
+        jwt.verify(token,"secretkey",(err,authData)=>{
+            if(err)
+            {
+                return res.status(404).json("Access Denied! User Not Logged In")
+            }
+            else
+            {
+                next();
+            }
+        } )
+    }
+}
 
+async function sendMail({to,subject,html}){
+    const transporter = mailer.createTransport(
+    )
 
-module.exports = {loginFunc,registerFunc,logoutFunc}
+}
+
+//Function for forget password
+const forgotFunc = async (req,res)=>{
+
+}
+
+//Function for forget password
+const resetPassFunc = async (req,res)=>{
+
+}
+
+// router.use("",verifyUser,)
+module.exports = {loginFunc,registerFunc,logoutFunc,forgotFunc}
