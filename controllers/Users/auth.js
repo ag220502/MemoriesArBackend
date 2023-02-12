@@ -1,5 +1,5 @@
 const quries = require("../../crudOperations/Users/users")
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt-nodejs")
 const jwt = require("jsonwebtoken")
 const mailer = require("nodemailer")
 

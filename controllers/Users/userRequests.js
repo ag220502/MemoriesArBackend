@@ -111,4 +111,9 @@ const acceptRequest = async (req,res)=>{
     }
 }
 
-module.exports = {sendRequest,allRequests,declineRequest,acceptRequest}
+//Function to unfriend a user
+const unfriendUser = async (req,res)=>{
+
+}
+
+module.exports = {sendRequest,allRequests,declineRequest,acceptRequest,unfriendUser}
