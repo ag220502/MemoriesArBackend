@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const getUserProfile = require('../../../controllers/Users/Profile/ProfilePageController.js');
+const getUserProfile = require('../../../controllers/Users/Profile/ProfilePage.js');
 
 //get Profile Page
-router.get('/profile', getUserProfile);     // TODO : check is just / profile is enough or not
+router.get('/profile', getUserProfile);    
 
 module.exports = router;

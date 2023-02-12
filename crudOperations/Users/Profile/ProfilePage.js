@@ -2,11 +2,9 @@ const pool = require("../../../connect.js")
 
 const db = {}
 
-// query to get all friends ID of a user
-
-db.getAllUserFriends = (userId)=>{
+db.getProfileData = (id)=>{
     return new Promise((resolve,reject)=>{
-        pool.query("SELECT `friendId`, `userId` FROM `user_friends` WHERE `userId` = ? OR `friendId` = ? ",[userId,userId],(err,result)=>{
+        pool.query('SELECT id,firstName,lastName,bio,profilePhoto,accVerified FROM `users` WHERE id=?', [id],(err,result)=>{
             if(err)
             {
                 return reject(err)
