@@ -1,6 +1,6 @@
 const queries = require("../../../crudOperations/Users/Profile/ProfilePage.js")
 
-const getUserProfile = async (req, res) => {
+const getUserProfileData = async (req, res) => {
     const id  = req.body.id;
     if (!id) {
         return res.status(400).json({ error: 'id is required' });
@@ -72,4 +72,4 @@ const deleteAccount = async (req, res) => {
 
 }
 
-module.exports = {getUserProfile, deactivateAccount, activateAccount, deleteAccount};
+module.exports = {getUserProfileData, deactivateAccount, activateAccount, deleteAccount};
