@@ -18,6 +18,24 @@ const getUserProfileData = async (req, res) => {
 
 }
 
+const getPersonalData = async (req, res) => {
+    const id  = req.body.id;
+    if (!id) {
+        return res.status(400).json({ error: 'id is required' });
+    }
+    try{
+        const result = await queries.getPersonalData(id)
+        if(result)
+        {
+            return res.status(200).json(result)
+        }
+    }
+    catch(err){
+        return res.status(400).json(err)
+    }
+
+}
+
 const deactivateAccount = async (req, res) => {
     const id  = req.body.id;
     if (!id) {
@@ -72,4 +90,4 @@ const deleteAccount = async (req, res) => {
 
 }
 
-module.exports = {getUserProfileData, deactivateAccount, activateAccount, deleteAccount};
+module.exports = {getUserProfileData, getPersonalData, deactivateAccount, activateAccount, deleteAccount};

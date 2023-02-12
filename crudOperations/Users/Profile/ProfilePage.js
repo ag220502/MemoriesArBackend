@@ -21,6 +21,25 @@ db.getProfileData = (id)=>{
 
 }
 
+db.getPersonalData = (id)=>{
+    return new Promise((resolve,reject)=>{
+        pool.query('SELECT id,email,dob,countryCode,mobile,gender,address,city,state,country FROM `users` WHERE id=?', [id],(err,result)=>{
+            if(err)
+            {
+                return reject(err)
+            }
+            else if(result.length == 0){
+                return reject("No user found")
+            }
+            else
+            {
+                return resolve(result)
+            }
+        })
+    })
+
+}
+
 db.deactivateAccount = (id)=>{
     return new Promise((resolve,reject)=>{
         pool.query(' SELECT * FROM users WHERE id = ? ' , [id],(err,result)=>{
