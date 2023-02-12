@@ -113,7 +113,26 @@ const acceptRequest = async (req,res)=>{
 
 //Function to unfriend a user
 const unfriendUser = async (req,res)=>{
-
+    const userId = req.body.userId
+    const friendId = req.body.friendId
+    if(!userId || !friendId || userId===friendId)
+    {
+        return res.status(400).json("Invalid Details.")
+    }
+    else
+    {
+        try
+        {
+            const result = await userQuery.deleteFriend(userId,friendId)
+            if(result.affectedRows)
+            {
+                return res.status(200).json("Unfriend Successfully")
+            }
+        }
+        catch(error){
+            return res.status(400).json(error)
+        }
+    }
 }
 
 module.exports = {sendRequest,allRequests,declineRequest,acceptRequest,unfriendUser}
