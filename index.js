@@ -14,6 +14,8 @@ const repAccRoutes = require("./routes/Users/Profile/reportAcc.js")
 const userRequests = require("./routes/Users/userRequests.js")
 const blockUsers = require("./routes/Users/blockedUsers.js")
 const UsersFriends = require("./routes/Users/Profile/UsersFriends.js")      //DC - users friends
+const SavedPosts = require("./routes/Posts/savePost.js")                   //DC - saved posts
+
 
 const app = express()
 
@@ -32,6 +34,7 @@ app.use("/api/report",repAccRoutes)
 app.use("/api/requests",userRequests)
 app.use("/api/block",blockUsers)
 app.use("/api/usersfriends",UsersFriends)        // DC - users friends
+app.use("/api/savedposts",SavedPosts)            // DC - saved posts
 // app.use("/api/users",userRoutes)
 
 //Telling app to listen to specific port
