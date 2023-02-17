@@ -9,12 +9,12 @@ const cookieParser = require("cookie-parser")
 //Importing all the routes
 // const userRoutes = require("./routes/Users/users.js")
 const authRoutes = require("./routes/Users/auth.js")
-const UserProfileRoute = require("./routes/Users/Profile/ProfilePage.js")       // DC - profile page
+const UserProfileRoute = require("./routes/Users/Profile/ProfilePage.js")       
 const repAccRoutes = require("./routes/Users/Profile/reportAcc.js")
 const userRequests = require("./routes/Users/userRequests.js")
 const blockUsers = require("./routes/Users/blockedUsers.js")
-const UsersFriends = require("./routes/Users/Profile/UsersFriends.js")      //DC - users friends
-const SavedPosts = require("./routes/Posts/savePost.js")                   //DC - saved posts
+const UsersFriends = require("./routes/Users/Profile/UsersFriends.js")      
+const SavedPosts = require("./routes/Posts/savePost.js")                   
 
 
 const app = express()
@@ -29,12 +29,12 @@ app.use(cookieParser())
 //     res.send("Hello World")
 // })
 app.use("/api/auth",authRoutes)
-app.use("/api/users",UserProfileRoute)      // DC - profile page
+app.use("/api/users",UserProfileRoute)      
 app.use("/api/report",repAccRoutes)
 app.use("/api/requests",userRequests)
 app.use("/api/block",blockUsers)
-app.use("/api/usersfriends",UsersFriends)        // DC - users friends
-app.use("/api/savedposts",SavedPosts)            // DC - saved posts
+app.use("/api/usersfriends",UsersFriends)        
+app.use("/api/savedposts",SavedPosts)            
 // app.use("/api/users",userRoutes)
 
 //Telling app to listen to specific port
