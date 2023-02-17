@@ -70,6 +70,33 @@ db.updateProfileData = (id,firstName,lastName,bio,profilePhoto)=>{
     })
 }
 
+db.updatePersonalData = (id, gender, mobile, dob, countryCode, address, city, state, country)=>{
+    return new Promise((resolve, reject) => {
+        
+            pool.query(' SELECT * FROM users WHERE id = ? ', [id], (err, result) => {
+                if (err) {
+                    return reject(err)
+                } else if (result.length == 0) {
+                    return reject("Account does not exist")
+                } else {
+                    pool.query('UPDATE `users` SET gender = ?, mobile = ?, dob = ?, countryCode = ?, address = ?, city = ?, state = ?, country = ? WHERE id = ? ', [gender, mobile, dob, countryCode, address, city, state, country, id], (err, result) => {
+                        if (err) {
+                            return reject(err)
+                        } else if (result.affectedRows == 0) {
+                            return reject("No changes made")
+                        } else {
+                            return resolve(result)
+                        }
+                    })
+    
+                }
+            })
+        
+    })
+}
+
+
+
 db.deactivateAccount = (id)=>{
     return new Promise((resolve,reject)=>{
         pool.query(' SELECT * FROM users WHERE id = ? ' , [id],(err,result)=>{
