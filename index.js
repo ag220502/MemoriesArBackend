@@ -37,6 +37,9 @@ app.use("/api/usersfriends",UsersFriends)
 app.use("/api/savedposts",SavedPosts)            
 // app.use("/api/users",userRoutes)
 
+app.use("/api/comment", postComment)            // DD - add, delete comments
+app.use("/api/posts", userPost)                 // DD - create, delete, edit post
+
 //Telling app to listen to specific port
 app.listen(3000,()=>{
     console.log(`Server Listening on port ${3000}`)
