@@ -39,6 +39,8 @@ app.use("/api/savedposts",SavedPosts)
 
 app.use("/api/comment", postComment)            // DD - add, delete comments
 app.use("/api/posts", userPost)                 // DD - create, delete, edit post
+app.use("/api/likes", likePost)                 // DD - like and unlike posts
+app.use("/api/dislikes", dislikePost)           // DD - dislike and undislike posts
 
 //Telling app to listen to specific port
 app.listen(3000,()=>{
