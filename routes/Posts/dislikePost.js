@@ -1,4 +1,3 @@
-//Routes for Dislike Post and and undislike Post
 const express = require("express");
 const router = express.Router();
 const {

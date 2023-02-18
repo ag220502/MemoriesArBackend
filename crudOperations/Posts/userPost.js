@@ -21,6 +21,38 @@ db.createPost = (userId, caption, lattitude, longitude) => {
   });
 };
 
+db.findPostById = (postId) => {
+  return new Promise((resolve, reject) => {
+    const findPostQuery =
+      "SELECT * FROM `user_posts` WHERE `id`=?";
+    pool.query(findPostQuery, [postId], (err, result) => {
+      if (err) {
+        return reject(err);
+      } else if (result.length) {
+        return resolve(true);
+      } else {
+        return resolve(false);
+      }
+    });
+  });
+};
+
+db.findUserById = (userId) => {
+  return new Promise((resolve, reject) => {
+    const findPostQuery =
+      "SELECT * FROM `users` WHERE `id`=?";
+    pool.query(findPostQuery, [userId], (err, result) => {
+      if (err) {
+        return reject(err);
+      } else if (result.length) {
+        return resolve(true);
+      } else {
+        return resolve(false);
+      }
+    });
+  });
+};
+
 db.findPostByIdAndUserId = (postId, userId) => {
   return new Promise((resolve, reject) => {
     const findPostQuery =
@@ -40,12 +72,10 @@ db.findPostByIdAndUserId = (postId, userId) => {
 db.editPost = (userId, postId, editPostQuery, fields) => {
   return new Promise((resolve, reject) => {
     pool.query(editPostQuery, fields.concat([userId, postId]), (err, result) => {
-      console.log(editPostQuery)
-      console.log(fields.concat([postId, userId]))
       if (err) {
         return reject(err);
       } else {
-        return resolve(result);return res.status(404).json("M")
+        return resolve(result);
       }
     });
   });

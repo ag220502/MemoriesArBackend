@@ -23,6 +23,7 @@ const postComment = require("./routes/Posts/commentPost.js")            // DD - 
 const userPost = require("./routes/Posts/userPost.js")                   // DD - create, delete, edit post
 const likePost = require("./routes/Posts/likePost.js")                   // DD - like and unlike posts
 const dislikePost = require("./routes/Posts/dislikePost.js")             // DD - dislike and undislike posts
+const tagUser = require("./routes/Posts/tagPost")                       // DD - tag and untag users
 
 const app = express()
 
@@ -51,6 +52,7 @@ app.use("/api/comment", postComment)            // DD - add, delete comments
 app.use("/api/posts", userPost)                 // DD - create, delete, edit post
 app.use("/api/likes", likePost)                 // DD - like and unlike posts
 app.use("/api/dislikes", dislikePost)           // DD - dislike and undislike posts
+app.use("/api/tagUser", tagUser)                // DD - tag and untag users
 
 //Telling app to listen to specific port
 app.listen(3000,()=>{
