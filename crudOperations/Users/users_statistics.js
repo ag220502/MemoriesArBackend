@@ -9,6 +9,9 @@ db.totalNumberOfUsers = ()=>{
             {
                 return reject(err)
             }
+            else if(this.totalNumberOfUsers == 0){
+                return reject("There are no users in the database")
+            }
             return resolve(data)
         })
     })
