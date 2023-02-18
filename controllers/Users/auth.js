@@ -1,4 +1,4 @@
-const quries = require("../../crudOperations/Users/users")
+const queries = require("../../crudOperations/Users/users")
 const bcrypt = require("bcrypt-nodejs")
 const jwt = require("jsonwebtoken")
 const mailer = require("nodemailer")
@@ -12,7 +12,7 @@ const loginFunc = async (req,res)=>{
         return res.status(400).json("Please Enter All Details.")
     }
     try{
-        if(!await quries.checkUserByEmail(email))
+        if(!await queries.checkUserByEmail(email))
         {
             return res.status(404).json("User Does Not Exists!")
         }
@@ -22,7 +22,7 @@ const loginFunc = async (req,res)=>{
         return res.status(500).json(error)
     }
 
-    const data = await quries.getUserByEmail(email)
+    const data = await queries.getUserByEmail(email)
 
     const checkPass = bcrypt.compareSync(checkpassword,data[0].password)
     if(!checkPass)
@@ -44,7 +44,7 @@ const registerFunc = async (req,res)=>{
         return res.status(400).json("Please Enter All Details.")
     }
     try{
-        if(await quries.checkUserByEmail(email))
+        if(await queries.checkUserByEmail(email))
         {
             console.log("Hello")
             return res.status(409).json("User Already Exists!")
@@ -57,7 +57,7 @@ const registerFunc = async (req,res)=>{
     const salt = bcrypt.genSaltSync(10);
     const hashedPass = bcrypt.hashSync(req.body.password,salt);
     try {
-        const user = await quries.insertUser(name,email,hashedPass)
+        const user = await queries.insertUser(name,email,hashedPass)
         if(user)
         {
             return res.status(200).json("User Registered Successfully.")
@@ -96,6 +96,54 @@ async function verifyUser(req,res,next){
         } )
     }
 }
+// function to update user password when logged in
+const updatePassword = async (req,res)=>{
+    const id = req.body.id
+    const oldPassword = req.body.oldPassword
+    const newPassword = req.body.newPassword
+    const confirmPassword = req.body.confirmPassword
+    if(!id){
+        return res.status(400).json("ID is required!")
+    }
+    if(!oldPassword || !newPassword || !confirmPassword){
+        return res.status(400).json("Please Enter All Details.")
+    }
+    if(newPassword !== confirmPassword){
+        return res.status(400).json("Passwords do not match!")
+    }
+    if(newPassword === oldPassword){
+        return res.status(400).json("New Password cannot be same as old password!")
+    }
+    try{
+        if(!await queries.checkUserById(id))
+        {
+            return res.status(404).json("User Does Not Exist!")
+        }
+    }
+    catch(error)
+    {
+        return res.status(500).json(error)
+    }
+    const data = await queries.getUserById(id)
+    const checkPass = bcrypt.compareSync(oldPassword,data[0].password)
+    if(!checkPass)
+    {
+        return res.status(400).json("Wrong Credentials!")
+    }
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPass = bcrypt.hashSync(newPassword,salt);
+    try {
+        const user = await queries.updatePassword(id,hashedPass)
+        if(user)
+        {
+            return res.status(200).json("Password Updated Successfully.")
+        }
+    } catch (error) {
+        return res.status(500).json(error)
+    }
+
+}
+
 
 async function sendMail({to,subject,html}){
     const transporter = mailer.createTransport(
@@ -114,4 +162,4 @@ const resetPassFunc = async (req,res)=>{
 }
 
 // router.use("",verifyUser,)
-module.exports = {loginFunc,registerFunc,logoutFunc,forgotFunc}
+module.exports = {loginFunc,registerFunc,logoutFunc,forgotFunc, updatePassword}

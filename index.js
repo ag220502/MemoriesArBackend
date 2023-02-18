@@ -9,13 +9,21 @@ const cookieParser = require("cookie-parser")
 //Importing all the routes
 // const userRoutes = require("./routes/Users/users.js")
 const authRoutes = require("./routes/Users/auth.js")
-const UserProfileRoute = require("./routes/Users/Profile/ProfilePage.js")       // DC - profile page
+const UserProfileRoute = require("./routes/Users/Profile/ProfilePage.js")       
 const repAccRoutes = require("./routes/Users/Profile/reportAcc.js")
 const userRequests = require("./routes/Users/userRequests.js")
 const blockUsers = require("./routes/Users/blockedUsers.js")
 const UsersFriends = require("./routes/Users/Profile/UsersFriends.js")      //DC - users friends
 const SavedPosts = require("./routes/Posts/savePost.js")                   //DC - saved posts
 const searchRoute = require("./routes/Users/searchUser.js")
+const UsersFriends = require("./routes/Users/Profile/UsersFriends.js")      
+const SavedPosts = require("./routes/Posts/savePost.js")                   
+const users_statistics = require("./routes/Users/users_statistics.js")
+ 
+const postComment = require("./routes/Posts/commentPost.js")            // DD - add, delete comments
+const userPost = require("./routes/Posts/userPost.js")                   // DD - create, delete, edit post
+const likePost = require("./routes/Posts/likePost.js")                   // DD - like and unlike posts
+const dislikePost = require("./routes/Posts/dislikePost.js")             // DD - dislike and undislike posts
 
 const app = express()
 
@@ -29,14 +37,20 @@ app.use(cookieParser())
 //     res.send("Hello World")
 // })
 app.use("/api/auth",authRoutes)
-app.use("/api/users",UserProfileRoute)      // DC - profile page
+app.use("/api/users",UserProfileRoute)      
 app.use("/api/report",repAccRoutes)
 app.use("/api/requests",userRequests)
 app.use("/api/block",blockUsers)
-app.use("/api/usersfriends",UsersFriends)        // DC - users friends
-app.use("/api/savedposts",SavedPosts)            // DC - saved posts
 app.use("/api/search",searchRoute) 
+app.use("/api/usersfriends",UsersFriends)        
+app.use("/api/savedposts",SavedPosts)
+app.use("/api/userStats",users_statistics)            
 // app.use("/api/users",userRoutes)
+
+app.use("/api/comment", postComment)            // DD - add, delete comments
+app.use("/api/posts", userPost)                 // DD - create, delete, edit post
+app.use("/api/likes", likePost)                 // DD - like and unlike posts
+app.use("/api/dislikes", dislikePost)           // DD - dislike and undislike posts
 
 //Telling app to listen to specific port
 app.listen(3000,()=>{

@@ -5,6 +5,8 @@ const func = require('../../../controllers/Users/Profile/ProfilePage.js');
 //get Profile Page
 router.get('/profile', func.getUserProfileData);
 router.get('/personal', func.getPersonalData);
+router.put('/updateProfile', func.updateProfileData);
+router.put('/updatePersonal', func.updatePersonalData);
 router.put('/deactivate', func.deactivateAccount);    
 router.put('/activate', func.activateAccount);
 router.delete('/delete', func.deleteAccount);

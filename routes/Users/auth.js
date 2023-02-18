@@ -6,6 +6,7 @@ router.post("/login",func.loginFunc)
 router.post("/register",func.registerFunc)
 router.post("/logout",func.logoutFunc)
 router.post("/forgotPass",func.forgotFunc)
+router.put("/updatePass",func.updatePassword)
 
 
 module.exports = router
