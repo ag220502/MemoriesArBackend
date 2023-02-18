@@ -16,10 +16,9 @@ const blockUsers = require("./routes/Users/blockedUsers.js")
 const UsersFriends = require("./routes/Users/Profile/UsersFriends.js")      //DC - users friends
 const SavedPosts = require("./routes/Posts/savePost.js")                   //DC - saved posts
 const searchRoute = require("./routes/Users/searchUser.js")
-const UsersFriends = require("./routes/Users/Profile/UsersFriends.js")      
-const SavedPosts = require("./routes/Posts/savePost.js")                   
 const users_statistics = require("./routes/Users/users_statistics.js")
- 
+const interest = require("./routes/Users/interests.js")
+
 const postComment = require("./routes/Posts/commentPost.js")            // DD - add, delete comments
 const userPost = require("./routes/Posts/userPost.js")                   // DD - create, delete, edit post
 const likePost = require("./routes/Posts/likePost.js")                   // DD - like and unlike posts
@@ -45,6 +44,7 @@ app.use("/api/search",searchRoute)
 app.use("/api/usersfriends",UsersFriends)        
 app.use("/api/savedposts",SavedPosts)
 app.use("/api/userStats",users_statistics)            
+app.use("/api/interests",interest) 
 // app.use("/api/users",userRoutes)
 
 app.use("/api/comment", postComment)            // DD - add, delete comments
