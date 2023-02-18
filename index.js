@@ -16,6 +16,11 @@ const blockUsers = require("./routes/Users/blockedUsers.js")
 const UsersFriends = require("./routes/Users/Profile/UsersFriends.js")      
 const SavedPosts = require("./routes/Posts/savePost.js")                   
 const users_statistics = require("./routes/Users/users_statistics.js")
+ 
+const postComment = require("./routes/Posts/commentPost.js")            // DD - add, delete comments
+const userPost = require("./routes/Posts/userPost.js")                   // DD - create, delete, edit post
+const likePost = require("./routes/Posts/likePost.js")                   // DD - like and unlike posts
+const dislikePost = require("./routes/Posts/dislikePost.js")             // DD - dislike and undislike posts
 
 const app = express()
 
