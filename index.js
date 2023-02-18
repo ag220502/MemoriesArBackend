@@ -15,7 +15,7 @@ const userRequests = require("./routes/Users/userRequests.js")
 const blockUsers = require("./routes/Users/blockedUsers.js")
 const UsersFriends = require("./routes/Users/Profile/UsersFriends.js")      
 const SavedPosts = require("./routes/Posts/savePost.js")                   
-
+const users_statistics = require("./routes/Users/users_statistics.js")
 
 const app = express()
 
@@ -34,7 +34,8 @@ app.use("/api/report",repAccRoutes)
 app.use("/api/requests",userRequests)
 app.use("/api/block",blockUsers)
 app.use("/api/usersfriends",UsersFriends)        
-app.use("/api/savedposts",SavedPosts)            
+app.use("/api/savedposts",SavedPosts)
+app.use("/api/userStats",users_statistics)            
 // app.use("/api/users",userRoutes)
 
 app.use("/api/comment", postComment)            // DD - add, delete comments
