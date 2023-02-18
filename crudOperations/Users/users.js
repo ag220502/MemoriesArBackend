@@ -47,7 +47,7 @@ db.getUserByEmail = (email)=>
 
 db.insertUser = (name,email,password)=>{
     return new Promise((resolve,reject)=>{
-        pool.query("INSERT INTO `users`(`firstName`,`email`, `password`) VALUES (?,?,?)",[name,email,password],(err,result)=>{
+        pool.query("INSERT INTO `users`(`firstName`,`email`, `password`,`accStatus`) VALUES (?,?,?,?)",[name,email,password,0],(err,result)=>{
             if(err)
             {
                 return reject(err)
