@@ -11,4 +11,37 @@ const totalNumberOfUsers = async (req,res)=>{
     }
 }
 
-module.exports = {totalNumberOfUsers}
+const totalNumberOfActiveUsers = async (req,res)=>{
+    try{
+        const data = await queries.totalNumberOfActiveUsers()
+        res.status(200).json(data)
+    }
+    catch(error)
+    {
+        res.status(500).json(error)
+    }
+}
+
+const totalNumberOfDeactivatedUsers = async (req,res)=>{
+    try{
+        const data = await queries.totalNumberOfDeactivatedUsers()
+        res.status(200).json(data)
+    }
+    catch(error)
+    {
+        res.status(500).json(error)
+    }
+}
+
+const totalNumberOfBannedUsers = async (req,res)=>{
+    try{
+        const data = await queries.totalNumberOfBannedUsers()
+        res.status(200).json(data)
+    }
+    catch(error)
+    {
+        res.status(500).json(error)
+    }
+}
+
+module.exports = {totalNumberOfUsers,totalNumberOfActiveUsers,totalNumberOfDeactivatedUsers,totalNumberOfBannedUsers}

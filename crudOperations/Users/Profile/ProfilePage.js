@@ -95,7 +95,9 @@ db.updatePersonalData = (id, gender, mobile, dob, countryCode, address, city, st
     })
 }
 
-
+// accStatus = 0 => active
+// accStatus = 1 => deactivated
+// accStatus = 2 => banned
 
 db.deactivateAccount = (id)=>{
     return new Promise((resolve,reject)=>{
