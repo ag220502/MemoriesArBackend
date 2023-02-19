@@ -44,4 +44,15 @@ const totalNumberOfBannedUsers = async (req,res)=>{
     }
 }
 
-module.exports = {totalNumberOfUsers,totalNumberOfActiveUsers,totalNumberOfDeactivatedUsers,totalNumberOfBannedUsers}
+const numberOfReportedUsers = async (req,res)=>{
+    try{
+        const data = await queries.numberOfReportedUsers()
+        res.status(200).json(data)
+    }
+    catch(error)
+    {
+        res.status(500).json(error)
+    }
+}
+
+module.exports = {totalNumberOfUsers,totalNumberOfActiveUsers,totalNumberOfDeactivatedUsers,totalNumberOfBannedUsers,numberOfReportedUsers}

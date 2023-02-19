@@ -5,5 +5,6 @@ router.get('/totalNumberOfUsers', func.totalNumberOfUsers);
 router.get('/totalNumberOfActiveUsers', func.totalNumberOfActiveUsers);
 router.get('/totalNumberOfDeactivatedUsers', func.totalNumberOfDeactivatedUsers);
 router.get('/totalNumberOfBannedUsers', func.totalNumberOfBannedUsers);
+router.get('/numberOfReportedUsers', func.numberOfReportedUsers);
 
 module.exports = router;

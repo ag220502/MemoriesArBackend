@@ -62,4 +62,19 @@ db.totalNumberOfBannedUsers = ()=>{
     })
 }
 
+db.numberOfReportedUsers = ()=>{
+    return new Promise((resolve,reject)=>{
+        pool.query("SELECT COUNT( DISTINCT reportUserId ) as numberOfReportedUsers FROM report_account",(err,data)=>{
+            if(err)
+            {
+                return reject(err)
+            }
+            else if(this.numberOfReportedUsers == 0){
+                return reject("There are no reported users in the database")
+            }
+            return resolve(data)
+        })
+    })
+}
+
 module.exports = db
