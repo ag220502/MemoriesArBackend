@@ -5,7 +5,7 @@ const {
   undislikePost,
 } = require("../../controllers/Posts/dislikePost")
 
-router.post("/dislike", dislikePost);
+router.patch("/dislike", dislikePost);
 router.delete("/undislike", undislikePost);
 
 module.exports = router;

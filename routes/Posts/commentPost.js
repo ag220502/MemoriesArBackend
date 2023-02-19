@@ -5,7 +5,7 @@ const {
   deleteComment,
 } = require("../../controllers/Posts/commentPost.js")
 
-router.post("/post", postComment);
+router.patch("/post", postComment);
 router.delete("/delete", deleteComment);
 
 module.exports = router;

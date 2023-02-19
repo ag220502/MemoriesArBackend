@@ -5,7 +5,7 @@ const {
   unlikePost,
 } = require("../../controllers/Posts/likePost")
 
-router.post("/like", likePost);
+router.patch("/like", likePost);
 router.delete("/unlike", unlikePost);
 
 module.exports = router;
