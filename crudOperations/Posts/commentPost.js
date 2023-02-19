@@ -47,11 +47,10 @@ db.findCommentByIdAndUserId = (commentId, userId) => {
   });
 };
 
-db.findPostByIdAndUserId = (postId, userId) => {
+db.findCommentById = (commentId) => {
   return new Promise((resolve, reject) => {
-    const findPostQuery =
-      "SELECT * FROM `user_posts` WHERE `id`=? AND `userId`=?";
-    pool.query(findPostQuery, [postId, userId], (err, result) => {
+    const findCommentQuery = "SELECT * FROM `post_comment` WHERE `commentId`=?";
+    pool.query(findCommentQuery, [commentId], (err, result) => {
       if (err) {
         return reject(err);
       } else if (result.length) {
@@ -65,8 +64,8 @@ db.findPostByIdAndUserId = (postId, userId) => {
 
 db.deleteCommentById = (commentId) => {
   return new Promise((resolve, reject) => {
-    const deletePostQuery = "DELETE FROM `post_comment` WHERE `commentId`=?";
-    pool.query(deletePostQuery, [commentId], (err, result) => {
+    const deleteCommentQuery = "DELETE FROM `post_comment` WHERE `commentId`=?";
+    pool.query(deleteCommentQuery, [commentId], (err, result) => {
       if (err) {
         return reject(err);
       } else {

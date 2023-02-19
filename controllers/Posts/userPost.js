@@ -4,9 +4,7 @@ const queries = require("../../crudOperations/Posts/userPost");
 const createPost = async (req, res) => {
   const { userId, image, lattitude, longitude } = req.body;
   let { caption } = req.body;
-  if (!userId || !caption || 
-    // !image || 
-    !lattitude || !longitude) {
+  if (!userId || !caption || !lattitude || !longitude) {
     res.status(404).json("Empty fields");
   }
   // add image to the table
@@ -14,7 +12,6 @@ const createPost = async (req, res) => {
     try {
       const result = await queries.createPost(
         userId,
-        // image,
         caption,
         lattitude,
         longitude
@@ -35,18 +32,18 @@ const editPost = async (req, res) => {
     //check error code
     return res.status(400).json("No details to be updated");
   }
-  let fields = []
+  let fields = [];
   try {
     if (!(await queries.findPostByIdAndUserId(postId, userId))) {
       res.status(404).json("Post doesn't exist");
     } else {
       let editPostQuery =
-        "UPDATE `user_posts` SET";
+        "UPDATE `user_posts` SET `dateEdited` = CURRENT_TIMESTAMP(), ";
       let bool = false;
       if (image) {
         editPostQuery = editPostQuery + " `image` = ?";
         bool = true;
-        fields.push(image)
+        fields.push(image);
       }
       if (caption) {
         if (bool) {
@@ -54,7 +51,7 @@ const editPost = async (req, res) => {
         }
         editPostQuery = editPostQuery + " `caption` = ?";
         bool = true;
-        fields.push(caption)
+        fields.push(caption);
       }
       if (lattitude) {
         if (bool) {
@@ -62,17 +59,22 @@ const editPost = async (req, res) => {
         }
         editPostQuery = editPostQuery + " `lattitude` = ?";
         bool = true;
-        fields.push(lattitude)
+        fields.push(lattitude);
       }
       if (longitude) {
         if (bool) {
           editPostQuery = editPostQuery + ",";
         }
         editPostQuery = editPostQuery + " `longitude` = ?";
-        fields.push(longitude)
+        fields.push(longitude);
       }
       editPostQuery = editPostQuery + " WHERE `userId` = ? AND `id` = ?";
-      const result = await queries.editPost(userId, postId, editPostQuery, fields);
+      const result = await queries.editPost(
+        userId,
+        postId,
+        editPostQuery,
+        fields
+      );
       return res.status(200).json("Post updated successfully.");
     }
   } catch (error) {
