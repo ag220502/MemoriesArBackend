@@ -1,7 +1,7 @@
 const queries = require("../../crudOperations/Users/users")
 const bcrypt = require("bcrypt-nodejs")
 const jwt = require("jsonwebtoken")
-const mailer = require("nodemailer")
+const mailer = require("../sendMail.js")
 
 //Functin to login to the account
 const loginFunc = async (req,res)=>{
@@ -36,6 +36,7 @@ const loginFunc = async (req,res)=>{
 
 //Functin to regiter the user
 const registerFunc = async (req,res)=>{
+    console.log("In reg func");
     const name = req.body.name
     const email = req.body.email
     const password = req.body.password
@@ -54,9 +55,19 @@ const registerFunc = async (req,res)=>{
     {
         return res.status(500).json(error)
     }
+    console.log("Salt Gen")
     const salt = bcrypt.genSaltSync(10);
     const hashedPass = bcrypt.hashSync(req.body.password,salt);
     try {
+        console.log("Sending Mail")
+        subject = "OTP Verification"
+        html = "<b>OTP is 123456</b>"
+        const sendMail = await mailer.sendMail()
+        if(sendMail)
+        {
+            console.log("Mail Sent");
+        }
+        
         const user = await queries.insertUser(name,email,hashedPass)
         if(user)
         {
@@ -144,12 +155,6 @@ const updatePassword = async (req,res)=>{
 
 }
 
-
-async function sendMail({to,subject,html}){
-    const transporter = mailer.createTransport(
-    )
-
-}
 
 //Function for forget password
 const forgotFunc = async (req,res)=>{
