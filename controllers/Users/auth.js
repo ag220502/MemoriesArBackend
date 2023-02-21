@@ -1,7 +1,16 @@
 const queries = require("../../crudOperations/Users/users")
 const bcrypt = require("bcrypt-nodejs")
 const jwt = require("jsonwebtoken")
-const mailer = require("nodemailer")
+const mailer = require("../sendMail.js")
+
+//importing sendgrid mailer
+const sendEmail = require("../../utils/sendEmail.js")
+
+// call this function to send email
+/**
+  await sendEmail(user.name, otp, "verification"); // for verificatrion
+  await sendEmail(user.name, otp, "password reset"); // for password reset
+ * */ 
 
 //Functin to login to the account
 const loginFunc = async (req,res)=>{
@@ -30,12 +39,12 @@ const loginFunc = async (req,res)=>{
         return res.status(400).json("Wrong Credentials!")
     }
     const token = jwt.sign({id:data[0].id},"secretkey")
-    const {password, ...others} = data[0]
-    res.cookie("accessToken", token).status(200).json(others)
+    res.cookie("accessToken", token).status(200).json({token:token})
 }
 
 //Functin to regiter the user
 const registerFunc = async (req,res)=>{
+    console.log("In reg func");
     const name = req.body.name
     const email = req.body.email
     const password = req.body.password
@@ -46,7 +55,6 @@ const registerFunc = async (req,res)=>{
     try{
         if(await queries.checkUserByEmail(email))
         {
-            console.log("Hello")
             return res.status(409).json("User Already Exists!")
         }
     }
@@ -54,13 +62,23 @@ const registerFunc = async (req,res)=>{
     {
         return res.status(500).json(error)
     }
+    console.log("Salt Gen")
     const salt = bcrypt.genSaltSync(10);
     const hashedPass = bcrypt.hashSync(req.body.password,salt);
     try {
+        // console.log("Sending Mail")
+        // subject = "OTP Verification"
+        // html = "<b>OTP is 123456</b>"
+        // const sendMail = await mailer.sendMail()
+        // if(sendMail)
+        // {
+        //     console.log("Mail Sent");
+        // }
+        
         const user = await queries.insertUser(name,email,hashedPass)
         if(user)
         {
-            return res.status(200).json("User Registered Successfully.")
+            return res.status(200).json("User Registered Successfully")
         }
     } catch (error) {
         return res.status(500).json(error)
@@ -72,7 +90,7 @@ const logoutFunc = (req,res)=>{
     res.clearCookie("accessToken",{
         secure:true,
         sameSite:"none"
-    }).status(200).json("User Logged Out Successfully.")
+    }).status(200).json(true)
 }
 
 //Function to very whether user is logged in or not
@@ -144,12 +162,6 @@ const updatePassword = async (req,res)=>{
 
 }
 
-
-async function sendMail({to,subject,html}){
-    const transporter = mailer.createTransport(
-    )
-
-}
 
 //Function for forget password
 const forgotFunc = async (req,res)=>{

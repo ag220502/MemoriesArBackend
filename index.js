@@ -28,6 +28,11 @@ const tagUser = require("./routes/Posts/tagPost")                       // DD - 
 
 const app = express()
 
+// import group routes
+const groupRoutes = require("./routes/Groups/group.js"); // DD - create, edit, delete group
+const groupMemberRoutes = require("./routes/Groups/groupMember.js"); // DD - add, remove, make admin, remove admin
+
+
 //Using all the thrid party functions
 app.use(express.json())
 app.use(cors())
@@ -50,11 +55,17 @@ app.use("/api/interests",interest)
 app.use("/api/userinterests",userInterests) 
 // app.use("/api/users",userRoutes)
 
+// posts
 app.use("/api/comment", postComment)            // DD - add, delete comments
 app.use("/api/posts", userPost)                 // DD - create, delete, edit post
 app.use("/api/likes", likePost)                 // DD - like and unlike posts
 app.use("/api/dislikes", dislikePost)           // DD - dislike and undislike posts
 app.use("/api/tagUser", tagUser)                // DD - tag and untag users
+
+// groups
+app.use("/api/groups", groupRoutes);
+app.use("/api/groupMember", groupMemberRoutes);
+
 
 //Telling app to listen to specific port
 app.listen(3000,()=>{

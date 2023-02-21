@@ -3,6 +3,6 @@ const router = express.Router()
 
 const func  = require("../../controllers/Users/searchUser.js")
 
-router.get("/byName",func.searchUserByName)
+router.get("/byName/:name",func.searchUserByName)
 
 module.exports = router
