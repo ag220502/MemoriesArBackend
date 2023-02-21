@@ -4,7 +4,7 @@ const func = require("../../controllers/Users/auth.js")
 
 router.post("/login",func.loginFunc)
 router.post("/register",func.registerFunc)
-router.post("/logout",func.logoutFunc)
+router.get("/logout",func.logoutFunc)
 router.post("/forgotPass",func.forgotFunc)
 router.patch("/updatePass",func.updatePassword)
 
