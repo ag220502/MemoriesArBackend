@@ -112,4 +112,27 @@ db.numberOfUserFriends = (id)=>{
     })
 }
 
+db.numberOfUserPosts = (id)=>{
+    return new Promise((resolve,reject)=>{
+         if(!id)
+         {
+              return reject("No id provided")
+         }
+         else{
+          pool.query("SELECT COUNT(*) as numberOfUserPosts FROM user_posts WHERE userId = ?",[id],(err,data)=>{
+                if(err)
+                {
+                 return reject(err)
+                }
+                else if(this.numberOfUserPosts == 0){
+                    return reject("There are no posts by this user")
+                }
+                else{
+                 return resolve(data)
+                }
+          })
+         }
+     })
+}
+
 module.exports = db

@@ -8,5 +8,6 @@ router.get('/totalNumberOfBannedUsers', func.totalNumberOfBannedUsers);
 router.get('/numberOfReportedUsers', func.numberOfReportedUsers);
 router.get('/numberOfReportedPosts', func.numberOfReportedPosts);
 router.get('/numberOfUserFriends', func.numberOfUserFriends);
+router.get('/numberOfUserPosts', func.numberOfUserPosts);
 
 module.exports = router;
