@@ -92,4 +92,24 @@ db.numberOfReportedPosts = ()=>{
     })
 }
 
+db.numberOfUserFriends = (id)=>{
+    return new Promise((resolve,reject)=>{
+       if(!id)
+       {
+           return reject("No id provided")
+       }
+       else{
+        pool.query("SELECT COUNT(*) as numberOfUserFriends FROM user_friends WHERE userId = ?",[id],(err,data)=>{
+            if(err)
+            {
+                return reject(err)
+            }
+            else{
+                return resolve(data)
+            }
+        })
+       }
+    })
+}
+
 module.exports = db

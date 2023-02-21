@@ -66,4 +66,16 @@ const numberOfReportedPosts = async (req,res)=>{
     }
 }
 
-module.exports = {totalNumberOfUsers,totalNumberOfActiveUsers,totalNumberOfDeactivatedUsers,totalNumberOfBannedUsers,numberOfReportedUsers, numberOfReportedPosts}
+const numberOfUserFriends = async (req,res)=>{
+    id = req.body.id
+    try{
+        const data = await queries.numberOfUserFriends(id)
+        res.status(200).json(data)
+    }   
+    catch(error)
+    {
+        res.status(500).json(error)
+    }
+}
+
+module.exports = {totalNumberOfUsers,totalNumberOfActiveUsers,totalNumberOfDeactivatedUsers,totalNumberOfBannedUsers,numberOfReportedUsers, numberOfReportedPosts, numberOfUserFriends}
