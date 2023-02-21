@@ -3,6 +3,15 @@ const bcrypt = require("bcrypt-nodejs")
 const jwt = require("jsonwebtoken")
 const mailer = require("../sendMail.js")
 
+//importing sendgrid mailer
+const sendEmail = require("../../utils/sendEmail.js")
+
+// call this function to send email
+/**
+  await sendEmail(user.name, otp, "verification"); // for verificatrion
+  await sendEmail(user.name, otp, "password reset"); // for password reset
+ * */ 
+
 //Functin to login to the account
 const loginFunc = async (req,res)=>{
     const email = req.body.email
