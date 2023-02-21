@@ -77,4 +77,19 @@ db.numberOfReportedUsers = ()=>{
     })
 }
 
+db.numberOfReportedPosts = ()=>{
+    return new Promise((resolve,reject)=>{
+        pool.query("SELECT COUNT( DISTINCT postId ) as numberOfReportedPosts FROM report_posts",(err,data)=>{
+            if(err)
+            {
+                return reject(err)
+            }
+            else if(this.numberOfRepoertedPosts == 0){
+                return reject("There are no reported posts in the database")
+            }
+            return resolve(data)
+        })
+    })
+}
+
 module.exports = db
