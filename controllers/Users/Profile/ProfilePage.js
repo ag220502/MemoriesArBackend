@@ -223,10 +223,9 @@ const unVerifyAccount = async (req, res) => {
 
 }
 
-module.exports = {getUserProfileData, getPersonalData, updateProfileData, updatePersonalData, deactivateAccount, activateAccount, deleteAccount, verifyAccount, unVerifyAccount};
 module.exports = {
     getUserProfileData, getPersonalData, 
     getFriendNumber, updateProfileData,
     updatePersonalData, deactivateAccount, 
     activateAccount, deleteAccount,
-	getPostNumber};
+	getPostNumber, verifyAccount, unVerifyAccount};
