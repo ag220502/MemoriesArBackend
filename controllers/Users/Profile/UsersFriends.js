@@ -1,7 +1,7 @@
 const queries = require("../../../crudOperations/Users/Profile/UsersFriends.js")
 
 const getFriendsLists = async (req,res)=>{
-    const userId = req.body.userId
+    const userId = req.params.id
     if(!userId)
     {
         return res.status(400).json("userId is required")
