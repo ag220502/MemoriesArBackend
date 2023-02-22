@@ -9,7 +9,7 @@ const cookieParser = require("cookie-parser")
 //Importing all the routes
 // const userRoutes = require("./routes/Users/users.js")
 const authRoutes = require("./routes/Users/auth.js")
-const UserProfileRoute = require("./routes/Users/Profile/ProfilePage.js")       
+const UserProfileRoute = require("./routes/Users/Profile/ProfilePage.js")  // profile page     
 const repAccRoutes = require("./routes/Users/Profile/reportAcc.js")
 const userRequests = require("./routes/Users/userRequests.js")
 const blockUsers = require("./routes/Users/blockedUsers.js")

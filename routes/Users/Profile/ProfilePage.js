@@ -14,5 +14,7 @@ router.patch('/activate', func.activateAccount);
 router.delete('/delete', func.deleteAccount);
 router.patch('/verify', func.verifyAccount);
 router.patch('/unVerify', func.unVerifyAccount);
+router.patch('/setAccountPrivate', func.setAccountPrivate);
+router.patch('/setAccountPublic', func.setAccountPublic);
 
 module.exports = router;

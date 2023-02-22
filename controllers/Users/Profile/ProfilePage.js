@@ -223,9 +223,45 @@ const unVerifyAccount = async (req, res) => {
 
 }
 
+const setAccountPrivate = async (req, res) => {
+    const id  = req.body.id;
+    if (!id) {
+        return res.status(400).json({ error: 'id is required' });
+    }
+    try{
+        const result = await queries.setAccountPrivate(id)
+        if(result.affectedRows)
+        {
+            return res.status(200).json('Account set to Private')
+        }
+    }
+    catch(err){
+        return res.status(400).json(err)
+    }
+
+}
+
+const setAccountPublic = async (req, res) => {
+    const id  = req.body.id;
+    if (!id) {
+        return res.status(400).json({ error: 'id is required' });
+    }
+    try{
+        const result = await queries.setAccountPublic(id)
+        if(result.affectedRows)
+        {
+            return res.status(200).json('Account set to Public')
+        }
+    }
+    catch(err){
+        return res.status(400).json(err)
+    }
+
+}
+
 module.exports = {
     getUserProfileData, getPersonalData, 
     getFriendNumber, updateProfileData,
     updatePersonalData, deactivateAccount, 
     activateAccount, deleteAccount,
-	getPostNumber, verifyAccount, unVerifyAccount};
+	getPostNumber, verifyAccount, unVerifyAccount, setAccountPrivate, setAccountPublic};
