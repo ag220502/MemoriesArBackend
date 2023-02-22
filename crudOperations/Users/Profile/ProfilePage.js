@@ -215,5 +215,125 @@ db.deleteAccount = (id)=>{
         })
     })
 }
+// accVerified = 0 => not verified
+// accVerified = 1 => verified
+db.VerifyAccount = (id)=>{
+    return new Promise((resolve,reject)=>{
+        pool.query(' SELECT * FROM users WHERE id = ? ' , [id],(err,result)=>{
+            if(err)
+            {
+                return reject(err)
+            }
+            else if(result.length == 0){
+                return reject("Account does not exist")
+            }
+            else{
+                pool.query('UPDATE `users` SET accVerified = 1 WHERE id=? AND accVerified != 1', [id],(err,result)=>{
+                    if(err)
+                    {
+                        return reject(err)
+                    }
+                    else if(result.affectedRows == 0){
+                        return reject("Account already verified")
+                    }
+                    else
+                    {
+                        return resolve(result)
+                    }
+                })
+            }
+        })
+    })
+}
+
+db.unVerifyAccount = (id)=>{
+    return new Promise((resolve,reject)=>{
+        pool.query(' SELECT * FROM users WHERE id = ? ' , [id],(err,result)=>{
+            if(err)
+            {
+                return reject(err)
+            }
+            else if(result.length == 0){
+                return reject("Account does not exist")
+            }
+            else{
+                pool.query('UPDATE `users` SET accVerified = 0 WHERE id=? AND accVerified != 0', [id],(err,result)=>{
+                    if(err)
+                    {
+                        return reject(err)
+                    }
+                    else if(result.affectedRows == 0){
+                        return reject("Account already unverified")
+                    }
+                    else
+                    {
+                        return resolve(result)
+                    }
+                })
+            }
+        })
+    })
+}
+
+// isPublic = 0 => public
+// isPublic = 1 => private
+
+db.setAccountPublic = (id)=>{
+    return new Promise((resolve,reject)=>{
+        pool.query(' SELECT * FROM users WHERE id = ? ' , [id],(err,result)=>{
+            if(err)
+            {
+                return reject(err)
+            }
+            else if(result.length == 0){
+                return reject("Account does not exist")
+            }
+            else{
+                pool.query('UPDATE `users` SET isPublic = 0 WHERE id=? AND isPublic != 0', [id],(err,result)=>{
+                    if(err)
+                    {
+                        return reject(err)
+                    }
+                    else if(result.affectedRows == 0){
+                        return reject("Account already public")
+                    }
+                    else
+                    {
+                        return resolve(result)
+                    }
+                })
+            }
+        })
+    })
+}
+
+db.setAccountPrivate = (id)=>{
+    return new Promise((resolve,reject)=>{
+        pool.query(' SELECT * FROM users WHERE id = ? ' , [id],(err,result)=>{
+            if(err)
+            {
+                return reject(err)
+            }
+            else if(result.length == 0){
+                return reject("Account does not exist")
+            }
+            else{
+                pool.query('UPDATE `users` SET isPublic = 1 WHERE id=? AND isPublic != 1', [id],(err,result)=>{
+                    if(err)
+                    {
+                        return reject(err)
+                    }
+                    else if(result.affectedRows == 0){
+                        return reject("Account already private")
+                    }
+                    else
+                    {
+                        return resolve(result)
+                    }
+                })
+            }
+        })
+    })
+}
 
 module.exports = db
