@@ -1,7 +1,7 @@
 const queries = require("../../../crudOperations/Users/Profile/ProfilePage.js")
 
 const getUserProfileData = async (req, res) => {
-    const id  = req.body.id;
+    const id  = req.params.id;
     if (!id) {
         return res.status(400).json({ error: 'id is required' });
     }
@@ -13,13 +13,50 @@ const getUserProfileData = async (req, res) => {
         }
     }
     catch(err){
+        console.log(err)
         return res.status(400).json(err)
     }
 
 }
 
+const getFriendNumber = async (req,res)=>{
+    const id  = req.params.id;
+    if (!id) {
+        return res.status(400).json({ error: 'id is required' });
+    }
+    try{
+        const result = await queries.getFriendNumber(id)
+        if(result)
+        {
+            return res.status(200).json(result)
+        }
+    }
+    catch(err){
+        return res.status(400).json(err)
+    }
+}
+
+const getPostNumber = async (req,res)=>{
+    const id  = req.params.id;
+    if (!id) {
+        return res.status(400).json({ error: 'id is required' });
+    }
+    try{
+        const result = await queries.getPostNumber(id)
+        if(result)
+        {
+            return res.status(200).json(result)
+        }
+    }
+    catch(err){
+        return res.status(400).json(err)
+    }
+}
+
+
+
 const getPersonalData = async (req, res) => {
-    const id  = req.body.id;
+    const id  = req.params.id;
     if (!id) {
         return res.status(400).json({ error: 'id is required' });
     }
@@ -45,9 +82,9 @@ const updateProfileData = async (req, res) => {
     if (!id) {
         return res.status(400).json({ error: 'id is required' });
     }
-    if (!firstName || !lastName || !bio || !profilePhoto) {
-        return res.status(400).json({ error: ' firstName or lastName or bio or profilePhoto is not provided' });
-    }
+    // if (!firstName || !lastName || !bio) {
+    //     return res.status(400).json({ error: ' firstName or lastName or bio or profilePhoto is not provided' });
+    // }
     try{
         const result = await queries.updateProfileData(id,firstName,lastName,bio,profilePhoto)
         if(result)
@@ -67,20 +104,25 @@ const updatePersonalData = async (req, res) => {
     const countryCode = req.body.countryCode;
     const mobile = req.body.mobile;
     const gender = req.body.gender;
-    const address = req.body.address;
-    const city = req.body.city;
-    const state = req.body.state;
-    const country = req.body.country;
+    // const address = req.body.address;
+    // const city = req.body.city;
+    // const state = req.body.state;
+    // const country = req.body.country;
+	const address = "";
+    const city = "";
+    const state = "";
+    const country = "";
     if (!id) {
         return res.status(400).json({ error: 'id is required' });
     }
-    if (!dob || !countryCode || !mobile || !gender || !address || !city || !state || !country) {
-        return res.status(400).json({error: 'all fields are required'});
-    }
+    // if (!dob || !countryCode || !mobile || !gender || !address || !city || !state || !country) {
+    //     return res.status(400).json({error: 'all fields are required'});
+    // }
     try{
         const result = await queries.updatePersonalData(id, gender, mobile, dob, countryCode, address, city, state, country)
         if(result)
         {
+		
             return res.status(200).json('Personal Data Updated')
         }
     }
@@ -182,3 +224,9 @@ const unVerifyAccount = async (req, res) => {
 }
 
 module.exports = {getUserProfileData, getPersonalData, updateProfileData, updatePersonalData, deactivateAccount, activateAccount, deleteAccount, verifyAccount, unVerifyAccount};
+module.exports = {
+    getUserProfileData, getPersonalData, 
+    getFriendNumber, updateProfileData,
+    updatePersonalData, deactivateAccount, 
+    activateAccount, deleteAccount,
+	getPostNumber};

@@ -12,6 +12,22 @@ const sendEmail = require("../../utils/sendEmail.js")
   await sendEmail(user.name, otp, "password reset"); // for password reset
  * */ 
 
+const getId = (req,res)=>{
+    const token = req.body.token
+    jwt.verify(token,"secretkey",async (err,paylod)=>{
+        if(err)
+        {
+            return res.status(404).json(err)
+        }
+        else
+        {
+            const userId = paylod
+            return res.status(200).json(userId)
+        }
+    })
+}
+
+
 //Functin to login to the account
 const loginFunc = async (req,res)=>{
     const email = req.body.email
@@ -39,7 +55,7 @@ const loginFunc = async (req,res)=>{
         return res.status(400).json("Wrong Credentials!")
     }
     const token = jwt.sign({id:data[0].id},"secretkey")
-    res.cookie("accessToken", token).status(200).json({token:token})
+    res.cookie("accessToken", token).status(200).json({token:token,userId:data[0].id})
 }
 
 //Functin to regiter the user
@@ -174,4 +190,4 @@ const resetPassFunc = async (req,res)=>{
 }
 
 // router.use("",verifyUser,)
-module.exports = {loginFunc,registerFunc,logoutFunc,forgotFunc, updatePassword}
+module.exports = {loginFunc,registerFunc,logoutFunc,forgotFunc, updatePassword,getId}
