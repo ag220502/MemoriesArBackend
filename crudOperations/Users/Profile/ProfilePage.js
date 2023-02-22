@@ -185,5 +185,64 @@ db.deleteAccount = (id)=>{
         })
     })
 }
+// accVerified = 0 => not verified
+// accVerified = 1 => verified
+db.VerifyAccount = (id)=>{
+    return new Promise((resolve,reject)=>{
+        pool.query(' SELECT * FROM users WHERE id = ? ' , [id],(err,result)=>{
+            if(err)
+            {
+                return reject(err)
+            }
+            else if(result.length == 0){
+                return reject("Account does not exist")
+            }
+            else{
+                pool.query('UPDATE `users` SET accVerified = 1 WHERE id=? AND accVerified != 1', [id],(err,result)=>{
+                    if(err)
+                    {
+                        return reject(err)
+                    }
+                    else if(result.affectedRows == 0){
+                        return reject("Account already verified")
+                    }
+                    else
+                    {
+                        return resolve(result)
+                    }
+                })
+            }
+        })
+    })
+}
+
+db.unVerifyAccount = (id)=>{
+    return new Promise((resolve,reject)=>{
+        pool.query(' SELECT * FROM users WHERE id = ? ' , [id],(err,result)=>{
+            if(err)
+            {
+                return reject(err)
+            }
+            else if(result.length == 0){
+                return reject("Account does not exist")
+            }
+            else{
+                pool.query('UPDATE `users` SET accVerified = 0 WHERE id=? AND accVerified != 0', [id],(err,result)=>{
+                    if(err)
+                    {
+                        return reject(err)
+                    }
+                    else if(result.affectedRows == 0){
+                        return reject("Account already unverified")
+                    }
+                    else
+                    {
+                        return resolve(result)
+                    }
+                })
+            }
+        })
+    })
+}
 
 module.exports = db

@@ -29,8 +29,8 @@ const tagUser = require("./routes/Posts/tagPost")                       // DD - 
 const app = express()
 
 // import group routes
-const groupRoutes = require("./routes/Groups/group.js"); // DD - create, edit, delete group
-const groupMemberRoutes = require("./routes/Groups/groupMember.js"); // DD - add, remove, make admin, remove admin
+const groupRoutes = require("./routes/Groups/group.js");                // DD - create, edit, delete group
+const groupMemberRoutes = require("./routes/Groups/groupMember.js");    // DD - add, remove, make admin, remove admin
 
 
 //Using all the thrid party functions

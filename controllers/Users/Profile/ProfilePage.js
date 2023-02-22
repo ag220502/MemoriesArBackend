@@ -145,4 +145,40 @@ const deleteAccount = async (req, res) => {
 
 }
 
-module.exports = {getUserProfileData, getPersonalData, updateProfileData, updatePersonalData, deactivateAccount, activateAccount, deleteAccount};
+const verifyAccount = async (req, res) => {
+    const id  = req.body.id;
+    if (!id) {
+        return res.status(400).json({ error: 'id is required' });
+    }
+    try{
+        const result = await queries.VerifyAccount(id)
+        if(result.affectedRows)
+        {
+            return res.status(200).json('Account Verified')
+        }
+    }
+    catch(err){
+        return res.status(400).json(err)
+    }
+
+}
+
+const unVerifyAccount = async (req, res) => {
+    const id  = req.body.id;
+    if (!id) {
+        return res.status(400).json({ error: 'id is required' });
+    }
+    try{
+        const result = await queries.unVerifyAccount(id)
+        if(result.affectedRows)
+        {
+            return res.status(200).json('Account Unverified')
+        }
+    }
+    catch(err){
+        return res.status(400).json(err)
+    }
+
+}
+
+module.exports = {getUserProfileData, getPersonalData, updateProfileData, updatePersonalData, deactivateAccount, activateAccount, deleteAccount, verifyAccount, unVerifyAccount};
