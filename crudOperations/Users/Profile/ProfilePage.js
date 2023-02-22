@@ -21,6 +21,36 @@ db.getProfileData = (id)=>{
 
 }
 
+db.getFriendNumber = (id)=>{
+    return new Promise((resolve,reject)=>{
+        pool.query('SELECT COUNT(*) as Num FROM `user_friends` WHERE userId=? or friendId=?', [id,id],(err,result)=>{
+            if(err)
+            {
+                return reject(err)
+            }
+            else
+            {
+                return resolve(result)
+            }
+        })
+    })
+}
+
+db.getPostNumber = (id)=>{
+    return new Promise((resolve,reject)=>{
+        pool.query('SELECT Count(*) as Num from user_posts WHERE userId=? AND status=?', [id,0],(err,result)=>{
+            if(err)
+            {
+                return reject(err)
+            }
+            else
+            {
+                return resolve(result)
+            }
+        })
+    })
+}
+
 db.getPersonalData = (id)=>{
     return new Promise((resolve,reject)=>{
         pool.query('SELECT id,email,dob,countryCode,mobile,gender,address,city,state,country FROM `users` WHERE id=?', [id],(err,result)=>{
