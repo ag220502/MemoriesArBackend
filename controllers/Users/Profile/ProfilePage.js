@@ -56,7 +56,7 @@ const getPostNumber = async (req,res)=>{
 
 
 const getPersonalData = async (req, res) => {
-    const id  = req.body.id;
+    const id  = req.params.id;
     if (!id) {
         return res.status(400).json({ error: 'id is required' });
     }
@@ -74,7 +74,6 @@ const getPersonalData = async (req, res) => {
 }
 
 const updateProfileData = async (req, res) => {
-	console.log(req.body.firstName)
     const id  = req.body.id;
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
@@ -105,20 +104,25 @@ const updatePersonalData = async (req, res) => {
     const countryCode = req.body.countryCode;
     const mobile = req.body.mobile;
     const gender = req.body.gender;
-    const address = req.body.address;
-    const city = req.body.city;
-    const state = req.body.state;
-    const country = req.body.country;
+    // const address = req.body.address;
+    // const city = req.body.city;
+    // const state = req.body.state;
+    // const country = req.body.country;
+	const address = "";
+    const city = "";
+    const state = "";
+    const country = "";
     if (!id) {
         return res.status(400).json({ error: 'id is required' });
     }
-    if (!dob || !countryCode || !mobile || !gender || !address || !city || !state || !country) {
-        return res.status(400).json({error: 'all fields are required'});
-    }
+    // if (!dob || !countryCode || !mobile || !gender || !address || !city || !state || !country) {
+    //     return res.status(400).json({error: 'all fields are required'});
+    // }
     try{
         const result = await queries.updatePersonalData(id, gender, mobile, dob, countryCode, address, city, state, country)
         if(result)
         {
+		
             return res.status(200).json('Personal Data Updated')
         }
     }
