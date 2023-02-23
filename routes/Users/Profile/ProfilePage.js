@@ -16,5 +16,7 @@ router.patch('/verify', func.verifyAccount);
 router.patch('/unVerify', func.unVerifyAccount);
 router.patch('/setAccountPrivate', func.setAccountPrivate);
 router.patch('/setAccountPublic', func.setAccountPublic);
+router.patch('/Ban', func.BanAccount);
+router.patch('/Unban', func.UnBanAccount);
 
 module.exports = router;
