@@ -69,6 +69,22 @@ db.findPostByIdAndUserId = (postId, userId) => {
   });
 };
 
+db.findAllPostsByUserId = (userId) => {
+  return new Promise((resolve, reject) => {
+    const findPostQuery =
+      "SELECT * FROM `user_posts` WHERE `userId`=?";
+    pool.query(findPostQuery, [userId], (err, result) => {
+      if (err) {
+        return reject(err);
+      } else if (result.length) {
+        return resolve(result);
+      } else {
+        return resolve(false);
+      }
+    });
+  });
+};
+
 db.editPost = (userId, postId, editPostQuery, fields) => {
   return new Promise((resolve, reject) => {
     pool.query(editPostQuery, fields.concat([userId, postId]), (err, result) => {

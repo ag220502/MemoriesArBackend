@@ -1,4 +1,5 @@
 const db = require("../../connect.js");
+const { findAllPostsByUserId } = require("../../crudOperations/Posts/userPost");
 const queries = require("../../crudOperations/Posts/userPost");
 
 const createPost = async (req, res) => {
@@ -103,4 +104,17 @@ const deletePost = async (req, res) => {
   }
 };
 
-module.exports = { createPost, editPost, deletePost };
+const getAllUserPosts = async (req,res) => {
+  const id = req.body.userId;
+  if (!id) {
+    return res.status(404).json("Invalid user ID");
+  }
+  try {
+    const result = await queries.findAllPostsByUserId(id);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
+module.exports = { createPost, editPost, deletePost , getAllUserPosts};
