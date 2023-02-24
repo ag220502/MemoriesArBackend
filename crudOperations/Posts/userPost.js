@@ -6,6 +6,7 @@ db.createPost = (userId, caption, lattitude, longitude) => {
   return new Promise((resolve, reject) => {
     const createPostQuery =
       "INSERT INTO `user_posts`(`userId`, `caption`, `lattitude`, `longitude`, `dateEdited`) VALUES (?,?,?,?,?)";
+      // "INSERT INTO `user_posts`(`userId`, `image`, `caption`, `lattitude`, `longitude`) VALUES (?,?,?,?,?)";
     pool.query(
       createPostQuery,
       [userId, caption, lattitude, longitude, '2020-8-24'],
@@ -61,6 +62,22 @@ db.findPostByIdAndUserId = (postId, userId) => {
         return reject(err);
       } else if (result.length) {
         return resolve(true);
+      } else {
+        return resolve(false);
+      }
+    });
+  });
+};
+
+db.findAllPostsByUserId = (userId) => {
+  return new Promise((resolve, reject) => {
+    const findPostQuery =
+      "SELECT * FROM `user_posts` WHERE `userId`=?";
+    pool.query(findPostQuery, [userId], (err, result) => {
+      if (err) {
+        return reject(err);
+      } else if (result.length) {
+        return resolve(result);
       } else {
         return resolve(false);
       }
@@ -144,50 +161,6 @@ db.deletePostsFromSavedById = (postId) => {
       } else {
         return resolve(result);
       }
-    });
-  });
-};
-
-db.checkIdImageExists = (postId) => {
-  return new Promise((resolve, reject) => {
-    const findPostQuery =
-      "SELECT * FROM `user_post_photos` WHERE `postId`=?";
-    pool.query(findPostQuery, [postId], (err, result) => {
-      if (err) {
-        return reject(err);
-      } else if (result.length) {
-        return resolve(true);
-      } else {
-        return resolve(false);
-      }
-    });
-  });
-}
-
-db.uploadImage = (postId, photo) => {
-  return new Promise((resolve, reject) => {
-    const uploadImageQuery =
-      "INSERT INTO `user_post_photos`(`postId`, `photo`) VALUES (?,?)";
-    pool.query(uploadImageQuery, [postId, photo], (err, result) => {
-      if (err) {
-        return reject(err);
-      } else {
-        return resolve(result);
-      }
-    });
-  });
-};
-
-db.findImageById = (postId) => {
-  return new Promise((resolve, reject) => {
-    const findPostQuery =
-      "SELECT * FROM `user_post_photos` WHERE `postId`=?";
-    pool.query(findPostQuery, [postId], (err, result) => {
-      if (err) {
-        return reject(err);
-      } else {
-        return resolve(result);
-      } 
     });
   });
 };
