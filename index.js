@@ -1,5 +1,5 @@
 //Importing the .env file
-// require("dotenv").config();
+require("dotenv").config();
 
 //Importing the third party libraries
 const express = require("express")
@@ -68,6 +68,6 @@ app.use("/api/groupMember", groupMemberRoutes);
 
 
 //Telling app to listen to specific port
-app.listen(process.env.PORT,()=>{
+app.listen(process.env.PORT || 3000 ,()=>{
     console.log(`Server Listening on port ${process.env.PORT}`)
 })
