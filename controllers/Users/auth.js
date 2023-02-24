@@ -1,7 +1,7 @@
 const queries = require("../../crudOperations/Users/users")
 const bcrypt = require("bcrypt-nodejs")
 const jwt = require("jsonwebtoken")
-const mailer = require("../sendMail.js")
+// const mailer = require("../sendMail.js")
 
 //importing sendgrid mailer
 const sendEmail = require("../../utils/sendEmail.js")

@@ -1,28 +1,28 @@
 const db = require("../../connect.js");
 const { findAllPostsByUserId } = require("../../crudOperations/Posts/userPost");
 const queries = require("../../crudOperations/Posts/userPost");
-
-const createPost = async (req, res) => {
-  const { userId, image, lattitude, longitude } = req.body;
-  let { caption } = req.body;
-  if (!userId || !caption || !lattitude || !longitude) {
-    res.status(404).json("Empty fields");
-  }
-  // add image to the table
-  else {
-    try {
-      const result = await queries.createPost(
-        userId,
-        caption,
-        lattitude,
-        longitude
-      );
-      return res.status(200).json("Post was created successfully.");
-    } catch (error) {
-      return res.status(400).json(error);
-    }
-  }
-};
+const { createPost } = require('../../functions/index')
+// const createPost = async (req, res) => {
+//   const { userId, image, lattitude, longitude } = req.body;
+//   let { caption } = req.body;
+//   if (!userId || !caption || !lattitude || !longitude) {
+//     res.status(404).json("Empty fields");
+//   }
+//   // add image to the table
+//   else {
+//     try {
+//       const result = await queries.createPost(
+//         userId,
+//         caption,
+//         lattitude,
+//         longitude
+//       );
+//       return res.status(200).json("Post was created successfully.");
+//     } catch (error) {
+//       return res.status(400).json(error);
+//     }
+//   }
+// };
 
 const editPost = async (req, res) => {
   const { userId, postId, image, caption, lattitude, longitude } = req.body;
