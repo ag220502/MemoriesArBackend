@@ -68,6 +68,6 @@ app.use("/api/groupMember", groupMemberRoutes);
 
 
 //Telling app to listen to specific port
-app.listen(3000,()=>{
-    console.log(`Server Listening on port ${3000}`)
+app.listen(process.env.PORT,()=>{
+    console.log(`Server Listening on port ${process.env.PORT}`)
 })
