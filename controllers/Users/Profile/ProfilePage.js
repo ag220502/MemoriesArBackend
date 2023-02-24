@@ -169,6 +169,42 @@ const activateAccount = async (req, res) => {
 
 }
 
+const BanAccount = async (req, res) => {
+    const id  = req.body.id;
+    if (!id) {
+        return res.status(400).json({ error: 'id is required' });
+    }
+    try{
+        const result = await queries.BanAccount(id)
+        if(result.affectedRows)
+        {
+            return res.status(200).json('Account Banned')
+        }
+    }
+    catch(err){
+        return res.status(400).json(err)
+    }
+
+}
+
+const UnBanAccount = async (req, res) => {
+    const id  = req.body.id;
+    if (!id) {
+        return res.status(400).json({ error: 'id is required' });
+    }
+    try{
+        const result = await queries.UnbanAccount(id)
+        if(result.affectedRows)
+        {
+            return res.status(200).json('Account UnBanned')
+        }
+    }
+    catch(err){
+        return res.status(400).json(err)
+    }
+
+}
+
 const deleteAccount = async (req, res) => {
     const id  = req.body.id;
     if (!id) {
@@ -264,4 +300,7 @@ module.exports = {
     getFriendNumber, updateProfileData,
     updatePersonalData, deactivateAccount, 
     activateAccount, deleteAccount,
-	getPostNumber, verifyAccount, unVerifyAccount, setAccountPrivate, setAccountPublic};
+	getPostNumber, verifyAccount, 
+    unVerifyAccount, setAccountPrivate,
+    setAccountPublic, BanAccount,
+    UnBanAccount};

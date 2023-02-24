@@ -189,6 +189,66 @@ db.activateAccount = (id)=>{
     })
 }
 
+db.BanAccount = (id)=>{
+    return new Promise((resolve,reject)=>{
+        pool.query(' SELECT * FROM users WHERE id = ? ' , [id],(err,result)=>{
+            if(err)
+            {
+                return reject(err)
+            }
+            else if(result.length == 0){
+                return reject("Account does not exist")
+            }
+            else{
+                pool.query('UPDATE `users` SET accStatus = 2 WHERE id=? AND accStatus != 2', [id],(err,result)=>{
+                    if(err)
+                    {
+                        return reject(err)
+                    }
+                    else if(result.affectedRows == 0){
+                        return reject("Account already banned")
+                    }
+                    else
+                    {
+                        return resolve(result)
+                    }
+                })
+            }
+            
+        })
+    })
+}
+
+db.UnbanAccount = (id)=>{
+    return new Promise((resolve,reject)=>{
+        pool.query(' SELECT * FROM users WHERE id = ? ' , [id],(err,result)=>{
+            if(err)
+            {
+                return reject(err)
+            }
+            else if(result.length == 0){
+                return reject("Account does not exist")
+            }
+            else{
+                pool.query('UPDATE `users` SET accStatus = 0 WHERE id=? AND accStatus != 0', [id],(err,result)=>{
+                    if(err)
+                    {
+                        return reject(err)
+                    }
+                    else if(result.affectedRows == 0){
+                        return reject("Account already unbanned")
+                    }
+                    else
+                    {
+                        return resolve(result)
+                    }
+                })
+            }
+            
+        })
+    })
+}
+
 db.deleteAccount = (id)=>{
     return new Promise((resolve,reject)=>{
         pool.query(' SELECT * FROM users WHERE id = ? ' , [id],(err,result)=>{
