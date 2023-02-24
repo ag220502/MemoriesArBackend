@@ -1,14 +1,15 @@
-const APIKey =
-  "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";
+require('dotenv').config()
+const APIKey = process.env.SENDGRID_API_KEY;
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(APIKey);
 
 
-module.exports  = async (name, otp, type) => {
+module.exports  = async (user, otp, type) => {
   try {
+    const name = user.name;
     const message = `Hello ${name}!\n\nYour MemoriesAR ${type} code is: \n${otp}\n\nYour code will expire after 5 minutes —do not share this code with anyone.\nIf you did not ask for this code, please ignore this mail.`
     await sgMail.send({
-      to: "ddavey1602@gmail.com",
+      to: user.email,
       from: "MemoriesARemail@gmail.com",
       subject: "Verify you Email for MemoriesAR",
       text: message,

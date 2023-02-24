@@ -1,7 +1,8 @@
 const queries = require("../../crudOperations/Users/searchUser.js")
 
 const searchUserByName = async (req,res)=>{
-    const name  = req.params.name
+    const name  = req.body.name    
+
     if(!name)
     {
         return res.status(400).json("Invalid Details")
@@ -13,7 +14,7 @@ const searchUserByName = async (req,res)=>{
     }
     catch(err)
     {
-        return res.status(400).json("Error")
+        return res.status(400).json(err)
     }
 }
 

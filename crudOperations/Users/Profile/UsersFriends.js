@@ -6,7 +6,7 @@ const db = {}
 
 db.getAllUserFriends = (userId)=>{
     return new Promise((resolve,reject)=>{
-        pool.query("SELECT DISTINCT(id) AS userId,u.firstName,u.lastName,u.profilePhoto from users u INNER JOIN (SELECT userId,friendId,friendDate FROM `user_friends` WHERE `userId` = ? OR `friendId` = ?) v ON u.id=v.userId OR u.id=v.friendId ORDER BY v.friendDate DESC",[userId,userId],(err,result)=>{
+        pool.query("SELECT `friendId`, `userId` FROM `user_friends` WHERE `userId` = ? OR `friendId` = ? ",[userId,userId],(err,result)=>{
             if(err)
             {
                 return reject(err)

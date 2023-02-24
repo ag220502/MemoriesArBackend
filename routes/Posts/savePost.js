@@ -6,6 +6,6 @@ router.post('/save', savePost)
 router.delete('/unsave', unsavePost)
 
 //get Profile Page
-router.get('/usersSavedPosts/:id', func.getSavedPosts);
+router.get('/usersSavedPosts', func.getSavedPosts);
 
 module.exports = router;

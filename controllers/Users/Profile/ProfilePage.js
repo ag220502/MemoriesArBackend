@@ -1,7 +1,7 @@
 const queries = require("../../../crudOperations/Users/Profile/ProfilePage.js")
 
 const getUserProfileData = async (req, res) => {
-    const id  = req.params.id;
+    const id  = req.body.id;
     if (!id) {
         return res.status(400).json({ error: 'id is required' });
     }
@@ -13,50 +13,13 @@ const getUserProfileData = async (req, res) => {
         }
     }
     catch(err){
-        console.log(err)
         return res.status(400).json(err)
     }
 
 }
-
-const getFriendNumber = async (req,res)=>{
-    const id  = req.params.id;
-    if (!id) {
-        return res.status(400).json({ error: 'id is required' });
-    }
-    try{
-        const result = await queries.getFriendNumber(id)
-        if(result)
-        {
-            return res.status(200).json(result)
-        }
-    }
-    catch(err){
-        return res.status(400).json(err)
-    }
-}
-
-const getPostNumber = async (req,res)=>{
-    const id  = req.params.id;
-    if (!id) {
-        return res.status(400).json({ error: 'id is required' });
-    }
-    try{
-        const result = await queries.getPostNumber(id)
-        if(result)
-        {
-            return res.status(200).json(result)
-        }
-    }
-    catch(err){
-        return res.status(400).json(err)
-    }
-}
-
-
 
 const getPersonalData = async (req, res) => {
-    const id  = req.params.id;
+    const id  = req.body.id;
     if (!id) {
         return res.status(400).json({ error: 'id is required' });
     }
@@ -82,9 +45,9 @@ const updateProfileData = async (req, res) => {
     if (!id) {
         return res.status(400).json({ error: 'id is required' });
     }
-    // if (!firstName || !lastName || !bio) {
-    //     return res.status(400).json({ error: ' firstName or lastName or bio or profilePhoto is not provided' });
-    // }
+    if (!firstName || !lastName || !bio || !profilePhoto) {
+        return res.status(400).json({ error: ' firstName or lastName or bio or profilePhoto is not provided' });
+    }
     try{
         const result = await queries.updateProfileData(id,firstName,lastName,bio,profilePhoto)
         if(result)
@@ -104,25 +67,20 @@ const updatePersonalData = async (req, res) => {
     const countryCode = req.body.countryCode;
     const mobile = req.body.mobile;
     const gender = req.body.gender;
-    // const address = req.body.address;
-    // const city = req.body.city;
-    // const state = req.body.state;
-    // const country = req.body.country;
-	const address = "";
-    const city = "";
-    const state = "";
-    const country = "";
+    const address = req.body.address;
+    const city = req.body.city;
+    const state = req.body.state;
+    const country = req.body.country;
     if (!id) {
         return res.status(400).json({ error: 'id is required' });
     }
-    // if (!dob || !countryCode || !mobile || !gender || !address || !city || !state || !country) {
-    //     return res.status(400).json({error: 'all fields are required'});
-    // }
+    if (!dob || !countryCode || !mobile || !gender || !address || !city || !state || !country) {
+        return res.status(400).json({error: 'all fields are required'});
+    }
     try{
         const result = await queries.updatePersonalData(id, gender, mobile, dob, countryCode, address, city, state, country)
         if(result)
         {
-		
             return res.status(200).json('Personal Data Updated')
         }
     }
@@ -169,42 +127,6 @@ const activateAccount = async (req, res) => {
 
 }
 
-const BanAccount = async (req, res) => {
-    const id  = req.body.id;
-    if (!id) {
-        return res.status(400).json({ error: 'id is required' });
-    }
-    try{
-        const result = await queries.BanAccount(id)
-        if(result.affectedRows)
-        {
-            return res.status(200).json('Account Banned')
-        }
-    }
-    catch(err){
-        return res.status(400).json(err)
-    }
-
-}
-
-const UnBanAccount = async (req, res) => {
-    const id  = req.body.id;
-    if (!id) {
-        return res.status(400).json({ error: 'id is required' });
-    }
-    try{
-        const result = await queries.UnbanAccount(id)
-        if(result.affectedRows)
-        {
-            return res.status(200).json('Account UnBanned')
-        }
-    }
-    catch(err){
-        return res.status(400).json(err)
-    }
-
-}
-
 const deleteAccount = async (req, res) => {
     const id  = req.body.id;
     if (!id) {
@@ -223,84 +145,4 @@ const deleteAccount = async (req, res) => {
 
 }
 
-const verifyAccount = async (req, res) => {
-    const id  = req.body.id;
-    if (!id) {
-        return res.status(400).json({ error: 'id is required' });
-    }
-    try{
-        const result = await queries.VerifyAccount(id)
-        if(result.affectedRows)
-        {
-            return res.status(200).json('Account Verified')
-        }
-    }
-    catch(err){
-        return res.status(400).json(err)
-    }
-
-}
-
-const unVerifyAccount = async (req, res) => {
-    const id  = req.body.id;
-    if (!id) {
-        return res.status(400).json({ error: 'id is required' });
-    }
-    try{
-        const result = await queries.unVerifyAccount(id)
-        if(result.affectedRows)
-        {
-            return res.status(200).json('Account Unverified')
-        }
-    }
-    catch(err){
-        return res.status(400).json(err)
-    }
-
-}
-
-const setAccountPrivate = async (req, res) => {
-    const id  = req.body.id;
-    if (!id) {
-        return res.status(400).json({ error: 'id is required' });
-    }
-    try{
-        const result = await queries.setAccountPrivate(id)
-        if(result.affectedRows)
-        {
-            return res.status(200).json('Account set to Private')
-        }
-    }
-    catch(err){
-        return res.status(400).json(err)
-    }
-
-}
-
-const setAccountPublic = async (req, res) => {
-    const id  = req.body.id;
-    if (!id) {
-        return res.status(400).json({ error: 'id is required' });
-    }
-    try{
-        const result = await queries.setAccountPublic(id)
-        if(result.affectedRows)
-        {
-            return res.status(200).json('Account set to Public')
-        }
-    }
-    catch(err){
-        return res.status(400).json(err)
-    }
-
-}
-
-module.exports = {
-    getUserProfileData, getPersonalData, 
-    getFriendNumber, updateProfileData,
-    updatePersonalData, deactivateAccount, 
-    activateAccount, deleteAccount,
-	getPostNumber, verifyAccount, 
-    unVerifyAccount, setAccountPrivate,
-    setAccountPublic, BanAccount,
-    UnBanAccount};
+module.exports = {getUserProfileData, getPersonalData, updateProfileData, updatePersonalData, deactivateAccount, activateAccount, deleteAccount};

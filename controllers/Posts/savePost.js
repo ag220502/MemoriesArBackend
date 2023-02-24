@@ -44,7 +44,7 @@ const unsavePost = async (req, res) => {
 };
 
 const getSavedPosts = async (req, res) => {
-  const id = req.params.id;
+  const id = req.body.id;
   if (!id) {
     return res.status(400).json({ error: "id is required" });
   }

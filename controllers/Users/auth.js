@@ -12,22 +12,6 @@ const sendEmail = require("../../utils/sendEmail.js")
   await sendEmail(user.name, otp, "password reset"); // for password reset
  * */ 
 
-const getId = (req,res)=>{
-    const token = req.body.token
-    jwt.verify(token,"secretkey",async (err,paylod)=>{
-        if(err)
-        {
-            return res.status(404).json(err)
-        }
-        else
-        {
-            const userId = paylod
-            return res.status(200).json(userId)
-        }
-    })
-}
-
-
 //Functin to login to the account
 const loginFunc = async (req,res)=>{
     const email = req.body.email
@@ -55,7 +39,8 @@ const loginFunc = async (req,res)=>{
         return res.status(400).json("Wrong Credentials!")
     }
     const token = jwt.sign({id:data[0].id},"secretkey")
-    res.cookie("accessToken", token).status(200).json({token:token,userId:data[0].id})
+    const {password, ...others} = data[0]
+    res.cookie("accessToken", token).status(200).json(others)
 }
 
 //Functin to regiter the user
@@ -71,6 +56,7 @@ const registerFunc = async (req,res)=>{
     try{
         if(await queries.checkUserByEmail(email))
         {
+            console.log("Hello")
             return res.status(409).json("User Already Exists!")
         }
     }
@@ -82,19 +68,19 @@ const registerFunc = async (req,res)=>{
     const salt = bcrypt.genSaltSync(10);
     const hashedPass = bcrypt.hashSync(req.body.password,salt);
     try {
-        // console.log("Sending Mail")
-        // subject = "OTP Verification"
-        // html = "<b>OTP is 123456</b>"
-        // const sendMail = await mailer.sendMail()
-        // if(sendMail)
-        // {
-        //     console.log("Mail Sent");
-        // }
+        console.log("Sending Mail")
+        subject = "OTP Verification"
+        html = "<b>OTP is 123456</b>"
+        const sendMail = await mailer.sendMail()
+        if(sendMail)
+        {
+            console.log("Mail Sent");
+        }
         
         const user = await queries.insertUser(name,email,hashedPass)
         if(user)
         {
-            return res.status(200).json("User Registered Successfully")
+            return res.status(200).json("User Registered Successfully.")
         }
     } catch (error) {
         return res.status(500).json(error)
@@ -106,7 +92,7 @@ const logoutFunc = (req,res)=>{
     res.clearCookie("accessToken",{
         secure:true,
         sameSite:"none"
-    }).status(200).json(true)
+    }).status(200).json("User Logged Out Successfully.")
 }
 
 //Function to very whether user is logged in or not
@@ -190,4 +176,4 @@ const resetPassFunc = async (req,res)=>{
 }
 
 // router.use("",verifyUser,)
-module.exports = {loginFunc,registerFunc,logoutFunc,forgotFunc, updatePassword,getId}
+module.exports = {loginFunc,registerFunc,logoutFunc,forgotFunc, updatePassword}
