@@ -4,11 +4,11 @@ const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(APIKey);
 
 
-module.exports  = async (name, otp, type) => {
+module.exports  = async (email, otp, type) => {
   try {
-    const message = `Hello ${name}!\n\nYour MemoriesAR ${type} code is: \n${otp}\n\nYour code will expire after 5 minutes —do not share this code with anyone.\nIf you did not ask for this code, please ignore this mail.`
+    const message = `Hello!\n\nYour MemoriesAR ${type} code is: \n${otp}\n\nYour code will expire after 5 minutes —do not share this code with anyone.\nIf you did not ask for this code, please ignore this mail.`
     await sgMail.send({
-      to: "ddavey1602@gmail.com",
+      to: email,
       from: "MemoriesARemail@gmail.com",
       subject: "Verify you Email for MemoriesAR",
       text: message,

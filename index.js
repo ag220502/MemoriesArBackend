@@ -26,6 +26,9 @@ const likePost = require("./routes/Posts/likePost.js")                   // DD -
 const dislikePost = require("./routes/Posts/dislikePost.js")             // DD - dislike and undislike posts
 const tagUser = require("./routes/Posts/tagPost")                       // DD - tag and untag users
 
+// verify account
+const verifyAccount = require("./routes/Users/otpVerification")
+
 const app = express()
 
 // import group routes
@@ -54,6 +57,9 @@ app.use("/api/userStats",users_statistics)
 app.use("/api/interests",interest) 
 app.use("/api/userinterests",userInterests) 
 // app.use("/api/users",userRoutes)
+
+//verify account
+app.use("/api/verify",verifyAccount)
 
 // posts
 app.use("/api/comment", postComment)            // DD - add, delete comments
