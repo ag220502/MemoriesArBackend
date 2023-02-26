@@ -147,46 +147,54 @@ async function verifyUser(req, res, next) {
   }
 }
 // function to update user password when logged in
-const updatePassword = async (req, res) => {
-  const id = req.body.id;
-  const oldPassword = req.body.oldPassword;
-  const newPassword = req.body.newPassword;
-  const confirmPassword = req.body.confirmPassword;
-  if (!id) {
-    return res.status(400).json("ID is required!");
-  }
-  if (!oldPassword || !newPassword || !confirmPassword) {
-    return res.status(400).json("Please Enter All Details.");
-  }
-  if (newPassword !== confirmPassword) {
-    return res.status(400).json("Passwords do not match!");
-  }
-  if (newPassword === oldPassword) {
-    return res.status(400).json("New Password cannot be same as old password!");
-  }
-  try {
-    if (!(await queries.checkUserById(id))) {
-      return res.status(404).json("User Does Not Exist!");
+// function to update user password when logged in
+const updatePassword = async (req,res)=>{
+    const id = req.body.id
+    const oldPassword = req.body.oldPassword
+    const newPassword = req.body.newPassword
+    const confirmPassword = req.body.confirmPassword
+    if(!id){
+        return res.status(400).json("ID is required!")
     }
-  } catch (error) {
-    return res.status(500).json(error);
-  }
-  const data = await queries.getUserById(id);
-  const checkPass = bcrypt.compareSync(oldPassword, data[0].password);
-  if (!checkPass) {
-    return res.status(400).json("Wrong Credentials!");
-  }
-  const salt = bcrypt.genSaltSync(10);
-  const hashedPass = bcrypt.hashSync(newPassword, salt);
-  try {
-    const user = await queries.updatePassword(id, hashedPass);
-    if (user) {
-      return res.status(200).json("Password Updated Successfully.");
+    // if(!oldPassword || !newPassword || !confirmPassword){
+    //     return res.status(400).json("Please Enter All Details.")
+    // }
+    // if(newPassword !== confirmPassword){
+    //     return res.status(400).json("Passwords do not match!")
+    // }
+    if(newPassword === oldPassword){
+        return res.status(400).json("New Password cannot be same as old password!")
     }
-  } catch (error) {
-    return res.status(500).json(error);
-  }
-};
+    // try{
+    //     if(!await queries.checkUserById(id))
+    //     {
+    //         return res.status(404).json("User Does Not Exist!")
+    //     }
+    // }
+    // catch(error)
+    // {
+    //     return res.status(500).json(error)
+    // }
+    const data = await queries.getUserById(id)
+    const checkPass = bcrypt.compareSync(oldPassword,data[0].password)
+    if(!checkPass)
+    {
+        return res.status(400).json({error:"Wrong Credentials!"})
+    }
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPass = bcrypt.hashSync(newPassword,salt);
+    try {
+        const user = await queries.updatePassword(id,hashedPass)
+        if(user)
+        {
+            return res.status(200).json("Password Updated")
+        }
+    } catch (error) {
+        return res.status(500).json("Server Error!")
+    }
+
+}
+
 
 //Function for forget password
 const forgotFunc = async (req, res) => {};

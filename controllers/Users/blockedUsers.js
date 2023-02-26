@@ -41,7 +41,7 @@ const unblockUser = async (req,res)=>{
 }
 
 const allBlockedUsers = async (req,res)=>{
-    const userId = req.body.userId
+    const userId = req.params.id
     if(!userId)
     {
         return res.status(400).json("Invalid Details")
