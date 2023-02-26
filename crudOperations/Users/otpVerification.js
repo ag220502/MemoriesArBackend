@@ -45,7 +45,7 @@ db.checkOtpExpired = (userId, otp) => {
       } else if (result.length === 0) {
         return reject("No otp found");
       } else {
-        return resolve(result[0].timeDiff <= 5); // true is otp isnt expired
+        return resolve(result[0].timeDiff <= 5); // true is otp isnt expiredw
       }
     });
   });

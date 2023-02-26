@@ -54,7 +54,8 @@ const removeMember = async (req, res) => {
     if (!(await queries.isMember(userId, groupId))) {
       return res.status(400).json("User is not a member of this group.");
     }
-    await queries.removeMember(userId, groupId);
+    await queries.removeMember(adminId, groupId, userId);
+
     return res.status(200).json("Member was removed successfully.");
   } catch (error) {
     return res.status(400).json(error);
@@ -165,7 +166,7 @@ const leaveGroup = async (req, res) => {
     if (!(await queries.isAdminInGroup(userId, groupId))) {
       return res.status(400).json("User is the only admin of this group.");
     }
-    await queries.removeMember(userId, groupId);
+    await queries.removeMember(userId, groupId, userId);
     return res.status(200).json("Member was removed successfully.");
   } catch (error) {
     return res.status(400).json(error);
