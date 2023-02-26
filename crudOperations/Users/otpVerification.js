@@ -68,22 +68,22 @@ db.checkOtpExists = (userId) => {
   });
 };
 
-// account status 0/null = unverified, 1 = verified
+// account status null = unverified, 0 = verified
 
 // check if user is already verified
 db.checkUserVerified = (id) => {
   return new Promise((resolve, reject) => {
     pool.query(
-      "SELECT * FROM `users` WHERE `id`=? AND (`accStatus` = 0 OR `accStatus` IS NULL)",
+      "SELECT * FROM `users` WHERE `id`=? AND `accStatus` IS NULL",
       id,
       (err, data) => {
         if (err) {
           return reject(err);
         }
         if (data.length > 0) {
-          return resolve(false);
+          return resolve(false); // account is not verified
         } else {
-          return resolve(true);
+          return resolve(true); // account status is not NULL
         }
       }
     );
@@ -95,7 +95,7 @@ db.verifyUser = (id) => {
   return new Promise((resolve, reject) => {
     pool.query(
       "UPDATE `users` SET `accStatus`=? WHERE `id`=?",
-      [1, id],
+      [0, id],
       (err, result) => {
         if (err) {
           return reject(err);

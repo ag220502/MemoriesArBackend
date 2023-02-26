@@ -1,3 +1,4 @@
+const { query } = require("express");
 const pool = require("../../connect.js");
 
 const groupQueries = require("./group.js");
@@ -40,35 +41,42 @@ db.removeMember = (userId, groupId, removedUserId) => {
     pool.query(
       addPastParticipantQuery,
       [userId, groupId, removedUserId],
-      (err, results) => {
+      async (err, results) => {
         if (err) {
           return reject(err);
-        }
-        const removeMemberQuery =
-          // remove member from group
-          "DELETE FROM `groups_people` WHERE `userId` = ? AND `groupId` = ?";
-        pool.query(
-          removeMemberQuery,
-          [removedUserId, groupId],
-          (err, results) => {
-            if (err) {
-              return reject(err);
-            }
-            //change updated by to admin
+        } else {
+          // check if removed user is creator
+          if (await db.isCreator(removedUserId, groupId)) {
+            // change created by to admin
+            await db.changeCreatedByTo(userId, groupId);
+          } else {
             const changeUpdatedByQuery =
               "UPDATE `groups` SET `updatedBy` = ? WHERE `groupId` = ?";
             pool.query(
               changeUpdatedByQuery,
-              [userId, groupId],
+              [userId, userId, groupId],
               (err, results) => {
                 if (err) {
                   return reject(err);
                 }
-                return resolve(results);
               }
             );
           }
-        );
+          const removeMemberQuery =
+            // remove member from group
+            "DELETE FROM `groups_people` WHERE `userId` = ? AND `groupId` = ?";
+          pool.query(
+            removeMemberQuery,
+            [removedUserId, groupId],
+            async (err, results) => {
+              if (err) {
+                return reject(err);
+              }
+              //change updated by to admin
+              return resolve(results);
+            }
+          );
+        }
       }
     );
   });
@@ -166,7 +174,7 @@ db.isGroupFull = (groupId) => {
   });
 };
 
-// check if admin is in a group
+// check if there is a second admin is in a group
 db.isAdminInGroup = (userId, groupId) => {
   return new Promise((resolve, reject) => {
     const isAdminInGroupQuery =
@@ -183,9 +191,9 @@ db.isAdminInGroup = (userId, groupId) => {
   });
 };
 
+// get all admins of a group expect the user
 db.getAdmins = (groupId, userId) => {
   return new Promise((resolve, reject) => {
-    console.log("getAdmins works");
     const getAdminsQuery =
       "SELECT * FROM `groups_people` WHERE `groupId` = ? AND `role` IS NOT NULL AND `userId` != ?";
     pool.query(getAdminsQuery, [groupId, userId], (err, results) => {
@@ -197,6 +205,7 @@ db.getAdmins = (groupId, userId) => {
   });
 };
 
+// get all members of a group expect the user
 db.getMembersExpectUserId = (groupId, userId) => {
   return new Promise((resolve, reject) => {
     const getMembersQuery =
@@ -210,6 +219,7 @@ db.getMembersExpectUserId = (groupId, userId) => {
   });
 };
 
+// change createdBy and updatedBy when a member is removed
 db.changeCreatedBy = async (userId, groupId) => {
   let newAdminId;
   if (await db.isAdminInGroup(userId, groupId)) {
@@ -220,15 +230,19 @@ db.changeCreatedBy = async (userId, groupId) => {
       return groupQueries.deleteGroup(groupId);
     }
     newAdminId = members[0].userId;
-    db.makeAdmin(newAdminId, groupId);
+    await db.makeAdmin(newAdminId, groupId);
   }
+  return await db.changeCreatedByTo(newAdminId, groupId);
+};
+
+// change createdBy and updatedBy to user
+db.changeCreatedByTo = (userId, groupId) => {
   return new Promise((resolve, reject) => {
-    console.log("works");
     const changeCreatedByQuery =
       "UPDATE `groups` SET `createdBy` = ?, `updatedBy` =? WHERE `groupId` = ?";
     pool.query(
       changeCreatedByQuery,
-      [newAdminId, newAdminId, groupId],
+      [userId, userId, groupId],
       (err, results) => {
         if (err) {
           return reject(err);
@@ -236,6 +250,23 @@ db.changeCreatedBy = async (userId, groupId) => {
         return resolve(results);
       }
     );
+  });
+};
+
+// check if user is creator of the group
+db.isCreator = (userId, groupId) => {
+  return new Promise((resolve, reject) => {
+    const isCreatorQuery =
+      "SELECT * FROM `groups` WHERE `createdBy` = ? AND `groupId` = ?";
+    pool.query(isCreatorQuery, [userId, groupId], (err, results) => {
+      if (err) {
+        return reject(err);
+      } else if (results.length) {
+        return resolve(true);
+      } else {
+        return resolve(false);
+      }
+    });
   });
 };
 

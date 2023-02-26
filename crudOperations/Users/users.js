@@ -69,6 +69,7 @@ db.insertUser = (name, email, password) => {
   return new Promise((resolve, reject) => {
     pool.query(
       "INSERT INTO `users`(`firstName`,`email`, `password`,`accStatus`) VALUES (?,?,?,?)",
+      // change this 0 to NULL
       [name, email, password, 0],
       (err, result) => {
         if (err) {
