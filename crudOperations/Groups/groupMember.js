@@ -1,5 +1,6 @@
 const pool = require("../../connect.js");
 
+const groupQueries = require("./group.js");
 const db = {};
 
 // add member to group
@@ -33,22 +34,43 @@ db.addAdmin = (userId, groupId) => {
 // remove member from group
 db.removeMember = (userId, groupId, removedUserId) => {
   return new Promise((resolve, reject) => {
-    const removeMemberQuery =
-      "DELETE FROM `groups_people` WHERE `userId` = ? AND `groupId` = ?";
-    pool.query(removeMemberQuery, [removedUserId, groupId], (err, results) => {
-      if (err) {
-        return reject(err);
-      }
+    const addPastParticipantQuery =
       // add member to past participants table
-      const addPastParticipantQuery =
-        "INSERT INTO `removed_group_users` (`userId`, `groupId`,`removedUserId`) VALUES (?, ?, ?)";
-      pool.query(addPastParticipantQuery, [userId, groupId, removedUserId], (err, results) => {
+      "INSERT INTO `removed_group_users` (`userId`, `groupId`,`removedUserId`) VALUES (?, ?, ?)";
+    pool.query(
+      addPastParticipantQuery,
+      [userId, groupId, removedUserId],
+      (err, results) => {
         if (err) {
           return reject(err);
         }
-        return resolve(results);
-      });
-    });
+        const removeMemberQuery =
+          // remove member from group
+          "DELETE FROM `groups_people` WHERE `userId` = ? AND `groupId` = ?";
+        pool.query(
+          removeMemberQuery,
+          [removedUserId, groupId],
+          (err, results) => {
+            if (err) {
+              return reject(err);
+            }
+            //change updated by to admin
+            const changeUpdatedByQuery =
+              "UPDATE `groups` SET `updatedBy` = ? WHERE `groupId` = ?";
+            pool.query(
+              changeUpdatedByQuery,
+              [userId, groupId],
+              (err, results) => {
+                if (err) {
+                  return reject(err);
+                }
+                return resolve(results);
+              }
+            );
+          }
+        );
+      }
+    );
   });
 };
 
@@ -158,6 +180,62 @@ db.isAdminInGroup = (userId, groupId) => {
         return resolve(false);
       }
     });
+  });
+};
+
+db.getAdmins = (groupId, userId) => {
+  return new Promise((resolve, reject) => {
+    console.log("getAdmins works");
+    const getAdminsQuery =
+      "SELECT * FROM `groups_people` WHERE `groupId` = ? AND `role` IS NOT NULL AND `userId` != ?";
+    pool.query(getAdminsQuery, [groupId, userId], (err, results) => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve(results);
+    });
+  });
+};
+
+db.getMembersExpectUserId = (groupId, userId) => {
+  return new Promise((resolve, reject) => {
+    const getMembersQuery =
+      "SELECT * FROM `groups_people` WHERE `groupId` = ? AND `userId` != ?";
+    pool.query(getMembersQuery, [groupId, userId], (err, results) => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve(results);
+    });
+  });
+};
+
+db.changeCreatedBy = async (userId, groupId) => {
+  let newAdminId;
+  if (await db.isAdminInGroup(userId, groupId)) {
+    newAdminId = await db.getAdmins(groupId, userId)[0].userId;
+  } else {
+    const members = await db.getMembersExpectUserId(groupId, userId);
+    if (members.length < 1) {
+      return groupQueries.deleteGroup(groupId);
+    }
+    newAdminId = members[0].userId;
+    db.makeAdmin(newAdminId, groupId);
+  }
+  return new Promise((resolve, reject) => {
+    console.log("works");
+    const changeCreatedByQuery =
+      "UPDATE `groups` SET `createdBy` = ?, `updatedBy` =? WHERE `groupId` = ?";
+    pool.query(
+      changeCreatedByQuery,
+      [newAdminId, newAdminId, groupId],
+      (err, results) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(results);
+      }
+    );
   });
 };
 
