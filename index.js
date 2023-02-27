@@ -7,7 +7,7 @@ const cors = require("cors")
 const cookieParser = require("cookie-parser")
 
 //Importing all the routes
-// const userRoutes = require("./routes/Users/users.js")
+const userRoutes = require("./routes/Users/users.js")
 const authRoutes = require("./routes/Users/auth.js")
 const UserProfileRoute = require("./routes/Users/Profile/ProfilePage.js")  // profile page     
 const repAccRoutes = require("./routes/Users/Profile/reportAcc.js")
@@ -56,8 +56,11 @@ app.use("/api/savedposts",SavedPosts)
 app.use("/api/userStats",users_statistics)            
 app.use("/api/interests",interest) 
 app.use("/api/userinterests",userInterests) 
+
+app.use("/api/userRoutes",userRoutes)
 app.use("/api/homePage",homePage) 
-// app.use("/api/users",userRoutes)
+
+
 
 //verify account
 app.use("/api/verify",verifyAccount)
