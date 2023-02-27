@@ -6,7 +6,8 @@ const {
   makeAdmin,
   removeAdmin,
   joinGroup,
-  leaveGroup
+  leaveGroup,
+  changeCreatedBy
 } = require("../../controllers/Groups/groupMember");
 
 // route for add member to group
@@ -26,5 +27,9 @@ router.post("/join", joinGroup);
 
 // route for leaving group
 router.delete("/leave", leaveGroup);
+
+// route for changing created by
+// this route is temporary, this function will be used when a user is deleted to assign new admin, to the group  
+router.patch("/changeCreatedBy", changeCreatedBy);
 
 module.exports = router;
