@@ -2,16 +2,16 @@ const pool = require("../../connect.js");
 
 const db = {};
 
-db.createPost = (userId, caption, lattitude, longitude) => {
+db.createPost = (userId, caption, lattitude, longitude, flag) => {
   return new Promise((resolve, reject) => {
     const createPostQuery =
-      "INSERT INTO `user_posts`(`userId`, `caption`, `lattitude`, `longitude`, `dateEdited`) VALUES (?,?,?,?,?)";
+      "INSERT INTO `user_posts`(`userId`, `caption`, `lattitude`, `longitude`, `flag`) VALUES (?,?,?,?,?)";
     pool.query(
       createPostQuery,
-      [userId, caption, lattitude, longitude, '2020-8-24'],
+      [userId, caption, lattitude, longitude, flag],
       (err, result) => {
         if (err) {
-          return reject(err);
+          return reject({message: "Error creating a post. ", error:err});
         } else {
           return resolve(result);
         }
@@ -209,5 +209,6 @@ db.findImageById = (postId) => {
     });
   });
 };
+
 
 module.exports = db;

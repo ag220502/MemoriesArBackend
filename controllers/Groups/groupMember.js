@@ -8,7 +8,8 @@ const addMember = async (req, res) => {
   if (!userId || !groupId || !adminId)
     return res.status(404).json("Empty fields");
   try {
-    if (!(await groupQueries.findGroupById(groupId))) {
+    const group = await groupQueries.findGroupById(groupId);
+    if (group.length == 0) {
       return res.status(404).json("Invalid group ID");
     }
     if (!(await postQueries.findUserById(userId))) {
@@ -39,7 +40,8 @@ const removeMember = async (req, res) => {
   if (!userId || !groupId || !adminId)
     return res.status(404).json("Empty fields");
   try {
-    if (!(await groupQueries.findGroupById(groupId))) {
+    const group = await groupQueries.findGroupById(groupId);
+    if (group.length == 0) {
       return res.status(404).json("Invalid group ID");
     }
     if (!(await postQueries.findUserById(userId))) {
@@ -54,7 +56,8 @@ const removeMember = async (req, res) => {
     if (!(await queries.isMember(userId, groupId))) {
       return res.status(400).json("User is not a member of this group.");
     }
-    await queries.removeMember(userId, groupId);
+    await queries.removeMember(adminId, groupId, userId);
+
     return res.status(200).json("Member was removed successfully.");
   } catch (error) {
     return res.status(400).json(error);
@@ -67,7 +70,8 @@ const makeAdmin = async (req, res) => {
   if (!userId || !groupId || !adminId)
     return res.status(404).json("Empty fields");
   try {
-    if (!(await groupQueries.findGroupById(groupId))) {
+    const group = await groupQueries.findGroupById(groupId);
+    if (group.length == 0) {
       return res.status(404).json("Invalid group ID");
     }
     if (!(await postQueries.findUserById(userId))) {
@@ -98,7 +102,8 @@ const removeAdmin = async (req, res) => {
   if (!userId || !groupId || !adminId)
     return res.status(404).json("Empty fields");
   try {
-    if (!(await groupQueries.findGroupById(groupId))) {
+    const group = await groupQueries.findGroupById(groupId);
+    if (group.length == 0) {
       return res.status(404).json("Invalid group ID");
     }
     if (!(await postQueries.findUserById(userId))) {
@@ -125,7 +130,8 @@ const joinGroup = async (req, res) => {
   const { userId, groupId } = req.body;
   if (!userId || !groupId) return res.status(404).json("Empty fields");
   try {
-    if (!(await groupQueries.findGroupById(groupId))) {
+    const group = await groupQueries.findGroupById(groupId);
+    if (group.length == 0) {
       return res.status(404).json("Invalid group ID");
     }
     if (!(await postQueries.findUserById(userId))) {
@@ -137,7 +143,6 @@ const joinGroup = async (req, res) => {
     if(await queries.isGroupFull(groupId)) {
       return res.status(400).json("Group is full.");
     }
-    const group = await groupQueries.findGroupById(groupId);
     if(group[0].visibility === "0") {
       return res.status(400).json("Group is private.");
     }
@@ -153,7 +158,8 @@ const leaveGroup = async (req, res) => {
   const { userId, groupId } = req.body;
   if (!userId || !groupId) return res.status(404).json("Empty fields");
   try {
-    if (!(await groupQueries.findGroupById(groupId))) {
+    const group = await groupQueries.findGroupById(groupId);
+    if (group.length == 0) {
       return res.status(404).json("Invalid group ID");
     }
     if (!(await postQueries.findUserById(userId))) {
@@ -163,21 +169,45 @@ const leaveGroup = async (req, res) => {
       return res.status(400).json("User is not a member of this group.");
     }
     if (!(await queries.isAdminInGroup(userId, groupId))) {
-      return res.status(400).json("User is the only admin of this group.");
+      queries.changeCreatedBy(userId, groupId);
     }
-    await queries.removeMember(userId, groupId);
+    await queries.removeMember(userId, groupId, userId);
     return res.status(200).json("Member was removed successfully.");
   } catch (error) {
     return res.status(400).json(error);
   }
 };
 
+const changeCreatedBy = async (req, res) => {
+  const { userId, groupId } = req.body;
+  if (!userId || !groupId) return res.status(404).json("Empty fields");
+  try {
+    const group = await groupQueries.findGroupById(groupId);
+    if (group.length == 0) {
+      return res.status(404).json("Invalid group ID");
+    }
+    if (!(await postQueries.findUserById(userId))) {
+      return res.status(404).json("Invalid user ID");
+    }
+    if (!(await queries.isMember(userId, groupId))) {
+      return res.status(400).json("User is not a member of this group.");
+    }
+    if(!await queries.isAdmin(userId, groupId)) {
+      return res.status(400).json("User is not an admin of this group.");
+    }
+    await queries.changeCreatedBy(userId, groupId);
+    return res.status(200).json("createdBy was changed successfully.");
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
 
 module.exports = {
   addMember,
   removeMember,
-  makeAdmin,
+  makeAdmin,  
   removeAdmin,
   joinGroup,
   leaveGroup,
+  changeCreatedBy,
 };

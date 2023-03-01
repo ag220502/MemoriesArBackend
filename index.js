@@ -7,7 +7,7 @@ const cors = require("cors")
 const cookieParser = require("cookie-parser")
 
 //Importing all the routes
-// const userRoutes = require("./routes/Users/users.js")
+const userRoutes = require("./routes/Users/users.js")
 const authRoutes = require("./routes/Users/auth.js")
 const UserProfileRoute = require("./routes/Users/Profile/ProfilePage.js")  // profile page     
 const repAccRoutes = require("./routes/Users/Profile/reportAcc.js")
@@ -25,6 +25,9 @@ const userPost = require("./routes/Posts/userPost.js")                   // DD -
 const likePost = require("./routes/Posts/likePost.js")                   // DD - like and unlike posts
 const dislikePost = require("./routes/Posts/dislikePost.js")             // DD - dislike and undislike posts
 const tagUser = require("./routes/Posts/tagPost")                       // DD - tag and untag users
+
+// verify account
+const verifyAccount = require("./routes/Users/otpVerification")
 
 const app = express()
 
@@ -53,8 +56,14 @@ app.use("/api/savedposts",SavedPosts)
 app.use("/api/userStats",users_statistics)            
 app.use("/api/interests",interest) 
 app.use("/api/userinterests",userInterests) 
+
+app.use("/api/userRoutes",userRoutes)
 app.use("/api/homePage",homePage) 
-// app.use("/api/users",userRoutes)
+
+
+
+//verify account
+app.use("/api/verify",verifyAccount)
 
 // posts
 app.use("/api/comment", postComment)            // DD - add, delete comments
