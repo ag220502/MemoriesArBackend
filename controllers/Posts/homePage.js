@@ -10,7 +10,7 @@ const homePage = async (req,res)=>{
         const result = await queries.getAllPosts(userId)
         if(result)
         {
-            return res.status(200).json(result)
+            return res.status(200).json(JSON.parse(JSON.stringify(result)))
         }
     }
     catch(err)

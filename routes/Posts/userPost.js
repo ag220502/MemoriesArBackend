@@ -5,7 +5,7 @@ const { createPost, editPost, deletePost, getAllUserPosts } = require("../../con
 router.post("/create", createPost);
 router.patch("/edit", editPost);
 router.delete("/delete", deletePost);
-router.get("/getAllPosts", getAllUserPosts )
+router.get("/getAllPosts/:id", getAllUserPosts )
 
 module.exports = router;
 

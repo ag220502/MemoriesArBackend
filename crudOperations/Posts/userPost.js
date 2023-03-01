@@ -52,6 +52,24 @@ db.findUserById = (userId) => {
   });
 };
 
+db.findAllPostsByUserId = (userId) => {
+  console.log(userId)
+  return new Promise((resolve, reject) => {
+    const findPostQuery =
+      "SELECT * FROM `user_posts` WHERE `userId`=?";
+    pool.query(findPostQuery, [userId], (err, result) => {
+      if (err) {
+        return reject(err);
+      } else if (result.length) {
+        return resolve(true);
+      } else {
+        return resolve(false);
+      }
+    });
+  });
+};
+
+
 db.findPostByIdAndUserId = (postId, userId) => {
   return new Promise((resolve, reject) => {
     const findPostQuery =
