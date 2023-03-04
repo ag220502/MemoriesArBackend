@@ -76,6 +76,9 @@ app.use("/api/tagUser", tagUser)                // DD - tag and untag users
 app.use("/api/groups", groupRoutes);
 app.use("/api/groupMember", groupMemberRoutes);
 
+//recent searches
+app.use("/api/recentSearches",require("./routes/Users/recentSearches.js"));
+
 
 //Telling app to listen to specific port
 app.listen(process.env.PORT || 3000 ,()=>{
