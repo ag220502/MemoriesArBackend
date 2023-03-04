@@ -56,14 +56,14 @@ db.findAllPostsByUserId = (userId) => {
   console.log(userId)
   return new Promise((resolve, reject) => {
     const findPostQuery =
-      "SELECT * FROM `user_posts` WHERE `userId`=?";
+      "SELECT up.id AS postId, upp.photo FROM `user_posts` up INNER JOIN user_post_photos upp ON up.id=upp.postId WHERE `userId`=?";
     pool.query(findPostQuery, [userId], (err, result) => {
       if (err) {
         return reject(err);
       } else if (result.length) {
-        return resolve(true);
+        return resolve(result);
       } else {
-        return resolve(false);
+        return resolve("No Posts Available");
       }
     });
   });

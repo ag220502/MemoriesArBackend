@@ -19,4 +19,30 @@ const getFriendsLists = async (req,res)=>{
     }
 }   
 
-module.exports = getFriendsLists
+
+const checkIsFriend = async (req,res)=>{
+    const {id,friend} = req.params
+    if(!id || !friend)
+    {
+        return res.status(400).json("userId and friendId are required")
+    }
+    try{
+
+        const result = await queries.checkIsFriend(id,friend)
+        if(result.length>0)
+        {
+            return res.status(200).json(true)   // returns true if the two users are friends
+        }
+        else
+        {
+            return res.status(200).json(false)  // returns false if the two users are not friends
+        }
+    }
+    catch(err)
+    {
+        return res.status(400).json(err)
+    }
+
+}
+
+module.exports = {getFriendsLists,checkIsFriend}
