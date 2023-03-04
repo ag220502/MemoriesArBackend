@@ -25,7 +25,7 @@ const userPost = require("./routes/Posts/userPost.js")                   // DD -
 const likePost = require("./routes/Posts/likePost.js")                   // DD - like and unlike posts
 const dislikePost = require("./routes/Posts/dislikePost.js")             // DD - dislike and undislike posts
 const tagUser = require("./routes/Posts/tagPost")                       // DD - tag and untag users
-
+const map = require("./routes/Posts/mapScreen.js")
 // verify account
 const verifyAccount = require("./routes/Users/otpVerification")
 
@@ -60,7 +60,7 @@ app.use("/api/userinterests",userInterests)
 app.use("/api/userRoutes",userRoutes)
 app.use("/api/homePage",homePage) 
 
-
+app.use("/api/map",map)
 
 //verify account
 app.use("/api/verify",verifyAccount)
