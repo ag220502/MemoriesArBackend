@@ -62,6 +62,11 @@ const loginFunc = async (req, res) => {
     await sendEmail(email, OTP, "verification"); // for verificatrion
     return res.status(400).json("Please Verify Your Account First!");
   }
+  if (data[0].accStatus == 1) {
+    return res.status(400).json("Your Account Has Been Deactivated!");
+  } else if (data[0].accStatus == 2) {
+    return res.status(400).json("Your Account Has Been Banned!");
+  }
   // create a token for creating a session
   const token = jwt.sign({ id: data[0].id }, "secretkey");
   res
@@ -147,67 +152,112 @@ async function verifyUser(req, res, next) {
   }
 }
 // function to update user password when logged in
-// function to update user password when logged in
-const updatePassword = async (req,res)=>{
-    const id = req.body.id
-    const oldPassword = req.body.oldPassword
-    const newPassword = req.body.newPassword
-    const confirmPassword = req.body.confirmPassword
-    if(!id){
-        return res.status(400).json("ID is required!")
+const updatePassword = async (req, res) => {
+  const id = req.body.id;
+  const oldPassword = req.body.oldPassword;
+  const newPassword = req.body.newPassword;
+  const confirmPassword = req.body.confirmPassword;
+  if (!id) {
+    return res.status(400).json("ID is required!");
+  }
+  if (!oldPassword || !newPassword || !confirmPassword) {
+    return res.status(400).json("Please Enter All Details.");
+  }
+  if (newPassword !== confirmPassword) {
+    return res.status(400).json("Passwords do not match!");
+  }
+  if (newPassword === oldPassword) {
+    return res.status(400).json("New Password cannot be same as old password!");
+  }
+  try {
+    if (!(await queries.checkUserById(id))) {
+      return res.status(404).json("User Does Not Exist!");
     }
-    // if(!oldPassword || !newPassword || !confirmPassword){
-    //     return res.status(400).json("Please Enter All Details.")
-    // }
-    // if(newPassword !== confirmPassword){
-    //     return res.status(400).json("Passwords do not match!")
-    // }
-    if(newPassword === oldPassword){
-        return res.status(400).json("New Password cannot be same as old password!")
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+  const data = await queries.getUserById(id);
+  const checkPass = bcrypt.compareSync(oldPassword, data[0].password);
+  if (!checkPass) {
+    return res.status(400).json("Wrong Credentials!");
+  }
+  const salt = bcrypt.genSaltSync(10);
+  const hashedPass = bcrypt.hashSync(newPassword, salt);
+  try {
+    const user = await queries.updatePassword(id, hashedPass);
+    if (user) {
+      return res.status(200).json("Password Updated Successfully.");
     }
-    // try{
-    //     if(!await queries.checkUserById(id))
-    //     {
-    //         return res.status(404).json("User Does Not Exist!")
-    //     }
-    // }
-    // catch(error)
-    // {
-    //     return res.status(500).json(error)
-    // }
-    const data = await queries.getUserById(id)
-    const checkPass = bcrypt.compareSync(oldPassword,data[0].password)
-    if(!checkPass)
-    {
-        return res.status(400).json({error:"Wrong Credentials!"})
-    }
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPass = bcrypt.hashSync(newPassword,salt);
-    try {
-        const user = await queries.updatePassword(id,hashedPass)
-        if(user)
-        {
-            return res.status(200).json("Password Updated")
-        }
-    } catch (error) {
-        return res.status(500).json("Server Error!")
-    }
-
-}
-
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
 
 //Function for forget password
-const forgotFunc = async (req, res) => {};
+const forgotFunc = async (req, res) => {
+  const email = req.body.email;
+  if (!email) {
+    return res.status(400).json("Email is required!");
+  }
+  try {
+    if (!(await queries.checkUserByEmail(email))) {
+      return res.status(404).json("User Does Not Exist!");
+    }
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+  const OTP = otpGenerator.generate(6, {
+    lowerCaseAlphabets: false,
+    upperCaseAlphabets: false,
+    specialChars: false,
+  });
+  await verificationQueries.createToken(email, OTP, "reset");
+  await sendEmail(email, OTP, "password reset"); // for verificatrion
+  return res.status(200).json("OTP Sent!");
+};
 
 //Function for forget password
-const resetPassFunc = async (req, res) => {};
+const resetPassFunc = async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+  if (!email || !otp || !newPassword) {
+    return res.status(400).json("Please Enter All Details.");
+  }
+  try {
+    if (!(await queries.checkUserByEmail(email))) {
+      return res.status(404).json("User Does Not Exist!");
+    }
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+  // check if otp is valid
+  if (!await verificationQueries.checkOtpValid(email, otp)) {
+    return res.status(400).json("Invalid otp");
+  }
+  
+  // check if otp is expired
+  // if (!await verificationQueries.checkOtpExpired(email, otp)) {
+  //   return res.status(400).json("Otp expired");
+  // }
+  
+  const data = await queries.getUserByEmail(email)
+  const salt = bcrypt.genSaltSync(10);
+  const hashedPass = bcrypt.hashSync(newPassword, salt);
+  try {
+    const user = await queries.updatePassword(data[0].id, hashedPass);
+    if (user) {
+      return res.status(200).json("Password Updated Successfully.");
+    }
+  } catch (error) {
+    return res.status(500).json(error);
+  }  
+};
 
-// router.use("",verifyUser,)
 module.exports = {
   loginFunc,
   registerFunc,
   logoutFunc,
   forgotFunc,
+  resetPassFunc,
   updatePassword,
   getId,
 };

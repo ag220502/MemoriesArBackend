@@ -74,16 +74,16 @@ db.checkOtpExists = (userId) => {
 db.checkUserVerified = (id) => {
   return new Promise((resolve, reject) => {
     pool.query(
-      "SELECT * FROM `users` WHERE `id`=? AND `accStatus` IS NULL",
+      "SELECT * FROM `users` WHERE `id`=? AND (`accStatus` IS NULL)",
       id,
       (err, data) => {
         if (err) {
           return reject(err);
         }
         if (data.length > 0) {
-          return resolve(false); // account is not verified
+          return resolve(false);
         } else {
-          return resolve(true); // account status is not NULL
+          return resolve(true);
         }
       }
     );
