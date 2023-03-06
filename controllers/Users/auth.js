@@ -45,51 +45,39 @@ const checkUserByEmail = async (req, res) => {
 
 //Functin to login to the account
 const loginFunc = async (req, res) => {
-  const email = req.body.email;
-  const checkpassword = req.body.password;
-  // check if all details are entered
-  if (!email || !checkpassword) {
-    return res.status(400).json("Please Enter All Details.");
-  }
+	const email = req.body.email;
+	const checkpassword = req.body.password;
+	// check if all details are entered
+	if (!email || !checkpassword) {
+		return res.status(400).json("Please Enter All Details.");
+	}
 
-  // check if user exists
-  try {
-    if (!(await queries.checkUserByEmail(email))) {
-      return res.status(404).json("User Does Not Exists!");
-    }
-  } catch (error) {
-    return res.status(500).json(error);
-  }
-  // check if password is correct
-  const data = await queries.getUserByEmail(email);
-
-  const checkPass = bcrypt.compareSync(checkpassword, data[0].password);
-  if (!checkPass) {
-    return res.status(400).json("Wrong Credentials!");
-  }
-  const id = data[0].id;
-  // check if the user is verified
-  if (!(await verificationQueries.checkUserVerified(id))) {
-    const OTP = otpGenerator.generate(6, {
-      lowerCaseAlphabets: false,
-      upperCaseAlphabets: false,
-      specialChars: false,
-    });
-    await verificationQueries.createToken(email, OTP, "verify");
-    await sendEmail(email, OTP, "verification"); // for verificatrion
-    return res.status(400).json("Please Verify Your Account First!");
-  }
-  if (data[0].accStatus == 1) {
-    return res.status(400).json("Your Account Has Been Deactivated!");
-  } else if (data[0].accStatus == 2) {
-    return res.status(400).json("Your Account Has Been Banned!");
-  }
-  // create a token for creating a session
-  const token = jwt.sign({ id: data[0].id }, "secretkey");
-  res
-    .cookie("accessToken", token)
-    .status(200)
-    .json({ token: token, userId: data[0].id });
+	// check if user exists
+	try {
+		if (!(await queries.checkUserByEmail(email))) {
+		return res.status(404).json(false);
+		}
+	} catch (error) {
+		return res.status(500).json(error);
+	}
+	// check if password is correct
+	const data = await queries.getUserByEmail(email);
+	const checkPass = bcrypt.compareSync(checkpassword, data[0].password);
+	if (!checkPass) {
+		return res.status(400).json(false);
+	}
+	// check if the user is verified
+	if (data[0].accStatus == 1) {
+		return res.status(400).json("Account Deactivated!");
+	} else if (data[0].accStatus == 2) {
+		return res.status(400).json("Account Banned!");
+	}
+	// create a token for creating a session
+	const token = jwt.sign({ id: data[0].id }, "secretkey");
+	res
+		.cookie("accessToken", token)
+		.status(200)
+		.json({ token: token, userId: data[0].id });
 };
 
 const sendOTP = async (req, res) => {
