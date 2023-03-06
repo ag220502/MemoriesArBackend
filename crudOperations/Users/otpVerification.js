@@ -18,20 +18,19 @@ db.createToken = (email, otp, type) => {
 };
 
 // check if otp is valid
-db.checkOtpValid = (userId, otp) => {
-  return new Promise((resolve, reject) => {
-    const checkOtpQuery =
-      "SELECT * FROM `otp_verification` WHERE `emailId` = ? AND `otp` = ?";
-    pool.query(checkOtpQuery, [userId, otp], (err, result) => {
-      if (err) {
-        return reject(err);
-      } else if (result.length === 0) {
-        return resolve(false);
-      } else {
-        return resolve(true); // otp is valid
-      }
+db.checkOtpValid = (email, otp) => {
+    return new Promise((resolve, reject) => {
+        const checkOtpQuery = "SELECT * FROM `otp_verification` WHERE `emailId` = ? AND `otp` = ?";
+        pool.query(checkOtpQuery, [email, otp], (err, result) => {
+			if (err) {
+				return reject(err);
+			} else if (result.length === 0) {
+				return resolve(false);
+			} else {
+				return resolve(true); // otp is valid
+			}
+        });
     });
-  });
 };
 
 // check if otp is expired
@@ -53,19 +52,19 @@ db.checkOtpExpired = (userId, otp) => {
 
 //check if otp exists
 db.checkOtpExists = (userId) => {
-  return new Promise((resolve, reject) => {
-    const checkOtpQuery =
-      "SELECT TIMESTAMPDIFF(MINUTE, `createdAt`, NOW()) AS `timeDiff` FROM `otp_verification` WHERE `id` = ?";
-    pool.query(checkOtpQuery, [userId], (err, result) => {
-      if (err) {
-        return reject(err);
-      } else if (result.length === 0) {
-        return resolve(false); // otp does not exist
-      } else {
-        return resolve(true); // otp exists
-      }
-    });
-  });
+	return new Promise((resolve, reject) => {
+		const checkOtpQuery =
+		"SELECT TIMESTAMPDIFF(MINUTE, `createdAt`, NOW()) AS `timeDiff` FROM `otp_verification` WHERE `id` = ?";
+		pool.query(checkOtpQuery, [userId], (err, result) => {
+		if (err) {
+			return reject(err);
+		} else if (result.length === 0) {
+			return resolve(false); // otp does not exist
+		} else {
+			return resolve(true); // otp exists
+		}
+		});
+	});
 };
 
 // account status null = unverified, 0 = verified
