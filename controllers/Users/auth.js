@@ -134,19 +134,9 @@ const registerFunc = async (req, res) => {
 
   try {
     const user = await queries.insertUser(name, email, hashedPass);
-    if (user) {
-      const OTP = otpGenerator.generate(6, {
-        lowerCaseAlphabets: false,
-        upperCaseAlphabets: false,
-        specialChars: false,
-      });
-      // create verification token      
-      const result = await verificationQueries.createToken(email, OTP, "verify");
-      
-      await sendEmail(email, OTP, "verification"); // for verificatrion
-      return res
-        .status(200)
-        .json("User Registered Successfully, kindly verify your account");
+    if(user.insertId)
+    {
+      return res.status(200).json(true);
     }
   } catch (error) {
     return res.status(500).json(error);
@@ -280,6 +270,22 @@ const resetPassFunc = async (req, res) => {
   }  
 };
 
+const verifyOTP = async (req, res) => {
+  const { email, otp } = req.params;
+  if (!email || !otp) {
+    return res.status(400).json("Please Enter All Details.");
+  }
+  // check if otp is valid
+  if (!await verificationQueries.checkOtpValid(email, otp)) {
+    return res.status(400).json(false);
+  }
+  else
+  {
+    return res.status(200).json(true);
+  }
+}
+
+
 module.exports = {
   loginFunc,
   registerFunc,
@@ -289,5 +295,6 @@ module.exports = {
   updatePassword,
   getId,
   checkUserByEmail,
-  sendOTP
+  sendOTP,
+  verifyOTP
 };

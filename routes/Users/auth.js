@@ -12,4 +12,5 @@ router.patch("/updatePass",func.updatePassword)
 router.post("/getId",func.getId)
 router.get("/sendOTP/:email",func.sendOTP)
 
+router.get("/verifyOtp/:email/:otp",func.verifyOTP)
 module.exports = router 
