@@ -15,6 +15,7 @@ db.addBlockedUser = (userId,blockedUserId)=>{
     })
 }
 
+
 //Function to execute query for unblock users
 db.deleteBlockedUser = (userId,blockedUserId)=>{
     return new Promise((resolve,reject)=>{

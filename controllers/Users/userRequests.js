@@ -5,7 +5,6 @@ const userQuery = require("../../crudOperations/Users/userFriends.js")
 const sendRequest = async (req,res)=>{
     const userId = req.body.userId
     const recId = req.body.recId
-
     if(!userId || !recId || userId===recId)
     {
         return res.status(400).json("Invalid Details.")
@@ -28,7 +27,7 @@ const sendRequest = async (req,res)=>{
 
 //Function to get all the requests of the users
 const allRequests = async (req,res)=>{
-    const userId = req.body.userId
+    const userId = req.params.id
 
     if(!userId)
     {
