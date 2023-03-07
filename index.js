@@ -76,6 +76,9 @@ app.use("/api/tagUser", tagUser)                // DD - tag and untag users
 app.use("/api/groups", groupRoutes);
 app.use("/api/groupMember", groupMemberRoutes);
 
+app.get("/", () => {
+    return res.status(200).json("Hello world")
+})
 //recent searches
 app.use("/api/recentSearches",require("./routes/Users/recentSearches.js"));
 
