@@ -26,53 +26,82 @@ const getId = (req, res) => {
   });
 };
 
+const checkUserByEmail = async (req, res) => {
+	const email = req.params.email;
+	if (!email) {
+
+		return res.status(400).json("Email is required!");
+	}
+	try {
+		if (await queries.checkUserByEmail(email)) {
+			return res.status(200).json(true);
+		} else {
+			return res.status(404).json(false);
+		}
+	} catch (error) {
+		return res.status(500).json(error);
+	}
+};
+
 //Functin to login to the account
 const loginFunc = async (req, res) => {
-  const email = req.body.email;
-  const checkpassword = req.body.password;
-  // check if all details are entered
-  if (!email || !checkpassword) {
-    return res.status(400).json("Please Enter All Details.");
-  }
+	const email = req.body.email;
+	const checkpassword = req.body.password;
+	// check if all details are entered
+	if (!email || !checkpassword) {
+		return res.status(400).json("Please Enter All Details.");
+	}
 
-  // check if user exists
-  try {
-    if (!(await queries.checkUserByEmail(email))) {
-      return res.status(404).json("User Does Not Exists!");
-    }
-  } catch (error) {
-    return res.status(500).json(error);
-  }
-  // check if password is correct
-  const data = await queries.getUserByEmail(email);
+	// check if user exists
+	try {
+		if (!(await queries.checkUserByEmail(email))) {
+		return res.status(404).json(false);
+		}
+	} catch (error) {
+		return res.status(500).json(error);
+	}
+	// check if password is correct
+	const data = await queries.getUserByEmail(email);
+	const checkPass = bcrypt.compareSync(checkpassword, data[0].password);
+	if (!checkPass) {
+		return res.status(400).json(false);
+	}
+	// check if the user is verified
+	if (data[0].accStatus == 1) {
+		return res.status(400).json("Account Deactivated!");
+	} else if (data[0].accStatus == 2) {
+		return res.status(400).json("Account Banned!");
+	}
+	// create a token for creating a session
+	const token = jwt.sign({ id: data[0].id }, "secretkey");
+	res
+		.cookie("accessToken", token)
+		.status(200)
+		.json({ token: token, userId: data[0].id });
+};
 
-  const checkPass = bcrypt.compareSync(checkpassword, data[0].password);
-  if (!checkPass) {
-    return res.status(400).json("Wrong Credentials!");
-  }
-  const id = data[0].id;
-  // check if the user is verified
-  if (!(await verificationQueries.checkUserVerified(id))) {
-    const OTP = otpGenerator.generate(6, {
-      lowerCaseAlphabets: false,
-      upperCaseAlphabets: false,
-      specialChars: false,
-    });
-    await verificationQueries.createToken(email, OTP, "verify");
-    await sendEmail(email, OTP, "verification"); // for verificatrion
-    return res.status(400).json("Please Verify Your Account First!");
-  }
-  // create a token for creating a session
-  const token = jwt.sign({ id: data[0].id }, "secretkey");
-  res
-    .cookie("accessToken", token)
-    .status(200)
-    .json({ token: token, userId: data[0].id });
+const sendOTP = async (req, res) => {
+	const email = req.params.email;
+	if (!email) {
+		return res.status(400).json("Email is required!");
+	}
+	try {
+		const OTP = otpGenerator.generate(6, {
+			lowerCaseAlphabets: false,
+			upperCaseAlphabets: false,
+			specialChars: false,
+		});
+		await verificationQueries.createToken(email, OTP, "verify");
+		await sendEmail(email, OTP, "verification"); // for verificatrion
+		return res.status(200).json(true);
+	}
+	catch (error) {
+		return res.status(500).json(error);
+	}
 };
 
 //Functin to regiter the user
 const registerFunc = async (req, res) => {
-  console.log("In reg func");
   const name = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
@@ -90,30 +119,12 @@ const registerFunc = async (req, res) => {
   const salt = bcrypt.genSaltSync(10);
   const hashedPass = bcrypt.hashSync(password, salt);
   console.log("Salt Gen Done");
-  // console.log("Sending Mail")
-  // subject = "OTP Verification"
-  // html = "<b>OTP is 123456</b>"
-  // const sendMail = await mailer.sendMail()
-  // if(sendMail)
-  // {
-  //     console.log("Mail Sent");
-  // }
 
   try {
     const user = await queries.insertUser(name, email, hashedPass);
-    if (user) {
-      const OTP = otpGenerator.generate(6, {
-        lowerCaseAlphabets: false,
-        upperCaseAlphabets: false,
-        specialChars: false,
-      });
-      // create verification token      
-      const result = await verificationQueries.createToken(email, OTP, "verify");
-      
-      await sendEmail(email, OTP, "verification"); // for verificatrion
-      return res
-        .status(200)
-        .json("User Registered Successfully, kindly verify your account");
+    if(user.insertId)
+    {
+      return res.status(200).json(true);
     }
   } catch (error) {
     return res.status(500).json(error);
@@ -147,67 +158,163 @@ async function verifyUser(req, res, next) {
   }
 }
 // function to update user password when logged in
-// function to update user password when logged in
-const updatePassword = async (req,res)=>{
-    const id = req.body.id
-    const oldPassword = req.body.oldPassword
-    const newPassword = req.body.newPassword
-    const confirmPassword = req.body.confirmPassword
-    if(!id){
-        return res.status(400).json("ID is required!")
+const updatePassword = async (req, res) => {
+  const id = req.body.id;
+  const oldPassword = req.body.oldPassword;
+  const newPassword = req.body.newPassword;
+  const confirmPassword = req.body.confirmPassword;
+  if (!id) {
+    return res.status(400).json("ID is required!");
+  }
+  if (!oldPassword || !newPassword || !confirmPassword) {
+    return res.status(400).json("Please Enter All Details.");
+  }
+  if (newPassword !== confirmPassword) {
+    return res.status(400).json("Passwords do not match!");
+  }
+  if (newPassword === oldPassword) {
+    return res.status(400).json("New Password cannot be same as old password!");
+  }
+  try {
+    if (!(await queries.checkUserById(id))) {
+      return res.status(404).json("User Does Not Exist!");
     }
-    // if(!oldPassword || !newPassword || !confirmPassword){
-    //     return res.status(400).json("Please Enter All Details.")
-    // }
-    // if(newPassword !== confirmPassword){
-    //     return res.status(400).json("Passwords do not match!")
-    // }
-    if(newPassword === oldPassword){
-        return res.status(400).json("New Password cannot be same as old password!")
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+  const data = await queries.getUserById(id);
+  const checkPass = bcrypt.compareSync(oldPassword, data[0].password);
+  if (!checkPass) {
+    return res.status(400).json("Wrong Credentials!");
+  }
+  const salt = bcrypt.genSaltSync(10);
+  const hashedPass = bcrypt.hashSync(newPassword, salt);
+  try {
+    const user = await queries.updatePassword(id, hashedPass);
+    if (user) {
+      return res.status(200).json("Password Updated Successfully.");
     }
-    // try{
-    //     if(!await queries.checkUserById(id))
-    //     {
-    //         return res.status(404).json("User Does Not Exist!")
-    //     }
-    // }
-    // catch(error)
-    // {
-    //     return res.status(500).json(error)
-    // }
-    const data = await queries.getUserById(id)
-    const checkPass = bcrypt.compareSync(oldPassword,data[0].password)
-    if(!checkPass)
-    {
-        return res.status(400).json({error:"Wrong Credentials!"})
-    }
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPass = bcrypt.hashSync(newPassword,salt);
-    try {
-        const user = await queries.updatePassword(id,hashedPass)
-        if(user)
-        {
-            return res.status(200).json("Password Updated")
-        }
-    } catch (error) {
-        return res.status(500).json("Server Error!")
-    }
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
 
+const updatePassByEmail = async (req, res) => {
+	const email = req.body.email;
+	const newPassword = req.body.newPassword;
+	if (!email || !newPassword) {
+		return res.status(400).json(1);
+	}
+	try {
+		if (!(await queries.checkUserByEmail(email))) {
+			return res.status(404).json(2);
+		}
+	} catch (error) {
+		return res.status(500).json(5);
+	}
+	const data = await queries.getUserByEmail(email);
+	const salt = bcrypt.genSaltSync(10);
+	const hashedPass = bcrypt.hashSync(newPassword, salt);
+	if(bcrypt.compareSync(newPassword, data[0].password))
+	{
+		return res.status(400).json(3);
+	}
+	try {
+		const user = await queries.updatePassword(data[0].id, hashedPass);
+		if (user) {
+			return res.status(200).json(0);
+		}
+	}
+	catch (error) {
+		return res.status(500).json(5);
+	}
+}
+
+//Function for forget password
+const forgotFunc = async (req, res) => {
+  const email = req.body.email;
+  if (!email) {
+    return res.status(400).json("Email is required!");
+  }
+  try {
+    if (!(await queries.checkUserByEmail(email))) {
+      return res.status(404).json("User Does Not Exist!");
+    }
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+  const OTP = otpGenerator.generate(6, {
+    lowerCaseAlphabets: false,
+    upperCaseAlphabets: false,
+    specialChars: false,
+  });
+  await verificationQueries.createToken(email, OTP, "reset");
+  await sendEmail(email, OTP, "password reset"); // for verificatrion
+  return res.status(200).json("OTP Sent!");
+};
+
+//Function for forget password
+const resetPassFunc = async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+  if (!email || !otp || !newPassword) {
+    return res.status(400).json("Please Enter All Details.");
+  }
+  try {
+    if (!(await queries.checkUserByEmail(email))) {
+      return res.status(404).json("User Does Not Exist!");
+    }
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+  // check if otp is valid
+  if (!await verificationQueries.checkOtpValid(email, otp)) {
+    return res.status(400).json("Invalid otp");
+  }
+  
+  // check if otp is expired
+  // if (!await verificationQueries.checkOtpExpired(email, otp)) {
+  //   return res.status(400).json("Otp expired");
+  // }
+  
+  const data = await queries.getUserByEmail(email)
+  const salt = bcrypt.genSaltSync(10);
+  const hashedPass = bcrypt.hashSync(newPassword, salt);
+  try {
+    const user = await queries.updatePassword(data[0].id, hashedPass);
+    if (user) {
+      return res.status(200).json("Password Updated Successfully.");
+    }
+  } catch (error) {
+    return res.status(500).json(error);
+  }  
+};
+
+const verifyOTP = async (req, res) => {
+  const { email, otp } = req.params;
+  if (!email || !otp) {
+    return res.status(400).json("Please Enter All Details.");
+  }
+  // check if otp is valid
+  if (!await verificationQueries.checkOtpValid(email, otp)) {
+    return res.status(400).json(false);
+  }
+  else
+  {
+    return res.status(200).json(true);
+  }
 }
 
 
-//Function for forget password
-const forgotFunc = async (req, res) => {};
-
-//Function for forget password
-const resetPassFunc = async (req, res) => {};
-
-// router.use("",verifyUser,)
 module.exports = {
   loginFunc,
   registerFunc,
   logoutFunc,
   forgotFunc,
+  resetPassFunc,
   updatePassword,
   getId,
+  checkUserByEmail,
+  sendOTP,
+  verifyOTP,
+  updatePassByEmail,
 };

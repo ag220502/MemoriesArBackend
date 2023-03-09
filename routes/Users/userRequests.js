@@ -3,7 +3,7 @@ const router = express.Router()
 const func = require("../../controllers/Users/userRequests.js")
 
 router.post("/sendRequest",func.sendRequest)
-router.get("/getAllRequests",func.allRequests)
+router.get("/getAllRequests/:id",func.allRequests)
 router.delete("/declineRequest",func.declineRequest)
 router.post("/acceptRequest",func.acceptRequest)
 router.delete("/unfriend",func.unfriendUser)

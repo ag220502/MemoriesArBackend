@@ -20,4 +20,20 @@ db.getAllUserFriends = (userId)=>{
 
 }
 
+db.checkIsFriend = (userId,friendId)=>{
+    return new Promise((resolve,reject)=>{
+        pool.query("SELECT * FROM `user_friends` WHERE (`userId` = ? AND `friendId` = ?) OR (`userId` = ? AND `friendId` = ?)",[userId,friendId,friendId,userId],(err,result)=>{
+            if(err)
+            {
+                return reject(err)
+            }
+            else
+            {
+                return resolve(result)
+            }
+        })
+    }
+    )
+}
+
 module.exports = db

@@ -106,13 +106,15 @@ const deletePost = async (req, res) => {
 
 const getAllUserPosts = async (req,res) => {
   const id = req.params.id;
-  console.log(id);
   if (!id) {
     return res.status(404).json("Invalid user ID");
   }
   try {
     const result = await findAllPostsByUserId(id);
+    console.log(result)
     return res.status(200).json(result);
+
+
   } catch (error) {
     return res.status(400).json(error);
   }

@@ -16,9 +16,11 @@ db.addUserRequests = (userId,receiveId)=>
     })
 }
 
+
+
 db.allRequestsById = (userId)=>{
     return new Promise((resolve,reject)=>{
-        pool.query("SELECT * FROM `user_requests` WHERE receiveId=? AND requestStatus=2 ORDER BY sendDate DESC;",userId,(err,result)=>{
+        pool.query("SELECT ur.userId,u.firstName,u.lastName,u.profilePhoto FROM `user_requests` ur INNER JOIN users u ON u.id=ur.userId WHERE receiveId=? AND requestStatus=2 ORDER BY sendDate DESC;",userId,(err,result)=>{
             if(err)
             {
                 return reject(err)
