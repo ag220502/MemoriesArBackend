@@ -149,6 +149,15 @@ const getAllReportedPosts = async (req, res) => {
   }
 };
 
+const getAllDislikedPosts = async (req, res) => {
+  try {
+    const result = await queries.getAllDislikedPosts();
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
 module.exports = {
   createPost,
   editPost,
@@ -157,4 +166,5 @@ module.exports = {
   getPostImage,
   getAllPostDetails,
   getAllReportedPosts,
+  getAllDislikedPosts,
 };

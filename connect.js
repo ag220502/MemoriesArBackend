@@ -16,7 +16,7 @@ module.exports = db
 
 //     host:"localhost",
 //     user: "root",
-//     database: "memoriesar",
+//     database: "memories_ar",
 // })
 
 // module.exports = db
