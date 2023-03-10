@@ -223,6 +223,21 @@ db.getPostImageById = (postId) => {
     });
   });
 };
-    
+
+db.getPostDetails= () => {
+  return new Promise((resolve, reject) => {
+    const findPostQuery = `SELECT users.email, users.id AS userId, user_posts.*, user_post_photos.*
+    FROM users
+    INNER JOIN user_posts ON users.id = user_posts.userId
+    LEFT JOIN user_post_photos ON user_posts.id = user_post_photos.postId;`
+    pool.query(findPostQuery, (err, result) => {
+      if (err) {
+        return reject(err);
+      } else {
+        return resolve(result);
+      }
+    });
+  });
+};
 
 module.exports = db;
