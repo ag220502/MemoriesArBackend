@@ -26,6 +26,8 @@ const likePost = require("./routes/Posts/likePost.js")                   // DD -
 const dislikePost = require("./routes/Posts/dislikePost.js")             // DD - dislike and undislike posts
 const tagUser = require("./routes/Posts/tagPost")                       // DD - tag and untag users
 const map = require("./routes/Posts/mapScreen.js")
+
+const userPlatform = require("./routes/Users/user_platform.js")        //DC - user places
 // verify account
 const verifyAccount = require("./routes/Users/otpVerification")
 
@@ -81,6 +83,9 @@ app.use("/api/recentSearches",require("./routes/Users/recentSearches.js"));
 
 //scrapbooks
 app.use("/api/scrapbooks",require("./routes/Scrapbooks/userScrapbook.js"));
+
+//user platform
+app.use("/api/userPlatform",userPlatform);
 
 //Telling app to listen to specific port
 app.listen(process.env.PORT || 3000 ,()=>{
