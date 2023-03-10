@@ -120,4 +120,18 @@ const getAllUserPosts = async (req,res) => {
   }
 };
 
-module.exports = { createPost, editPost, deletePost , getAllUserPosts};
+const getPostImage = async (req, res) => {
+  const postId = req.params.id;
+  if (!postId) {
+    return res.status(404).json("Invalid post ID");
+  }
+  try {
+  
+    const result = await queries.getPostImageById(postId);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
+module.exports = { createPost, editPost, deletePost , getAllUserPosts, getPostImage};

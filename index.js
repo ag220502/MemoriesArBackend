@@ -66,8 +66,8 @@ app.use("/api/map",map)
 app.use("/api/verify",verifyAccount)
 
 // posts
-app.use("/api/comment", postComment)            // DD - add, delete comments
 app.use("/api/posts", userPost)                 // DD - create, delete, edit post
+app.use("/api/comment", postComment)            // DD - add, delete comments
 app.use("/api/likes", likePost)                 // DD - like and unlike posts
 app.use("/api/dislikes", dislikePost)           // DD - dislike and undislike posts
 app.use("/api/tagUser", tagUser)                // DD - tag and untag users
@@ -76,12 +76,11 @@ app.use("/api/tagUser", tagUser)                // DD - tag and untag users
 app.use("/api/groups", groupRoutes);
 app.use("/api/groupMember", groupMemberRoutes);
 
-app.get("/", () => {
-    return res.status(200).json("Hello world")
-})
 //recent searches
 app.use("/api/recentSearches",require("./routes/Users/recentSearches.js"));
 
+//scrapbooks
+app.use("/api/scrapbooks",require("./routes/Scrapbooks/userScrapbook.js"));
 
 //Telling app to listen to specific port
 app.listen(process.env.PORT || 3000 ,()=>{

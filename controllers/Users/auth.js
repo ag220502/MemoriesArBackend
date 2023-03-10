@@ -199,6 +199,37 @@ const updatePassword = async (req, res) => {
   }
 };
 
+const updatePassByEmail = async (req, res) => {
+	const email = req.body.email;
+	const newPassword = req.body.newPassword;
+	if (!email || !newPassword) {
+		return res.status(400).json(1);
+	}
+	try {
+		if (!(await queries.checkUserByEmail(email))) {
+			return res.status(404).json(2);
+		}
+	} catch (error) {
+		return res.status(500).json(5);
+	}
+	const data = await queries.getUserByEmail(email);
+	const salt = bcrypt.genSaltSync(10);
+	const hashedPass = bcrypt.hashSync(newPassword, salt);
+	if(bcrypt.compareSync(newPassword, data[0].password))
+	{
+		return res.status(400).json(3);
+	}
+	try {
+		const user = await queries.updatePassword(data[0].id, hashedPass);
+		if (user) {
+			return res.status(200).json(0);
+		}
+	}
+	catch (error) {
+		return res.status(500).json(5);
+	}
+}
+
 //Function for forget password
 const forgotFunc = async (req, res) => {
   const email = req.body.email;
@@ -284,5 +315,6 @@ module.exports = {
   getId,
   checkUserByEmail,
   sendOTP,
-  verifyOTP
+  verifyOTP,
+  updatePassByEmail,
 };
