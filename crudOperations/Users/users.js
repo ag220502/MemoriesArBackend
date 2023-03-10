@@ -106,7 +106,7 @@ db.updatePassword = (id, password) => {
 
 db.allReportedUsers = () => {
   return new Promise((resolve, reject) => {
-    const reportQuery  = `SELECT users.id AS userId, users.email, COUNT(report_account.reportUserId) AS reports_count, report_account.status 
+    const reportQuery  = `SELECT users.id AS userId, users.email,users.firstName, users.lastName, COUNT(report_account.reportUserId) AS reports_count, report_account.status 
     FROM users
     INNER JOIN report_account ON users.id = report_account.reportUserId
     GROUP BY users.id, users.email;
