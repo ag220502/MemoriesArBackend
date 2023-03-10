@@ -5,6 +5,6 @@ const func = require("../../controllers/Users/recentSearches.js")
 
 router.post("/createSearch",func.createSearch)
 router.patch("/deleteSearch",func.deleteSearch)
-router.get("/userRecentSearches",func.userRecentSearches)
+router.get("/userRecentSearches/:id",func.userRecentSearches)
 
 module.exports = router

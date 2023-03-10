@@ -38,7 +38,7 @@ const deleteSearch = async (req,res)=>{
 }
 
 const userRecentSearches = async (req,res)=>{
-    const userId = req.body.userId
+    const userId = req.params.id
 
     if(!userId)
     {
