@@ -210,5 +210,19 @@ db.findImageById = (postId) => {
   });
 };
 
+db.getPostImageById = (postId) => {
+  return new Promise((resolve, reject) => {
+    const findPostQuery =
+      "SELECT * FROM `user_post_photos` WHERE `postId`=?";
+    pool.query(findPostQuery, [postId], (err, result) => {
+      if (err) {
+        return reject(err);
+      } else {
+        return resolve(result);
+      }
+    });
+  });
+};
+    
 
 module.exports = db;
