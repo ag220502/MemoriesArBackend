@@ -242,7 +242,8 @@ db.getAllReportedPosts = () => {
     const findPostQuery = `SELECT users.id AS userId, users.email, report_posts.postId , COUNT(report_posts.postId) AS reports_count, user_post_photos.*
     FROM users
     INNER JOIN report_posts ON users.id = report_posts.userId
-    LEFT JOIN user_post_photos ON report_posts.postId = user_post_photos.postId;`;
+    LEFT JOIN user_post_photos ON report_posts.postId = user_post_photos.postId
+    GROUP BY report_posts.postId;`;
 
     pool.query(findPostQuery, (err, result) => {
       if (err) {
@@ -253,5 +254,23 @@ db.getAllReportedPosts = () => {
     });
   });
 };
+
+db.getAllDislikedPosts = () => {
+  return new Promise((resolve, reject) => {
+    const findPostQuery = `SELECT users.id AS userId, users.email, post_dislikes.postId , COUNT(post_dislikes.postId) AS dislikes_count, user_post_photos.*
+    FROM users
+    INNER JOIN post_dislikes ON users.id = post_dislikes.userId
+    LEFT JOIN user_post_photos ON post_dislikes.postId = user_post_photos.postId
+    GROUP BY post_dislikes.postId;`;
+    pool.query(findPostQuery, (err, result) => {
+      if (err) {
+        return reject(err);
+      } else {
+        return resolve(result);
+      }
+    });
+  });
+};
+
 
 module.exports = db;
