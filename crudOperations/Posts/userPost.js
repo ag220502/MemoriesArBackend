@@ -11,7 +11,7 @@ db.createPost = (userId, caption, lattitude, longitude, flag) => {
       [userId, caption, lattitude, longitude, flag],
       (err, result) => {
         if (err) {
-          return reject({message: "Error creating a post. ", error:err});
+          return reject({ message: "Error creating a post. ", error: err });
         } else {
           return resolve(result);
         }
@@ -22,8 +22,7 @@ db.createPost = (userId, caption, lattitude, longitude, flag) => {
 
 db.findPostById = (postId) => {
   return new Promise((resolve, reject) => {
-    const findPostQuery =
-      "SELECT * FROM `user_posts` WHERE `id`=?";
+    const findPostQuery = "SELECT * FROM `user_posts` WHERE `id`=?";
     pool.query(findPostQuery, [postId], (err, result) => {
       if (err) {
         return reject(err);
@@ -38,8 +37,7 @@ db.findPostById = (postId) => {
 
 db.findUserById = (userId) => {
   return new Promise((resolve, reject) => {
-    const findPostQuery =
-      "SELECT * FROM `users` WHERE `id`=?";
+    const findPostQuery = "SELECT * FROM `users` WHERE `id`=?";
     pool.query(findPostQuery, [userId], (err, result) => {
       if (err) {
         return reject(err);
@@ -53,7 +51,7 @@ db.findUserById = (userId) => {
 };
 
 db.findAllPostsByUserId = (userId) => {
-  console.log(userId)
+  console.log(userId);
   return new Promise((resolve, reject) => {
     const findPostQuery =
       "SELECT up.id AS postId, upp.photo FROM `user_posts` up INNER JOIN user_post_photos upp ON up.id=upp.postId WHERE `userId`=?";
@@ -68,7 +66,6 @@ db.findAllPostsByUserId = (userId) => {
     });
   });
 };
-
 
 db.findPostByIdAndUserId = (postId, userId) => {
   return new Promise((resolve, reject) => {
@@ -88,13 +85,17 @@ db.findPostByIdAndUserId = (postId, userId) => {
 
 db.editPost = (userId, postId, editPostQuery, fields) => {
   return new Promise((resolve, reject) => {
-    pool.query(editPostQuery, fields.concat([userId, postId]), (err, result) => {
-      if (err) {
-        return reject(err);
-      } else {
-        return resolve(result);
+    pool.query(
+      editPostQuery,
+      fields.concat([userId, postId]),
+      (err, result) => {
+        if (err) {
+          return reject(err);
+        } else {
+          return resolve(result);
+        }
       }
-    });
+    );
   });
 };
 
@@ -137,7 +138,6 @@ db.deleteAllPostLikesById = (postId) => {
   });
 };
 
-
 db.deleteAllPostDisikesById = (postId) => {
   return new Promise((resolve, reject) => {
     const deleteCommentsQuery = "DELETE FROM `post_dislikes` WHERE `postId`=?";
@@ -168,8 +168,7 @@ db.deletePostsFromSavedById = (postId) => {
 
 db.checkIdImageExists = (postId) => {
   return new Promise((resolve, reject) => {
-    const findPostQuery =
-      "SELECT * FROM `user_post_photos` WHERE `postId`=?";
+    const findPostQuery = "SELECT * FROM `user_post_photos` WHERE `postId`=?";
     pool.query(findPostQuery, [postId], (err, result) => {
       if (err) {
         return reject(err);
@@ -180,7 +179,7 @@ db.checkIdImageExists = (postId) => {
       }
     });
   });
-}
+};
 
 db.uploadImage = (postId, photo) => {
   return new Promise((resolve, reject) => {
@@ -198,22 +197,7 @@ db.uploadImage = (postId, photo) => {
 
 db.findImageById = (postId) => {
   return new Promise((resolve, reject) => {
-    const findPostQuery =
-      "SELECT * FROM `user_post_photos` WHERE `postId`=?";
-    pool.query(findPostQuery, [postId], (err, result) => {
-      if (err) {
-        return reject(err);
-      } else {
-        return resolve(result);
-      } 
-    });
-  });
-};
-
-db.getPostImageById = (postId) => {
-  return new Promise((resolve, reject) => {
-    const findPostQuery =
-      "SELECT * FROM `user_post_photos` WHERE `postId`=?";
+    const findPostQuery = "SELECT * FROM `user_post_photos` WHERE `postId`=?";
     pool.query(findPostQuery, [postId], (err, result) => {
       if (err) {
         return reject(err);
@@ -224,12 +208,42 @@ db.getPostImageById = (postId) => {
   });
 };
 
-db.getPostDetails= () => {
+db.getPostImageById = (postId) => {
+  return new Promise((resolve, reject) => {
+    const findPostQuery = "SELECT * FROM `user_post_photos` WHERE `postId`=?";
+    pool.query(findPostQuery, [postId], (err, result) => {
+      if (err) {
+        return reject(err);
+      } else {
+        return resolve(result);
+      }
+    });
+  });
+};
+
+db.getPostDetails = () => {
   return new Promise((resolve, reject) => {
     const findPostQuery = `SELECT users.email, users.id AS userId, user_posts.*, user_post_photos.*
     FROM users
     INNER JOIN user_posts ON users.id = user_posts.userId
-    LEFT JOIN user_post_photos ON user_posts.id = user_post_photos.postId;`
+    LEFT JOIN user_post_photos ON user_posts.id = user_post_photos.postId;`;
+    pool.query(findPostQuery, (err, result) => {
+      if (err) {
+        return reject(err);
+      } else {
+        return resolve(result);
+      }
+    });
+  });
+};
+
+db.getAllReportedPosts = () => {
+  return new Promise((resolve, reject) => {
+    const findPostQuery = `SELECT users.id AS userId, users.email, report_posts.postId , COUNT(report_posts.postId) AS reports_count, user_post_photos.*
+    FROM users
+    INNER JOIN report_posts ON users.id = report_posts.userId
+    LEFT JOIN user_post_photos ON report_posts.postId = user_post_photos.postId;`;
+
     pool.query(findPostQuery, (err, result) => {
       if (err) {
         return reject(err);

@@ -1,7 +1,7 @@
 const db = require("../../connect.js");
 const { findAllPostsByUserId } = require("../../crudOperations/Posts/userPost");
 const queries = require("../../crudOperations/Posts/userPost");
-const { createPost } = require('../../functions/index')
+const { createPost } = require("../../functions/index");
 // const createPost = async (req, res) => {
 //   const { userId, image, lattitude, longitude } = req.body;
 //   let { caption } = req.body;
@@ -104,17 +104,15 @@ const deletePost = async (req, res) => {
   }
 };
 
-const getAllUserPosts = async (req,res) => {
+const getAllUserPosts = async (req, res) => {
   const id = req.params.id;
   if (!id) {
     return res.status(404).json("Invalid user ID");
   }
   try {
     const result = await findAllPostsByUserId(id);
-    console.log(result)
+    console.log(result);
     return res.status(200).json(result);
-
-
   } catch (error) {
     return res.status(400).json(error);
   }
@@ -126,7 +124,6 @@ const getPostImage = async (req, res) => {
     return res.status(404).json("Invalid post ID");
   }
   try {
-  
     const result = await queries.getPostImageById(postId);
     return res.status(200).json(result);
   } catch (error) {
@@ -135,7 +132,6 @@ const getPostImage = async (req, res) => {
 };
 
 const getAllPostDetails = async (req, res) => {
-
   try {
     const result = await queries.getPostDetails();
     return res.status(200).json(result);
@@ -144,5 +140,21 @@ const getAllPostDetails = async (req, res) => {
   }
 };
 
+const getAllReportedPosts = async (req, res) => {
+  try {
+    const result = await queries.getAllReportedPosts();
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
 
-module.exports = { createPost, editPost, deletePost , getAllUserPosts, getPostImage, getAllPostDetails  };
+module.exports = {
+  createPost,
+  editPost,
+  deletePost,
+  getAllUserPosts,
+  getPostImage,
+  getAllPostDetails,
+  getAllReportedPosts,
+};

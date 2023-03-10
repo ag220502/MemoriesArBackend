@@ -10,6 +10,17 @@ const allUsers = async (req, res) => {
   }
 };
 
+const allReportedUsers = async (req, res) => {
+  try {
+    const data = await queries.allReportedUsers();
+    return res.send(data);
+  } catch (err) {
+    return res.status(400).json(err);
+  }
+};
+
+
 module.exports = {
   allUsers,
+  allReportedUsers, 
 };
