@@ -115,10 +115,9 @@ const registerFunc = async (req, res) => {
   } catch (error) {
     return res.status(500).json(error);
   }
-  console.log("Salt Gen");
   const salt = bcrypt.genSaltSync(10);
   const hashedPass = bcrypt.hashSync(password, salt);
-  console.log("Salt Gen Done");
+
 
   try {
     const user = await queries.insertUser(name, email, hashedPass);
