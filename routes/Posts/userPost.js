@@ -8,6 +8,7 @@ const {
   getPostImage,
   getAllPostDetails,
   getAllReportedPosts,
+  getAllDislikedPosts,
 } = require("../../controllers/Posts/userPost");
 
 router.post("/create", createPost);
@@ -17,6 +18,7 @@ router.get("/getAllPosts/:id", getAllUserPosts);
 router.get("/getPostlink/:id", getPostImage);
 router.get("/getAllPostDetails", getAllPostDetails);
 router.get("/getAllReportedPosts", getAllReportedPosts);
+router.get("/getAllDislikedPosts", getAllDislikedPosts);
 
 module.exports = router;
 
