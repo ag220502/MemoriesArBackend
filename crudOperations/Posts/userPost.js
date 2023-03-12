@@ -240,9 +240,10 @@ db.getPostDetails = () => {
 
 db.getAllReportedPosts = () => {
   return new Promise((resolve, reject) => {
-    const findPostQuery = `SELECT users.id AS userId, users.firstName, users.lastName, users.email, report_posts.postId , COUNT(report_posts.postId) AS reports_count, user_post_photos.photo AS image
+    const findPostQuery = `SELECT users.id AS userId, users.firstName, users.lastName, users.email, user_posts.uploadTime, report_posts.postId , COUNT(report_posts.postId) AS reports_count, user_post_photos.photo AS image
     FROM users
     INNER JOIN report_posts ON users.id = report_posts.userId
+    INNER JOIN user_posts ON user_posts.id = report_posts.postId
     LEFT JOIN user_post_photos ON report_posts.postId = user_post_photos.postId
     GROUP BY report_posts.postId;`;
 
@@ -258,9 +259,10 @@ db.getAllReportedPosts = () => {
 
 db.getAllDislikedPosts = () => {
   return new Promise((resolve, reject) => {
-    const findPostQuery = `SELECT users.id AS userId, users.firstName, users.lastName, users.email, post_dislikes.postId , COUNT(post_dislikes.postId) AS dislikes_count, user_post_photos.photo AS image
+    const findPostQuery = `SELECT users.id AS userId, users.firstName, users.lastName, users.email, user_posts.uploadTime, post_dislikes.postId , COUNT(post_dislikes.postId) AS dislikes_count, user_post_photos.photo AS image
     FROM users
     INNER JOIN post_dislikes ON users.id = post_dislikes.userId
+    INNER JOIN user_posts ON user_posts.id = post_dislikes.postId 
     LEFT JOIN user_post_photos ON post_dislikes.postId = user_post_photos.postId
     GROUP BY post_dislikes.postId;`;
     pool.query(findPostQuery, (err, result) => {
