@@ -10,5 +10,7 @@ router.get('/numberOfReportedPosts', func.numberOfReportedPosts);
 router.get('/numberOfUserFriends', func.numberOfUserFriends);
 router.get('/numberOfUserPosts', func.numberOfUserPosts);
 router.get('/getStats', func.getStats);
+router.get('/totalNumberOfFriends', func.totalNumberOfFriends);
+router.get('/totalNumberOfPosts', func.totalNumberOfPosts);
 
 module.exports = router;

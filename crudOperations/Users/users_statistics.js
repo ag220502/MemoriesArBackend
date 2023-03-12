@@ -161,36 +161,73 @@ db.getActiveUsersByDate = (startDate, endDate) => {
 };
 
 db.getDeactivatedUsersByDate = (startDate, endDate) => {
-    return new Promise((resolve, reject) => {
-        if (!startDate || !endDate) {
-            return reject("No date provided");
-        } else {
-            pool.query("SELECT COUNT(*) as deactivatedUsersByDate FROM `users` WHERE `accStatus` = 1 AND `statusTime` BETWEEN ? AND ?", [startDate, endDate], (err, data) => {
-                if (err) {
-                    return reject(err);
-                } else {
-                    return resolve(data);
-                }
-            });
+  return new Promise((resolve, reject) => {
+    if (!startDate || !endDate) {
+      return reject("No date provided");
+    } else {
+      pool.query(
+        "SELECT COUNT(*) as deactivatedUsersByDate FROM `users` WHERE `accStatus` = 1 AND `statusTime` BETWEEN ? AND ?",
+        [startDate, endDate],
+        (err, data) => {
+          if (err) {
+            return reject(err);
+          } else {
+            return resolve(data);
+          }
         }
-    });
+      );
+    }
+  });
 };
 
 db.getBannedUsersByDate = (startDate, endDate) => {
-    return new Promise((resolve, reject) => {
-        if (!startDate || !endDate) {
-            return reject("No date provided");
-        } else {
-            pool.query("SELECT COUNT(*) as bannedUsersByDate FROM `users` WHERE `accStatus` = 2 AND `statusTime` BETWEEN ? AND ?", [startDate, endDate], (err, data) => {
-                if (err) {
-                    return reject(err);
-                } else {
-                    return resolve(data);
-                }
-            });
+  return new Promise((resolve, reject) => {
+    if (!startDate || !endDate) {
+      return reject("No date provided");
+    } else {
+      pool.query(
+        "SELECT COUNT(*) as bannedUsersByDate FROM `users` WHERE `accStatus` = 2 AND `statusTime` BETWEEN ? AND ?",
+        [startDate, endDate],
+        (err, data) => {
+          if (err) {
+            return reject(err);
+          } else {
+            return resolve(data);
+          }
         }
-    });
+      );
+    }
+  });
 };
 
+db.totalNumberOfPosts = () => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      "SELECT COUNT(*) as numOfPosts FROM `user_posts`",
+      (err, data) => {
+        if (err) {
+          return reject(err);
+        } else {
+          return resolve(data);
+        }
+      }
+    );
+  });
+};
+
+db.totalNumberOfFriends = () => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      "SELECT COUNT(*) as numOfFriends FROM `user_friends`",
+      (err, data) => {
+        if (err) {
+          return reject(err);
+        } else {
+          return resolve(data);
+        }
+      }
+    );
+  });
+};
 
 module.exports = db;
