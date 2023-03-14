@@ -275,5 +275,19 @@ db.getAllDislikedPosts = () => {
   });
 };
 
+db.getPostById = (id) => {
+  return new Promise((resolve, reject) => {
+    const findPostQuery = `SELECT user_posts.*, user_post_photos.photo AS image FROM user_posts 
+    INNER JOIN user_post_photos ON user_posts.id = user_post_photos.postId WHERE user_posts.id = ?`;
+    pool.query(findPostQuery, [id], (err, result) => {
+      if (err) {
+        return reject(err);
+      } else {
+        return resolve(result);
+      }
+    });
+  });
+};
+
 
 module.exports = db;
