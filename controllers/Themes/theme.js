@@ -21,7 +21,6 @@ const addThemes = async (req, res) => {
     return res.status(500).json(error);
   }
 };
-addThemes
 const getThemes = async (req, res) => {
   try {
     const data = await queries.getThemes();

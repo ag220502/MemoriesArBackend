@@ -55,4 +55,21 @@ const deleteComment = async (req, res) => {
   }
 };
 
-module.exports = { postComment, deleteComment };
+const getAllComments = async (req, res) => {
+  const { id } = req.params;
+  if (!id) return res.status(400).json("Missing fields");
+  try {
+    const result = await queries.getAllComments(id);
+    if (result.length > 0) {
+      return res.status(200).json(result);
+    } else {
+      return res.status(404).json("No comments found");
+    }
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
+
+
+module.exports = { postComment, deleteComment,getAllComments };
