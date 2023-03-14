@@ -3,9 +3,11 @@ const router = express.Router();
 const {
   postComment,
   deleteComment,
-} = require("../../controllers/Posts/commentPost.js")
+  getPostComments
+} = require("../../controllers/Posts/commentPost.js");
 
 router.post("/post", postComment);
 router.delete("/delete", deleteComment);
+router.get("/getPostComments", getPostComments)
 
 module.exports = router;
