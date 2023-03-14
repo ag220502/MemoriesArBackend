@@ -55,4 +55,18 @@ const deleteComment = async (req, res) => {
   }
 };
 
-module.exports = { postComment, deleteComment };
+const getPostComments = async (req,res) => {
+  const {postId} = req.params
+  if (!postId) {
+    return res.status(400).json("Invalid PostId");
+  }
+  try {
+    const result = await queries.getPostComments(postId)
+    return res.status(200).json(result)
+  } catch (error) {
+    return res.status(500).json(error)
+  }
+
+}
+
+module.exports = { postComment, deleteComment, getPostComments };

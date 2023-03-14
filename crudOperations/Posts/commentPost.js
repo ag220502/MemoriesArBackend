@@ -75,4 +75,17 @@ db.deleteCommentById = (commentId) => {
   });
 };
 
+db.getPostComments = (postId) => {
+  return new Promise((resolve, reject) => {
+    const getCommentsQuery = "SELECT * FROM `post_comment`  WHERE `postId` = ?"
+    pool.query(getCommentsQuery, [postId], (err, result) =>{
+      if (err) {
+        return reject(err)
+      } else {
+        return resolve(result)
+      }
+    })
+  })
+}
+
 module.exports = db;
