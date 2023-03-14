@@ -2,6 +2,10 @@ const db = require("../../connect.js");
 const { findAllPostsByUserId } = require("../../crudOperations/Posts/userPost");
 const queries = require("../../crudOperations/Posts/userPost");
 const { createPost } = require("../../functions/index");
+const likeQueries = require("../../crudOperations/Posts/likePost.js");
+const dislikeQueries = require("../../crudOperations/Posts/dislikePost.js");
+const savedQueries = require("../../crudOperations/Posts/savePost.js");
+
 // const createPost = async (req, res) => {
 //   const { userId, image, lattitude, longitude } = req.body;
 //   let { caption } = req.body;
@@ -171,6 +175,46 @@ const getPostById = async (req, res) => {
   }
 };
 
+const checkLiked = async (req, res) => {
+  const { userId, postId } = req.params;
+  if (!userId || !postId) {
+    return res.status(404).json("Invalid user/post ID");
+  }
+  try {
+    const result = await likeQueries.findLikeByUserIdAndPostId(userId, postId);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
+const checkDisliked = async (req, res) => {
+  const { userId, postId } = req.params;
+  if (!userId || !postId) {
+    return res.status(404).json("Invalid user/post ID");
+  }
+  try {
+    const result = await dislikeQueries.findDislikeByUserIdAndPostId(userId, postId);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
+const checkSaved = async (req, res) => {
+  const { userId, postId } = req.params;
+  if (!userId || !postId) {
+    return res.status(404).json("Invalid user/post ID");
+  }
+  try {
+    const result = await savedQueries.findSavedPostByUserIdAndPostId(userId, postId);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
+
 module.exports = {
   createPost,
   editPost,
@@ -180,5 +224,8 @@ module.exports = {
   getAllPostDetails,
   getAllReportedPosts,
   getAllDislikedPosts,
-  getPostById
+  getPostById,
+  checkLiked,
+  checkDisliked,
+  checkSaved,
 };
