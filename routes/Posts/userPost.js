@@ -9,11 +9,13 @@ const {
   getAllPostDetails,
   getAllReportedPosts,
   getAllDislikedPosts,
+  getPostById
 } = require("../../controllers/Posts/userPost");
 
 router.post("/create", createPost);
 router.patch("/edit", editPost);
 router.delete("/delete", deletePost);
+router.get("/getPostById/:id", getPostById)
 router.get("/getAllPosts/:id", getAllUserPosts);
 router.get("/getPostlink/:id", getPostImage);
 router.get("/getAllPostDetails", getAllPostDetails);
@@ -21,5 +23,3 @@ router.get("/getAllReportedPosts", getAllReportedPosts);
 router.get("/getAllDislikedPosts", getAllDislikedPosts);
 
 module.exports = router;
-
-//changes made
