@@ -3,9 +3,11 @@ const pool = require("../../connect.js");
 const db = {};
 
 
-db.addThemes = (query) => {
+db.addThemes = (array) => {
     return new Promise((resolve, reject) => {
-        pool.query(query, (err, result) => {
+        const themeQuery =
+      `INSERT INTO account_themes (darkClr, textDarkClr, lightClr, textLightClr, midClr, textMidClr) VALUES (?,?,?,?,?,?);`; 
+        pool.query(themeQuery, array, (err, result) => {
             if (err) {
                 return reject(err);
             }
