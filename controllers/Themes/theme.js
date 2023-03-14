@@ -2,25 +2,17 @@ const queries = require("../../crudOperations/Themes/theme.js");
 
 const addThemes = async (req, res) => {
   try {
-    const themeQuery =
-      `INSERT INTO account_themes (themeId, darkClr, textDarkClr, lightClr, textLightClr, midClr, textMidClr) VALUES` +
-      `(1, '#7D1538', '#FFFFFF', '#D3F3EE', '#000000', '#902214', '#FFFFFF'),` +
-      `(2, '#407899', '#FFFFFF', '#FFFFF2', '#000000', '#41D3BD', '#000000'),` +
-      `(3, '#BDC4A7', '#000000', '#F3F9D2', '#000000', '#92B4A7', '#000000'),` +
-      `(4, '#274C77', '#FFFFFF', '#A3CEF1', '#000000', '#6096BA', '#FFFFFF'),` +
-      `(5, '#335C67', '#FFFFFF', '#FFF3B0', '#000000', '#E09F3E', '#000000'),` +
-      `(6, '#A30000', '#FFFFFF', '#FFBA08', '#000000', '#136F63', '#FFFFFF'),` +
-      `(7, '#C4B7CB', '#000000', '#BFEDEF', '#000000', '#BBC7CE', '#000000'),` +
-      `(8, '#0F0326', '#FFFFFF', '#F5F7DC', '#000000', '#E65F5C', '#FFFFFF'),` +
-      `(9, '#BB0A21', '#FFFFFF', '#FFF9FB', '#000000', '#4B88A2', '#FFFFFF');`;
-    await queries.addThemes(themeQuery);
-
+    const { darkClr, textDarkClr, lightClr, textLightClr, midClr, textMidClr } =
+      req.body;
+    const array = [darkClr, textDarkClr, lightClr, textLightClr, midClr, textMidClr,];
+    await queries.addThemes(array);
     return res.status(200).json("Themes Added Successfully");
   } catch (error) {
-      console.log(error);
+    console.log(error);
     return res.status(500).json(error);
   }
 };
+
 const getThemes = async (req, res) => {
   try {
     const data = await queries.getThemes();
@@ -30,7 +22,120 @@ const getThemes = async (req, res) => {
   }
 };
 
+const editTheme = async (req, res) => {
+  try {
+    const {
+      themeId,
+      darkClr,
+      textDarkClr,
+      lightClr,
+      textLightClr,
+      midClr,
+      textMidClr,
+    } = req.body;
+    if (!themeId) {
+      return res.status(400).json("No themeId provided");
+    }
+    if (
+      !darkClr &&
+      !textDarkClr &&
+      !lightClr &&
+      !textLightClr &&
+      !midClr &&
+      !textMidClr
+    ) {
+      return res.status(400).json("No queries to be edited");
+    }
+    let editThemeQuery = "UPDATE `account_themes` SET ";
+    let bool = false;
+    let fields = [];
+    if (darkClr) {
+      editThemeQuery += "`darkClr` = ?";
+      bool = true;
+      fields.push(darkClr);
+    }
+    if (textDarkClr) {
+      if (bool) {
+        editThemeQuery += ", ";
+      }
+      editThemeQuery += "`textDarkClr` = ?";
+      bool = true;
+      fields.push(textDarkClr);
+    }
+    if (lightClr) {
+      if (bool) {
+        editThemeQuery += ", ";
+      }
+      editThemeQuery += "`lightClr` = ?";
+      bool = true;
+      fields.push(lightClr);
+    }
+    if (textLightClr) {
+      if (bool) {
+        editThemeQuery += ", ";
+      }
+      editThemeQuery += "`textLightClr` = ?";
+      bool = true;
+      fields.push(textLightClr);
+    }
+    if (midClr) {
+      if (bool) {
+        editThemeQuery += ", ";
+      }
+      editThemeQuery += "`midClr` = ?";
+      bool = true;
+      fields.push(midClr);
+    }
+    if (textMidClr) {
+      if (bool) {
+        editThemeQuery += ", ";
+      }
+      editThemeQuery += "`textMidClr` = ?";
+      fields.push(textMidClr);
+    }
+    editThemeQuery += " WHERE `themeId` = " + themeId;
+    const result = await queries.editTheme(editThemeQuery, fields);
+    return res.status(200).json("Theme updated successfully.");
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+const deleteTheme = async (req, res) => {
+  try {
+    const { themeId } = req.body;
+    await queries.deleteTheme(themeId);
+    return res.status(200).json("Theme deleted successfully.");
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+const selectUserTheme = async (req, res) => {
+  try {
+    const { userId, themeId } = req.body;
+    if (!userId) {
+      return res.status(400).json("No userId provided");
+    }
+    if (!themeId) {
+      return res.status(400).json("No themeId provided");
+    }
+    const userTheme = await queries.findUserTheme(userId);
+    if (userTheme.length === 0) {
+      await queries.createUserTheme(themeId, userId);
+      return res.status(200).json("Theme added successfully.");
+    }
+    await queries.changeUserTheme(themeId, userId);
+    return res.status(200).json("Theme changed successfully.");
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
 module.exports = {
   addThemes,
   getThemes,
+  editTheme,
+  deleteTheme,
+  selectUserTheme,
 };
