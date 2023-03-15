@@ -81,11 +81,11 @@ db.changeUserTheme = (themeId, userId) => {
   });
 };
 
-db.createUserTheme = (themeId, userId) => {
+db.createUserTheme = (userId) => {
   return new Promise((resolve, reject) => {
     pool.query(
-      "INSERT INTO `user_account_details` (`userId`, `themeId`) VALUES (?, ?)",
-      [userId, themeId],
+      "INSERT INTO `user_account_details` (`userId`, `themeId`) VALUES (?, 10)",
+      [userId],
       (err, result) => {
         if (err) {
           return reject(err);

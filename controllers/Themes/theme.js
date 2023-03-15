@@ -120,11 +120,6 @@ const selectUserTheme = async (req, res) => {
     if (!themeId) {
       return res.status(400).json("No themeId provided");
     }
-    const userTheme = await queries.findUserTheme(userId);
-    if (userTheme.length === 0) {
-      await queries.createUserTheme(themeId, userId);
-      return res.status(200).json("Theme added successfully.");
-    }
     await queries.changeUserTheme(themeId, userId);
     return res.status(200).json("Theme changed successfully.");
   } catch (error) {
