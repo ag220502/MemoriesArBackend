@@ -9,6 +9,5 @@ const {
 router.get("/allComments/:id", getAllComments);
 router.post("/post", postComment);
 router.delete("/delete", deleteComment);
-router.get("/getPostComments", getPostComments)
 
 module.exports = router;
