@@ -82,7 +82,7 @@ app.use("/api/groupMember", groupMemberRoutes);
 app.use("/api/recentSearches",require("./routes/Users/recentSearches.js"));
 
 //scrapbooks
-app.use("/api/scrapbooks",require("./routes/Scrapbooks/userScrapbook.js"));
+app.use("/api/scrapbooks",require("./routes/Scrapbooks/scrapbookRoutes.js"));
 
 //user platform
 app.use("/api/userPlatform",userPlatform);
