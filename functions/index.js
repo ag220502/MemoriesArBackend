@@ -1,6 +1,7 @@
 // import user post queries
 const queries = require("../crudOperations/Posts/userPost");
 const profileQueries = require("../crudOperations/Users/Profile/ProfilePage");
+const tagQueries = require("../crudOperations/Posts/tagPost");
 
 const functions = require("firebase-functions");
 const { Storage } = require("@google-cloud/storage");
@@ -84,7 +85,7 @@ const createPost = async (req, res) => {
           "?alt=media&token=" +
           "1";
       }
-      console.log("Firebase: Image uploaded.")
+      // console.log("Firebase: Image uploaded.")
 
       // console.log(files, fields)
       // object to send to database
@@ -98,14 +99,23 @@ const createPost = async (req, res) => {
             fields.caption,
             fields.lattitude,
             fields.longitude,
-            fields.flag ? fields.flag : 0
+            fields.flag ? fields.flag : 0,
             );
-            console.log("SQL: Post created.")
+          //   console.log("SQL: Post created.")
             await queries.uploadImage(result.insertId, imageUrl);
-            console.log("SQL: Image uploaded.")
+          //   console.log("SQL: Image uploaded.")
+            if (fields.tag) {
+              let tag = fields.tag.slice(1, fields.tag.length -1).split(",");
+              if (tag.length > 0) {
+                for (let i = 0; i < tag.length; i++) {
+                  await tagQueries.tagUser(result.insertId, tag[i]);
+                  // console.log("SQL: User " + tag[i] + " tagged.")
+                }
+              }
+            }
           return res.status(200).json({message:"Post was created successfully.", url:imageUrl});
         } catch (error) {
-          return res.status(400).json(error);
+          return res.status(400).json({error : error.message});
         }
       }
     });
