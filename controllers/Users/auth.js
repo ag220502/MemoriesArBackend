@@ -1,5 +1,8 @@
 const queries = require("../../crudOperations/Users/users");
 const verificationQueries = require("../../crudOperations/Users/otpVerification");
+// theme queries
+const themeQueries = require("../../crudOperations/Themes/theme.js");
+
 const bcrypt = require("bcrypt-nodejs");
 const jwt = require("jsonwebtoken");
 const otpGenerator = require("otp-generator");
@@ -7,12 +10,6 @@ const otpGenerator = require("otp-generator");
 
 //importing sendgrid mailer
 const sendEmail = require("../../utils/sendEmail.js");
-
-// call this function to send email
-/**
-  await sendEmail(user.name, otp, "verification"); // for verificatrion
-  await sendEmail(user.name, otp, "password reset"); // for password reset
- * */
 
 const getId = (req, res) => {
   const token = req.body.token;
@@ -117,13 +114,12 @@ const registerFunc = async (req, res) => {
   }
   const salt = bcrypt.genSaltSync(10);
   const hashedPass = bcrypt.hashSync(password, salt);
-
-
   try {
     const user = await queries.insertUser(name, email, hashedPass);
-    if(user.insertId)
+    if(user)
     {
-      return res.status(200).json(true);
+      await themeQueries.createUserTheme(user);
+      return res.status(200).json("User Registered Successfully!");
     }
   } catch (error) {
     return res.status(500).json(error);
