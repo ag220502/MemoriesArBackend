@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const template = require('../../controllers/Scrapbooks/TemplateController.js');
 const category = require('../../controllers/Scrapbooks/categoryController.js');
+const scrapbook = require('../../controllers/Scrapbooks/ScrapbooksController.js');
 
 //template routes
 router.post('/createTemplate', template.createTemplate);
@@ -15,5 +16,9 @@ router.get('/getCategory/:categoryId', category.getCategory);
 router.get('/getAllCategories', category.getAllCategories);
 router.patch('/updateCategory/:categoryId', category.updateCategory);
 router.delete('/deleteCategory/:categoryId', category.deleteCategory);
+
+//scrapbook routes
+router.post('/createScrapbook/:userId', scrapbook.createScrapbook);
+router.patch('/updateScrapbook/:scrapId', scrapbook.updateScrapbook);
 
 module.exports = router;

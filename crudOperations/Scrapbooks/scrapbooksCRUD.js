@@ -4,24 +4,32 @@ const db = {};
 
 db.createScrapbook = async (userId, name, caption, lattitude, longitude, uploadTime, contentType, coverPic, templateId) => {
     return new Promise((resolve, reject) => {
-        if(!userId || !name || !uploadTime || !contentType || !templateId || !coverPic) {
-            return reject("userId, name, uploadTime, contentType, templateId, coverPic are required");
-        }
-        if( lattitude && longitude ) {
-            pool.query("INSERT INTO `scrapbooks` (`userId`, `name`, `caption`, `lattitude`, `longitude`, `uploadTime`, `contentType`, `coverPic`, `templateId`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [userId, name, caption, lattitude, longitude, uploadTime, contentType, coverPic, templateId], (err, result) => {
-                if (err) {
-                    return reject(err);
+        pool.query("SELECT * FROM `scrapbooks` WHERE `name` = ? AND `userId` = ?", [name, userId], (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            else if(result.length) {
+                return reject("Scrapbook with this name already exists");
+            }
+            else{
+                if( lattitude && longitude ) {
+                    pool.query("INSERT INTO `scrapbooks` (`userId`, `name`, `caption`, `lattitude`, `longitude`, `uploadTime`, `contentType`, `coverPic`, `templateId`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [userId, name, caption, lattitude, longitude, uploadTime, contentType, coverPic, templateId], (err, result) => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        return resolve(result);
+                    });
+                } else {
+                    pool.query("INSERT INTO `scrapbooks` (`userId`, `name`, `caption`, `uploadTime`, `contentType`, `coverPic`, `templateId`) VALUES (?, ?, ?, ?, ?, ?, ?)", [userId, name, caption, uploadTime, contentType, coverPic, templateId], (err, result) => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        return resolve(result);
+                    });
                 }
-                return resolve(result);
-            });
-        } else {
-            pool.query("INSERT INTO `scrapbooks` (`userId`, `name`, `caption`, `uploadTime`, `contentType`, `coverPic`, `templateId`) VALUES (?, ?, ?, ?, ?, ?, ?)", [userId, name, caption, uploadTime, contentType, coverPic, templateId], (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-                return resolve(result);
-            });
-        }
+            }
+        });
+        
     });
 };
 
