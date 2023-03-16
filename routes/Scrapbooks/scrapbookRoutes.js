@@ -2,6 +2,7 @@ const router = require('express').Router();
 const template = require('../../controllers/Scrapbooks/TemplateController.js');
 const category = require('../../controllers/Scrapbooks/categoryController.js');
 const scrapbook = require('../../controllers/Scrapbooks/ScrapbooksController.js');
+const image = require('../../controllers/Scrapbooks/images.js');
 
 //template routes
 router.post('/createTemplate', template.createTemplate);
@@ -24,5 +25,13 @@ router.get('/getScrapbookById/:scrapId', scrapbook.getScrapbook);
 router.get('/getAllScrapbooks/:userId', scrapbook.getAllUserScrapbooks);
 router.delete('/deleteScrapbook/:scrapId', scrapbook.deleteScrapbook);
 router.delete('/deleteAllScrapbooks/:userId', scrapbook.deleteAllUserScrapbooks);
+
+//image routes
+router.post('/addImage', image.addImage);
+router.get('/getImage/:pictureId', image.getImage);
+router.get('/getAllScrapImages/:scrapId', image.getImageByScrapId);
+router.patch('/updateImage/:pictureId', image.updateImage);
+router.delete('/deleteImage/:pictureId', image.deleteImage);
+router.delete('/deleteAllScrapImages/:scrapId', image.deleteAllScrapImages);
 
 module.exports = router;
