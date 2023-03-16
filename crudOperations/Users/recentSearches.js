@@ -45,7 +45,7 @@ db.deleteSearch = (userId,searchedUserId) => {
 
 db.userRecentSearches = (userId) => {
     return new Promise((resolve,reject)=>{
-        pool.query("SELECT searchedUserId,statusTime FROM `recent_searches` WHERE `userId` = ? AND `searchStatus` != 1 ORDER BY `statusTime` DESC ",[userId],(err,data)=>{
+        pool.query("SELECT rs.searchedUserId,u.firstName,u.profilePhoto,rs.statusTime FROM `recent_searches` rs INNER JOIN users u ON u.id=rs.userId WHERE rs.`userId` = ? AND `searchStatus` != 1 ORDER BY rs.statusTime DESC ",[userId],(err,data)=>{
             if(err)
             {
                 return reject(err)
@@ -59,4 +59,19 @@ db.userRecentSearches = (userId) => {
     })
 }
 
+db.suggestedUsers = (userId) => {
+    return new Promise((resolve,reject)=>{
+        pool.query("SELECT u.id,u.firstName,u.profilePhoto FROM users u WHERE u.id NOT IN (SELECT rs.searchedUserId FROM `recent_searches` rs WHERE rs.`userId` = ? AND `searchStatus` != 1) AND u.id != ? ORDER BY RAND() LIMIT 30",[userId,userId],(err,data)=>{
+            if(err)
+            {
+                return reject(err)
+            }
+            else if(data.length==0)
+            {
+                return reject("No Suggested Users")
+            }
+            return resolve(data)
+        })
+    })
+}
 module.exports = db
