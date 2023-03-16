@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const {
-  createPost,
   editPost,
   deletePost,
   getAllUserPosts,
@@ -14,6 +13,7 @@ const {
   checkDisliked,
   checkSaved,
 } = require("../../controllers/Posts/userPost");
+const {createPost} = require("../../functions/index.js")
 
 router.post("/create", createPost);
 router.patch("/edit", editPost);
