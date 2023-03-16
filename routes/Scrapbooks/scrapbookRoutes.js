@@ -20,5 +20,9 @@ router.delete('/deleteCategory/:categoryId', category.deleteCategory);
 //scrapbook routes
 router.post('/createScrapbook/:userId', scrapbook.createScrapbook);
 router.patch('/updateScrapbook/:scrapId', scrapbook.updateScrapbook);
+router.get('/getScrapbookById/:scrapId', scrapbook.getScrapbook);
+router.get('/getAllScrapbooks/:userId', scrapbook.getAllUserScrapbooks);
+router.delete('/deleteScrapbook/:scrapId', scrapbook.deleteScrapbook);
+router.delete('/deleteAllScrapbooks/:userId', scrapbook.deleteAllUserScrapbooks);
 
 module.exports = router;
