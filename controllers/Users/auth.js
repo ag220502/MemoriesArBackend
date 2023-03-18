@@ -9,7 +9,7 @@ const otpGenerator = require("otp-generator");
 // const mailer = require("../sendMail.js")
 
 //importing sendgrid mailer
-const sendEmail = require("../../utils/sendEmail.js");
+const sendEmail = require("../../utils/mail/sendEmail.js");
 
 const getId = (req, res) => {
   const token = req.body.token;
