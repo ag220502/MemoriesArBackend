@@ -4,11 +4,21 @@ const db = {};
 
 db.createTemplate = async (templateName, templateDescription, categoryId) => {
     return new Promise((resolve, reject) => {
-        pool.query("INSERT INTO `scrapbook_templates` (`templateName`, `templateDescription`, `categoryId`) VALUES (?, ?, ?)", [templateName, templateDescription, categoryId], (err, result) => {
+        pool.query("SELECT * FROM `scrapbook_templates` WHERE templateName=?", [templateName], (err, result) => {
             if (err) {
                 return reject(err);
             }
-            return resolve(result);
+            if (result.length > 0) {
+                return reject("Template already exists");
+            }
+            else{
+                pool.query("INSERT INTO `scrapbook_templates` (`templateName`, `templateDescription`, `categoryId`) VALUES (?, ?, ?)", [templateName, templateDescription, categoryId], (err, result) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    return resolve(result);
+                });
+            }
         });
     });
 };

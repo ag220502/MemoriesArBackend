@@ -3,11 +3,11 @@ const router = express.Router();
 const {
   postComment,
   deleteComment,
-  getPostComments
-} = require("../../controllers/Posts/commentPost.js");
+  getAllComments
+} = require("../../controllers/Posts/commentPost.js")
 
+router.get("/allComments/:id", getAllComments);
 router.post("/post", postComment);
 router.delete("/delete", deleteComment);
-router.get("/getPostComments", getPostComments)
 
 module.exports = router;
