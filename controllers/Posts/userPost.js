@@ -7,8 +7,10 @@ const dislikeQueries = require("../../crudOperations/Posts/dislikePost.js");
 const savedQueries = require("../../crudOperations/Posts/savePost.js");
 
 const createPost = async (req, res) => {
+  console.log("Hello In Func")
   const { userId, caption, lattitude, longitude, flag, postImage, tag } =
     req.body;
+  console.log(req.body);
   console.log(postImage);
   // if (!userId || !caption || !lattitude || !longitude) {
   //   res.status(404).json("Empty fields");
