@@ -15,19 +15,21 @@ const createPost = async (req, res) => {
   postImage = Buffer.from(postImage, "base64");
 
   // Write the image file to disk
-  fs.writeFile("image.jpg", postImage, (err) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error writing image file");
-    } else {
-      console.log("Image file saved successfully");
-      res.send("Image uploaded successfully");
-    }
-  });
-
+  // fs.writeFile("image.jpg", postImage, (err) => {
+  //   if (err) {
+  //     console.error(err);
+  //     res.status(500).send("Error writing image file");
+  //   } else {
+  //     console.log("Image file saved successfully");
+  //     // res.status(400).json("Image uploaded successfully");
+  //   }
+  // });
+  console.log("Image done");
   let imageUrl;
   try {
+    console.log("hello")
     imageUrl = await uploadImage(postImage, "posts");
+    console.log(imageUrl);
   } catch (error) {
     return res.status(400).json(error.message);
   }
@@ -42,6 +44,7 @@ const createPost = async (req, res) => {
         longitude,
         flag ? flag : 0
       );
+      console.log(result)
       if (tag) {
         let tagCopy = tag.slice(1, tag.length - 1).split(",");
         if (tagCopy.length > 0) {
@@ -52,6 +55,7 @@ const createPost = async (req, res) => {
         }
       }
       await queries.uploadImage(result.insertId, imageUrl);
+      console.log("Successfull")
       return res.status(200).json("Post was created successfully.");
     } catch (error) {
       return res.status(400).json(error);

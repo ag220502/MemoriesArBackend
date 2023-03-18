@@ -126,6 +126,7 @@ const updatePFP = async (req, res) => {
 };
 
 const uploadImage = async (profileImage, folderName) => {
+  console.log("Hello In uploadImage")
   try {
     // create a unique id for the image
     let uuid = UUID();
@@ -135,10 +136,11 @@ const uploadImage = async (profileImage, folderName) => {
       "https://firebasestorage.googleapis.com/v0/b/memoriesar-f08a7.appspot.com/o/";
 
     if (!profileImage) {
+      console.log("No image found")
       throw new Error("No image found");
     }
     // rename the image
-    profileImage.name = uuid + profileImage.name;
+    const name = uuid;
 
     // url of the uploaded image
     let imageUrl;
@@ -150,17 +152,26 @@ const uploadImage = async (profileImage, folderName) => {
     if (profileImage.size == 0) {
       throw new Error("No image found");
     } else {
+      
       // upload image to bucket
-      const imageResponse = await bucket.upload(profileImage.path, {
-        destination: `${folderName}/${profileImage.name}`,
-        resumable: true,
-        metadata: {
+      try
+      {
+        const imageResponse = await bucket.upload(profileImage, {
+          destination: `${folderName}/${name}`,
+          resumable: true,
           metadata: {
-            firebaseStorageDownloadTokens: uuid,
+            metadata: {
+              firebaseStorageDownloadTokens: uuid,
+            },
           },
-        },
-      });
-
+        });
+      }
+      catch(err)
+      {
+        console.log(err)
+      }
+      
+      console.log("Image name is ")
       // get the image url
       imageUrl =
         downLoadPath +
@@ -168,6 +179,7 @@ const uploadImage = async (profileImage, folderName) => {
         "?alt=media&token=" +
         "1";
     }
+    console.log("Url is "+imageUrl)
     return imageUrl;
   } catch (error) {
     throw new Error(error.message);
