@@ -30,6 +30,7 @@ const storage = new Storage({
 
 // we can move this to the router now
 const createPost = async (req, res) => {
+  console.log("Function")
   const form = new formidable.IncomingForm({ multiples: true });
 
   try {
@@ -46,7 +47,7 @@ const createPost = async (req, res) => {
         return res.status(400).json(error.message);
       }
 
-      // console.log(files, fields)
+      console.log(files, fields)
       // object to send to database
       if (
         !fields.userId ||

@@ -39,9 +39,12 @@ const groupMemberRoutes = require("./routes/Groups/groupMember.js");    // DD - 
 
 
 //Using all the thrid party functions
-app.use(express.json())
+// app.use(express.json())
 app.use(cors())
 app.use(cookieParser())
+app.use(express.json({limit: '100mb'}));
+
+app.use(express.urlencoded({limit: '100mb'}));
 
 //Using all the routes
 // app.use("/",(req,res)=>{
@@ -82,7 +85,8 @@ app.use("/api/groupMember", groupMemberRoutes);
 app.use("/api/recentSearches",require("./routes/Users/recentSearches.js"));
 
 //scrapbooks
-app.use("/api/scrapbooks",require("./routes/Scrapbooks/userScrapbook.js"));
+app.use("/api/scrapbooks",require("./routes/Scrapbooks/scrapbookRoutes.js"));
+app.use("/api/scrapUtils",require("./routes/Scrapbooks/scrapUtils.js"));
 
 //user platform
 app.use("/api/userPlatform",userPlatform);

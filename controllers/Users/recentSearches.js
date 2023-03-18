@@ -52,5 +52,19 @@ const userRecentSearches = async (req,res)=>{
     }
 }
 
+const suggestedUsers= async (req,res)=>{
+    const userId = req.params.id
 
-module.exports = {createSearch,deleteSearch,userRecentSearches}
+    if(!userId)
+    {
+        return res.status(404).json("Incomplete Details")
+    }
+    try {
+        const result = await queries.suggestedUsers(userId);
+        return res.status(200).json(result)
+    } catch (error) {
+        return res.status(404).json(error)
+    }
+}
+
+module.exports = {createSearch,deleteSearch,userRecentSearches,suggestedUsers}

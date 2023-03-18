@@ -75,17 +75,19 @@ db.deleteCommentById = (commentId) => {
   });
 };
 
-db.getPostComments = (postId) => {
+db.getAllComments = (postId) => {
   return new Promise((resolve, reject) => {
-    const getCommentsQuery = "SELECT * FROM `post_comment`  WHERE `postId` = ?"
-    pool.query(getCommentsQuery, [postId], (err, result) =>{
+    const getAllCommentsQuery =
+      "SELECT pc.commentId,pc.comment,u.firstName,u.lastName,u.id,u.profilePhoto FROM `post_comment` pc LEFT JOIN users u ON pc.userId=u.id WHERE postId=? ORDER BY pc.commentTime DESC";
+    pool.query(getAllCommentsQuery, [postId], (err, result) => {
       if (err) {
-        return reject(err)
+        return reject(err);
       } else {
-        return resolve(result)
+        return resolve(result);
       }
-    })
-  })
-}
+    });
+  });
+};
+
 
 module.exports = db;
