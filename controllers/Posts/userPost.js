@@ -5,28 +5,58 @@ const { uploadImage } = require("../../functions/index");
 const likeQueries = require("../../crudOperations/Posts/likePost.js");
 const dislikeQueries = require("../../crudOperations/Posts/dislikePost.js");
 const savedQueries = require("../../crudOperations/Posts/savePost.js");
-
+const tagQueries = require("../../crudOperations/Posts/tagPost");
+const fs = require("fs");
 const createPost = async (req, res) => {
-  const { userId, caption, lattitude, longitude, flag, postImage, tag } =
-    req.body;
-  console.log(postImage);
-  // if (!userId || !caption || !lattitude || !longitude) {
-  //   res.status(404).json("Empty fields");
-  // }
-  // add image to the table
-  // else {
-  //   try {
-  //     const result = await queries.createPost(
-  //       userId,
-  //       caption,
-  //       lattitude,
-  //       longitude
-  //     );
-  //     return res.status(200).json("Post was created successfully.");
-  //   } catch (error) {
-  //     return res.status(400).json(error);
-  //   }
-  // }
+  const { userId, caption, lattitude, longitude, flag, tag } = req.body;
+  let { postImage } = req.body;
+
+  // Decode the base64-encoded image string
+  postImage = Buffer.from(postImage, "base64");
+
+  // Write the image file to disk
+  fs.writeFile("image.jpg", postImage, (err) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Error writing image file");
+    } else {
+      console.log("Image file saved successfully");
+      res.send("Image uploaded successfully");
+    }
+  });
+
+  let imageUrl;
+  try {
+    imageUrl = await uploadImage(postImage, "posts");
+  } catch (error) {
+    return res.status(400).json(error.message);
+  }
+  if (!userId || !caption || !lattitude || !longitude) {
+    res.status(404).json("Empty fields");
+  } else {
+    try {
+      const result = await queries.createPost(
+        userId,
+        caption,
+        lattitude,
+        longitude,
+        flag ? flag : 0
+      );
+      if (tag) {
+        let tagCopy = tag.slice(1, tag.length - 1).split(",");
+        if (tagCopy.length > 0) {
+          for (let i = 0; i < tagCopy.length; i++) {
+            await tagQueries.tagUser(result.insertId, tagCopy[i]);
+            // console.log("SQL: User " + tag[i] + " tagged.")
+          }
+        }
+      }
+      await queries.uploadImage(result.insertId, imageUrl);
+      return res.status(200).json("Post was created successfully.");
+    } catch (error) {
+      return res.status(400).json(error);
+    }
+  }
 };
 
 const editPost = async (req, res) => {
