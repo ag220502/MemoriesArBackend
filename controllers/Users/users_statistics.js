@@ -168,34 +168,34 @@ const getStats = async (req, res) => {
   );
   const stats = {
     today: {
-      activeUsers: todayActiveUsers,
-      deactivatedUsers: todayDeactivatedUsers,
-      bannedUsers: todayBannedUsers,
+      activeUsers: todayActiveUsers[0].activeUsersByDate,
+      deactivatedUsers: todayDeactivatedUsers[0].deactivatedUsersByDate,
+      bannedUsers: todayBannedUsers[0].bannedUsersByDate,
     },
     yesterday: {
-      activeUsers: yesterdayActiveUsers,
-      deactivatedUsers: yesterdayDeactivatedUsers,
-      bannedUsers: yesterdayBannedUsers,
+      activeUsers: yesterdayActiveUsers[0].activeUsersByDate,
+      deactivatedUsers: yesterdayDeactivatedUsers[0].deactivatedUsersByDate,
+      bannedUsers: yesterdayBannedUsers[0].bannedUsersByDate,
     },
     thisMonth: {
-      activeUsers: thisMonthActiveUsers,
-      deactivatedUsers: thisMonthDeactivatedUsers,
-      bannedUsers: thisMonthBannedUsers,
+      activeUsers: thisMonthActiveUsers[0].activeUsersByDate,
+      deactivatedUsers: thisMonthDeactivatedUsers[0].deactivatedUsersByDate,
+      bannedUsers: thisMonthBannedUsers[0].bannedUsersByDate,
     },
     lastMonth: {
-      activeUsers: lastMonthActiveUsers,
-      deactivatedUsers: lastMonthDeactivatedUsers,
-      bannedUsers: lastMonthBannedUsers,
+      activeUsers: lastMonthActiveUsers[0].activeUsersByDate,
+      deactivatedUsers: lastMonthDeactivatedUsers[0].deactivatedUsersByDate,
+      bannedUsers: lastMonthBannedUsers[0].bannedUsersByDate,
     },
     thisYear: {
-      activeUsers: thisYearActiveUsers,
-      deactivatedUsers: thisYearDeactivatedUsers,
-      bannedUsers: thisYearBannedUsers,
+      activeUsers: thisYearActiveUsers[0].activeUsersByDate,
+      deactivatedUsers: thisYearDeactivatedUsers[0].deactivatedUsersByDate,
+      bannedUsers: thisYearBannedUsers[0].bannedUsersByDate,
     },
     lastYear: {
-      activeUsers: lastYearActiveUsers,
-      deactivatedUsers: lastYearDeactivatedUsers,
-      bannedUsers: lastYearBannedUsers,
+      activeUsers: lastYearActiveUsers[0].activeUsersByDate,
+      deactivatedUsers: lastYearDeactivatedUsers[0].deactivatedUsersByDate,
+      bannedUsers: lastYearBannedUsers[0].bannedUsersByDate,
     },
   };
   return res.status(200).json(stats);
