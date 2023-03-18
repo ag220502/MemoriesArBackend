@@ -36,6 +36,7 @@ const app = express()
 // import group routes
 const groupRoutes = require("./routes/Groups/group.js");                // DD - create, edit, delete group
 const groupMemberRoutes = require("./routes/Groups/groupMember.js");    // DD - add, remove, make admin, remove admin
+const sendEmail = require("./utils/mail/sendEmail.js");
 
 
 //Using all the thrid party functions
@@ -93,6 +94,8 @@ app.use("/api/userPlatform",userPlatform);
 
 //themes
 app.use("/api/themes",require("./routes/Themes/theme.js"));
+
+sendEmail("ddavey1602@gmail.com", "315634","reset")
 
 //Telling app to listen to specific port
 app.listen(process.env.PORT || 3000 ,()=>{
