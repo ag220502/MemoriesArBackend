@@ -168,5 +168,18 @@ db.deleteAllUserScrapbooks = async (userId) => {
     });
 };
 
+db.checkScrapbookExists = async (scrapId) => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT * FROM `scrapbooks` WHERE `scrapId`=?", [scrapId], (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            if(result.length) {
+                return resolve(true);
+            }
+            return resolve(false);
+        });
+    });
+};
 
 module.exports = db;

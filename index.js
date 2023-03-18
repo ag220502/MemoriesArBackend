@@ -83,6 +83,7 @@ app.use("/api/recentSearches",require("./routes/Users/recentSearches.js"));
 
 //scrapbooks
 app.use("/api/scrapbooks",require("./routes/Scrapbooks/scrapbookRoutes.js"));
+app.use("/api/scrapUtils",require("./routes/Scrapbooks/scrapUtils.js"));
 
 //user platform
 app.use("/api/userPlatform",userPlatform);
