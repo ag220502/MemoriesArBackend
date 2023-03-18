@@ -33,6 +33,7 @@ const storage = new Storage({
 // const bucket = storage.bucket("gs://memoriesar-f08a7.appspot.com");
 
 const createPost = async (req, res) => {
+  console.log("Function")
   const form = new formidable.IncomingForm({ multiples: true });
 
   try {
@@ -85,9 +86,9 @@ const createPost = async (req, res) => {
           "?alt=media&token=" +
           "1";
       }
-      // console.log("Firebase: Image uploaded.")
+      console.log("Firebase: Image uploaded.")
 
-      // console.log(files, fields)
+      console.log(files, fields)
       // object to send to database
       if (!fields.userId || !fields.caption || !fields.lattitude || !fields.longitude) {
         return res.status(404).json("Empty fields");
@@ -101,15 +102,15 @@ const createPost = async (req, res) => {
             fields.longitude,
             fields.flag ? fields.flag : 0,
             );
-          //   console.log("SQL: Post created.")
+            console.log("SQL: Post created.")
             await queries.uploadImage(result.insertId, imageUrl);
-          //   console.log("SQL: Image uploaded.")
+            console.log("SQL: Image uploaded.")
             if (fields.tag) {
               let tag = fields.tag.slice(1, fields.tag.length -1).split(",");
               if (tag.length > 0) {
                 for (let i = 0; i < tag.length; i++) {
                   await tagQueries.tagUser(result.insertId, tag[i]);
-                  // console.log("SQL: User " + tag[i] + " tagged.")
+                  console.log("SQL: User " + tag[i] + " tagged.")
                 }
               }
             }

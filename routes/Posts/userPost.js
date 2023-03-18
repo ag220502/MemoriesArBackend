@@ -13,7 +13,8 @@ const {
   checkLiked,
   checkDisliked,
   checkSaved,
-} = require("../../controllers/Posts/userPost");
+} = require("../../controllers/Posts/userPost.js");
+// const {createPost} = require("../../functions/index.js")
 
 router.post("/create", createPost);
 router.patch("/edit", editPost);

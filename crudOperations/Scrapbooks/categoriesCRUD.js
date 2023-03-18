@@ -4,24 +4,29 @@ const db = {};
 
 db.createCategory = async (categoryName) => {
     return new Promise((resolve, reject) => {
-        if(!categoryName) {
-            return reject("categoryName is required");
-        }
-        pool.query("INSERT INTO `categories` (`categoryName`) VALUES (?)", [categoryName], (err, result) => {
+        pool.query("SELECT * FROM `scrapbook_categories` WHERE `categoryName`=?", [categoryName], (err, result) => {
             if (err) {
                 return reject(err);
             }
-            return resolve(result);
+            if(result.length > 0) {
+                return reject("Category already exists");
+            }
+            else{
+                pool.query("INSERT INTO `scrapbook_categories` (`categoryName`) VALUES (?)", [categoryName], (err, result) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    return resolve(result);
+                });
+            }
         });
+        
     });
 };
 
 db.getCategory = async (categoryId) => {
     return new Promise((resolve, reject) => {
-        if(!categoryId) {
-            return reject("categoryId is required");
-        }
-        pool.query("SELECT categoryName FROM `categories` WHERE `categoryId`=?", [categoryId], (err, result) => {
+        pool.query("SELECT categoryName FROM `scrapbook_categories` WHERE `categoryId`=?", [categoryId], (err, result) => {
             if (err) {
                 return reject(err);
             }
@@ -30,12 +35,9 @@ db.getCategory = async (categoryId) => {
     });
 };
 
-db.getCategoryId = async (categoryName) => {
+db.getAllCategories = async () => {
     return new Promise((resolve, reject) => {
-        if(!categoryName) {
-            return reject("categoryName is required");
-        }
-        pool.query("SELECT categoryId FROM `categories` WHERE `categoryName`=?", [categoryName], (err, result) => {
+        pool.query("SELECT * FROM `scrapbook_categories`", (err, result) => {
             if (err) {
                 return reject(err);
             }
@@ -46,10 +48,7 @@ db.getCategoryId = async (categoryName) => {
 
 db.updateCategory = async (categoryName, categoryId) => {
     return new Promise((resolve, reject) => {
-        if(!categoryName || !categoryId) {
-            return reject("categoryName and categoryId are required");
-        }
-        pool.query("UPDATE `categories` SET `categoryName`=? WHERE `categoryId`=?", [categoryName, categoryId], (err, result) => {
+        pool.query("UPDATE `scrapbook_categories` SET `categoryName`=? WHERE `categoryId`=?", [categoryName, categoryId], (err, result) => {
             if (err) {
                 return reject(err);
             }
@@ -63,7 +62,7 @@ db.deleteCategory = async (categoryId) => {
         if(!categoryId) {
             return reject("categoryId is required");
         }
-        pool.query("DELETE FROM `categories` WHERE `categoryId`=?", [categoryId], (err, result) => {
+        pool.query("DELETE FROM `scrapbook_categories` WHERE `categoryId`=?", [categoryId], (err, result) => {
             if (err) {
                 return reject(err);
             }
