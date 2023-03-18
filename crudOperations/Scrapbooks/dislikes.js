@@ -2,17 +2,17 @@ const pool = require("../../connect.js");
 
 const db = {};
 
-db.addLike = (scrapId, userId, time) => {
+db.addDislike = (scrapId, userId, time) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT * FROM `scrapbook_likes` WHERE scrapId = ? AND userId = ?", [scrapId, userId], (err, results) => {
+        pool.query("SELECT * FROM `scrapbook_dislikes` WHERE scrapId = ? AND userId = ?", [scrapId, userId], (err, results) => {
             if (err) {
                 return reject(err.message);
             }
             else if (results.length > 0) {
-                return reject("Scrapbook already liked by user");
+                return reject("Scrapbook already disliked by user");
             }
             else{
-                pool.query("INSERT INTO `scrapbook_likes` (scrapId, userId, time) VALUES (?, ?, ?)", [scrapId, userId, time], (err, results) => {
+                pool.query("INSERT INTO `scrapbook_dislikes` (scrapId, userId, time) VALUES (?, ?, ?)", [scrapId, userId, time], (err, results) => {
                     if (err) {
                         return reject(err.message);
                     }
@@ -23,37 +23,37 @@ db.addLike = (scrapId, userId, time) => {
     });
 };
 
-db.getAllScrapLikes = (scrapId) => {
+db.getAllScrapDislikes = (scrapId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT userId, time FROM `scrapbook_likes` WHERE scrapId = ?", [scrapId], (err, results) => {
+        pool.query("SELECT userId, time FROM `scrapbook_dislikes` WHERE scrapId = ?", [scrapId], (err, results) => {
             if (err) {
                 return reject(err.message);
             }
             if(results.length == 0){
-                return reject("No likes found");
+                return reject("No dislikes found");
             }
             return resolve(results);
         });
     });
 };
 
-db.getAllUserLikes = (userId) => {
+db.getAllUserDislikes = (userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT scrapId, time FROM `scrapbook_likes` WHERE userId = ? ORDER BY `time` ASC", [userId], (err, results) => {
+        pool.query("SELECT scrapId, time FROM `scrapbook_dislikes` WHERE userId = ? ORDER BY `time` ASC", [userId], (err, results) => {
             if (err) {
                 return reject(err.message);
             }
             if(results.length == 0){
-                return reject("No likes found");
+                return reject("No dislikes found");
             }
             return resolve(results);
         });
     });
 };
 
-db.unLike = (scrapId, userId) => {
+db.unDislike = (scrapId, userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("DELETE FROM `scrapbook_likes` WHERE scrapId = ? AND userId = ?", [scrapId, userId], (err, results) => {
+        pool.query("DELETE FROM `scrapbook_dislikes` WHERE scrapId = ? AND userId = ?", [scrapId, userId], (err, results) => {
             if (err) {
                 return reject(err.message);
             }
@@ -62,16 +62,16 @@ db.unLike = (scrapId, userId) => {
     });
 };
 
-db.checkLike = (scrapId, userId) => {
+db.checkDislike = (scrapId, userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT * FROM `scrapbook_likes` WHERE scrapId = ? AND userId = ?", [scrapId, userId], (err, results) => {
+        pool.query("SELECT * FROM `scrapbook_dislikes` WHERE scrapId = ? AND userId = ?", [scrapId, userId], (err, results) => {
             if (err) {
                 return reject(err.message);
             }
-            if(results.length == 0){
+            else if(results.length == 0){
                 return resolve(false);
             }
-            return resolve(true);
+            else return resolve(true);
         });
     });
 };

@@ -1,16 +1,16 @@
-const queries = require("../../crudOperations/Scrapbooks/likes.js");
-const disQueries = require("../../crudOperations/Scrapbooks/dislikes.js");
+const queries = require("../../crudOperations/Scrapbooks/dislikes.js");
+const likeQueries = require("../../crudOperations/Scrapbooks/likes.js");
 
-const addLike = async (req, res) => {
+const addDislike = async (req, res) => {
     try {
         const { scrapId, userId, time } = req.body;
-        if(disQueries.checkDislike(scrapId, userId)){
-            disQueries.unDislike(scrapId, userId);
+        if(likeQueries.checkLike(scrapId, userId)){
+            likeQueries.unLike(scrapId, userId);
         }
-        const result = await queries.addLike(scrapId, userId, time);
+        const result = await queries.addDislike(scrapId, userId, time);
         res.status(200).json({
             status: "success",
-            message: "Like added",
+            message: "Dislike added",
             body: {
                 like: result
             }
@@ -18,7 +18,7 @@ const addLike = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             status: "error",
-            message: "Error adding like",
+            message: "Error adding dislike",
             body: {
                 error: error
             }
@@ -26,13 +26,13 @@ const addLike = async (req, res) => {
     }
 };
 
-const getAllScrapLikes = async (req, res) => {
+const getAllScrapDislikes = async (req, res) => {
     try {
         const { scrapId } = req.body;
-        const result = await queries.getAllScrapLikes(scrapId);
+        const result = await queries.getAllScrapDislikes(scrapId);
         res.status(200).json({
             status: "success",
-            message: "Scrapbook Likes fetched",
+            message: "Scrapbook Dislikes fetched",
             body: {
                 likes: result
             }
@@ -40,7 +40,7 @@ const getAllScrapLikes = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             status: "error",
-            message: "Error fetching likes",
+            message: "Error fetching dislikes",
             body: {
                 error: error
             }
@@ -48,13 +48,13 @@ const getAllScrapLikes = async (req, res) => {
     }
 };
 
-const getAllUserLikes = async (req, res) => {
+const getAllUserDislikes = async (req, res) => {
     try {
         const { userId } = req.body;
-        const result = await queries.getAllUserLikes(userId);
+        const result = await queries.getAllUserDislikes(userId);
         res.status(200).json({
             status: "success",
-            message: "User Likes fetched",
+            message: "User Dislikes fetched",
             body: {
                 likes: result
             }
@@ -62,7 +62,7 @@ const getAllUserLikes = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             status: "error",
-            message: "Error fetching likes",
+            message: "Error fetching dislikes",
             body: {
                 error: error
             }
@@ -70,23 +70,23 @@ const getAllUserLikes = async (req, res) => {
     }
 };
 
-const unLike = async (req, res) => {
+const unDislike = async (req, res) => {
     try {
         const { scrapId, userId } = req.body;
-        if((queries.checkLike(scrapId, userId))){
+        if((queries.checkDislike(scrapId, userId))){
             return res.status(500).json({
                 status: "error",
-                message: "Error removing like",
+                message: "Error removing dislike",
                 body: {
-                    error: "User has not liked this scrapbook"
+                    error: "User has not disliked this scrapbook"
                 }
             });
         }
         else{
-            const result = await queries.unLike(scrapId, userId);
+            const result = await queries.unDislike(scrapId, userId);
             res.status(200).json({
                 status: "success",
-                message: "Like removed",
+                message: "Dislike removed",
                 body: {
                     like: result
                 }
@@ -95,7 +95,7 @@ const unLike = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             status: "error",
-            message: "Error removing like",
+            message: "Error removing dislike",
             body: {
                 error: error
             }
@@ -103,4 +103,4 @@ const unLike = async (req, res) => {
     }
 };
 
-module.exports = {addLike, getAllScrapLikes, getAllUserLikes, unLike}
+module.exports = {addDislike, getAllScrapDislikes, getAllUserDislikes, unDislike}
