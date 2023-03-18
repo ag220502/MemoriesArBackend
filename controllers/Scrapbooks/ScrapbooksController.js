@@ -62,7 +62,7 @@ const updateScrapbook = async (req, res) => {
             status: "error",
             message: "Error updating scrapbook",
             body: {
-                error: err
+                error: err.message
             }
         });
     }

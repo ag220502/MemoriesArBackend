@@ -33,90 +33,20 @@ db.createScrapbook = async (userId, name, caption, lattitude, longitude, uploadT
     });
 };
 
-db.updateScrapbook = async (scrapId, name, caption, lattitude, longitude, editTime, contentFlag, coverPhoto) => {
+db.updateScrapbook = async (scrapId, name, caption, lattitude, longitude, lastEditTime, contentFlag, coverPhoto) => {
     return new Promise((resolve, reject) => {
-        if( lattitude && longitude ) {
-            pool.query("UPDATE `scrapbooks` SET `lattitude`=?, `longitude`=? WHERE `scrapId`=?", [lattitude, longitude, scrapId], (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-                if(result.affectedRows) {
-                    pool.query("UPDATE `scrapbook_images` SET `editTime`=? WHERE `scrapId`=?", [editTime, scrapId], (err, result) => {
-                        if (err) {
-                            return reject(err);
-                        }
-                        return resolve(result);
-                    });
-                }
-                return resolve(result);
-            });
+        if(!scrapId) {
+            return reject("scrapId is required");
         }
-        else if( name ) {
-            pool.query("UPDATE `scrapbooks` SET `name`=? WHERE `scrapId`=?", [name, scrapId], (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-                if(result.affectedRows) {
-                    pool.query("UPDATE `scrapbook_images` SET `editTime`=? WHERE `scrapId`=?", [editTime, scrapId], (err, result) => {
-                        if (err) {
-                            return reject(err);
-                        }
-                        return resolve(result);
-                    });
-                }
-                return resolve(result);
-            });
-        }
-        else if( caption ) {
-            pool.query("UPDATE `scrapbooks` SET `caption`=? WHERE `scrapId`=?", [caption, scrapId], (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-                if(result.affectedRows) {
-                    pool.query("UPDATE `scrapbook_images` SET `editTime`=? WHERE `scrapId`=?", [editTime, scrapId], (err, result) => {
-                        if (err) {
-                            return reject(err);
-                        }
-                        return resolve(result);
-                    });
-                }
-                return resolve(result);
-            });
-        }
-        else if(contentType) {
-            pool.query("UPDATE `scrapbooks` SET `contentFlag`=? WHERE `scrapId`=?", [contentFlag, scrapId], (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-                if(result.affectedRows) {
-                    pool.query("UPDATE `scrapbook_images` SET `editTime`=? WHERE `scrapId`=?", [editTime, scrapId], (err, result) => {
-                        if (err) {
-                            return reject(err);
-                        }
-                        return resolve(result);
-                    });
-                }
-                return resolve(result);
-            });
-        }
-        else if(coverPhoto) {
-            pool.query("UPDATE `scrapbooks` SET `coverPhoto`=? WHERE `scrapId`=?", [coverPhoto, scrapId], (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-                if(result.affectedRows) {
-                    pool.query("UPDATE `scrapbook_images` SET `editTime`=? WHERE `scrapId`=?", [editTime, scrapId], (err, result) => {
-                        if (err) {
-                            return reject(err);
-                        }
-                        return resolve(result);
-                    });
-                }
-                return resolve(result);
-            });
-        }
+        pool.query("UPDATE `scrapbooks` SET `name`=?, `caption`=?, `lattitude`=?, `longitude`=?, `lastEditTime`=?, `contentFlag`=?, `coverPhoto`=? WHERE `scrapId`=?", [name, caption, lattitude, longitude, lastEditTime, contentFlag, coverPhoto, scrapId], (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            return resolve(result);
+        });
     });
-};
+}
+
 
 db.getScrapbook = async (scrapId) => {
     return new Promise((resolve, reject) => {
