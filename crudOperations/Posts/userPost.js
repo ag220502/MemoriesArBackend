@@ -11,7 +11,8 @@ db.createPost = (userId, caption, lattitude, longitude, flag) => {
       [userId, caption, lattitude, longitude, flag],
       (err, result) => {
         if (err) {
-          return reject({ message: "Error creating a post. ", error: err });
+          console.log(err)
+          return reject({ message: "Error creating a post. ", error: err.message });
         } else {
           return resolve(result);
         }
