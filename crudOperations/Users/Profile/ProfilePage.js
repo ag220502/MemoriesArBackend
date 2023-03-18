@@ -55,7 +55,7 @@ db.getPostNumber = (id) => {
 db.getPersonalData = (id) => {
   return new Promise((resolve, reject) => {
     pool.query(
-      "SELECT id,email,dob,countryCode,mobile,gender,address,city,state,country FROM `users` WHERE id=?",
+      "SELECT id,email,CAST(dob AS date) AS 'dob',countryCode,mobile,gender,address,city,state,country FROM `users` WHERE id=?",
       [id],
       (err, result) => {
         if (err) {
