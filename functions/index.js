@@ -12,9 +12,10 @@ admin.initializeApp({
 
 const bucket = admin.storage().bucket();
 
-const file = bucket.file(`${UUID()}.jpg`);
 
-const uploadImage = (base64EncodedImageString) => {
+const uploadImage = (base64EncodedImageString, uuid) => {
+  
+  const file = bucket.file(`${uuid}.jpg`);
   // Convert the base64-encoded image string to a Buffer
   const imageBuffer = Buffer.from(base64EncodedImageString, "base64");
 

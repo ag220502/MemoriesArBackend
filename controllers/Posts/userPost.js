@@ -7,10 +7,13 @@ const dislikeQueries = require("../../crudOperations/Posts/dislikePost.js");
 const savedQueries = require("../../crudOperations/Posts/savePost.js");
 const tagQueries = require("../../crudOperations/Posts/tagPost");
 const fs = require("fs");
+const UUID = require("uuid-v4");
+
+
 const createPost = async (req, res) => {
   const { userId, caption, lattitude, longitude, flag, tag } = req.body;
   let { postImage } = req.body;
-
+  const uuid = UUID();
   // Decode the base64-encoded image string
   postImage = Buffer.from(postImage, "base64");
 
@@ -18,16 +21,16 @@ const createPost = async (req, res) => {
   fs.writeFile("image.jpg", postImage, (err) => {
     if (err) {
       console.error(err);
-      res.status(500).send("Error writing image file");
+      return res.status(500).send("Error writing image file");
     } else {
       console.log("Image file saved successfully");
-      res.send("Image uploaded successfully");
     }
   });
-
-  let imageUrl;
+  const downloadUri  = "https://firebasestorage.googleapis.com/v0/b/memoriesar-f08a7.appspot.com/o/"
+  
+  let imageUrl = downloadUri + uuid + ".jpg" + "?alt=media&token=" + "1";
   try {
-    imageUrl = await uploadImage(postImage, "posts");
+    uploadImage(postImage, uuid);
   } catch (error) {
     return res.status(400).json(error.message);
   }
