@@ -3,6 +3,7 @@ const comments = require('../../controllers/Scrapbooks/comments.js');
 const likes = require('../../controllers/Scrapbooks/likes.js');
 const dislikes = require('../../controllers/Scrapbooks/dislikes.js');
 const savedScrapbooks = require('../../controllers/Scrapbooks/savedScrapbook.js');
+const reportScrapbook = require('../../controllers/Scrapbooks/reportScrapbook.js');
 
 //comment routes
 router.post('/addComment', comments.addComment);
@@ -25,5 +26,8 @@ router.delete('/unDislike', dislikes.unDislike);
 router.post('/saveScrapbook', savedScrapbooks.saveScrapbook);
 router.get('/getSavedScrapbooks', savedScrapbooks.getSavedScrapbooks);
 router.delete('/deleteSavedScrapbook', savedScrapbooks.deleteSavedScrapbook);
+
+//report scrapbook routes
+router.post('/reportScrapbook', reportScrapbook.reportScrapbook);
 
 module.exports = router;
