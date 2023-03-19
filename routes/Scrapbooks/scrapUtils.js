@@ -2,6 +2,7 @@ const router = require('express').Router();
 const comments = require('../../controllers/Scrapbooks/comments.js');
 const likes = require('../../controllers/Scrapbooks/likes.js');
 const dislikes = require('../../controllers/Scrapbooks/dislikes.js');
+const savedScrapbooks = require('../../controllers/Scrapbooks/savedScrapbook.js');
 
 //comment routes
 router.post('/addComment', comments.addComment);
@@ -19,5 +20,10 @@ router.post('/addDislike', dislikes.addDislike);
 router.get('/getScrapDislikes', dislikes.getAllScrapDislikes);
 router.get('/getUserDislikes', dislikes.getAllUserDislikes);
 router.delete('/unDislike', dislikes.unDislike);
+
+//save scrapbook routes
+router.post('/saveScrapbook', savedScrapbooks.saveScrapbook);
+router.get('/getSavedScrapbooks', savedScrapbooks.getSavedScrapbooks);
+router.delete('/deleteSavedScrapbook', savedScrapbooks.deleteSavedScrapbook);
 
 module.exports = router;
