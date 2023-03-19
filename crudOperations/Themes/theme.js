@@ -59,7 +59,7 @@ db.findUserTheme = (userId) => {
       (err, result) => {
         if (err) {
           return reject(err);
-        } 
+        }
         return resolve(result);
       }
     );
@@ -96,6 +96,19 @@ db.createUserTheme = (userId) => {
   });
 };
 
-
+db.getUserTheme = (userId) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      "SELECT `themeId` FROM `user_account_details` WHERE `userId` = ?",
+      [userId],
+      (err, result) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(result);
+      }
+    );
+  });
+};
 
 module.exports = db;

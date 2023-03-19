@@ -127,10 +127,25 @@ const selectUserTheme = async (req, res) => {
   }
 };
 
+const getUserTheme = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    if (!userId) {
+      return res.status(400).json("No userId provided");
+    }
+    const data = await queries.getUserTheme(userId);
+    return res.status(200).json(data);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+
 module.exports = {
   addThemes,
   getThemes,
   editTheme,
   deleteTheme,
   selectUserTheme,
+  getUserTheme,
 };
