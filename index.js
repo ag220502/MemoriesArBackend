@@ -95,7 +95,8 @@ app.use("/api/userPlatform",userPlatform);
 //themes
 app.use("/api/themes",require("./routes/Themes/theme.js"));
 
-sendEmail("ddavey1602@gmail.com", "315634","reset")
+// testing
+// sendEmail("ddavey1602@gmail.com", "315634","reset")
 
 //Telling app to listen to specific port
 app.listen(process.env.PORT || 3000 ,()=>{
