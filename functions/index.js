@@ -1,7 +1,7 @@
 const admin = require("firebase-admin");
 
 // Initialize the Firebase Admin SDK
-const serviceAccount = require("../admin.json");
+const serviceAccount = require("./admin.json");
 
 const UUID = require("uuid-v4");
 
@@ -12,9 +12,24 @@ admin.initializeApp({
 
 const bucket = admin.storage().bucket();
 
-const file = bucket.file(`${UUID()}.jpg`);
+const decode = (photo) => {
+  photo = Buffer.from(photo, "base64");
 
-const uploadImage = (base64EncodedImageString) => {
+  // Write the image file to disk
+  fs.writeFile("image.jpg", photo, (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Error writing image file");
+    } else {
+      console.log("Image file saved successfully");
+    }
+  });
+  return photo
+}
+
+const uploadImage = (base64EncodedImageString, uuid) => {
+  
+  const file = bucket.file(`${uuid}.jpg`);
   // Convert the base64-encoded image string to a Buffer
   const imageBuffer = Buffer.from(base64EncodedImageString, "base64");
 
@@ -48,6 +63,10 @@ const uploadImage = (base64EncodedImageString) => {
     }
     console.log("Image download URL:", url);
   });
+  const downloadUri  = "https://firebasestorage.googleapis.com/v0/b/memoriesar-f08a7.appspot.com/o/"
+  let imageUrl = downloadUri + uuid + ".jpg" + "?alt=media&token=" + "1";
+  return imageUrl
+  
 };
 
-module.exports = { uploadImage };
+module.exports = { uploadImage, decode };

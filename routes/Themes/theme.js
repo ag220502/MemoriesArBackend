@@ -10,5 +10,6 @@ router.delete("/deleteTheme", func.deleteTheme)
 
 // user themes
 router.patch("/selectUserTheme", func.selectUserTheme)
+router.get("/getUserTheme/:userId", func.getUserTheme)
 
 module.exports = router
