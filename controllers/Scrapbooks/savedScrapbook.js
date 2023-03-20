@@ -66,4 +66,21 @@ const deleteSavedScrapbook = async (req, res) => {
     }
 };
 
-module.exports = { saveScrapbook, getSavedScrapbooks, deleteSavedScrapbook}
+const checkSavedScrapbook = async (req, res) => {
+    try {
+        // get the data from the request body
+        const { userId, scrapId } = req.body;
+        // check if the scrapbook is saved
+        const result = await queries.checkSavedScrapbook(userId, scrapId);
+        return result;   
+    } catch (err) {
+        // return a response with the error
+        res.status(500).json({
+            status: "error",
+            message: "Error checking saved scrapbook",
+            data: err.message,
+        });
+    }
+};
+
+module.exports = { saveScrapbook, getSavedScrapbooks, deleteSavedScrapbook, checkSavedScrapbook}

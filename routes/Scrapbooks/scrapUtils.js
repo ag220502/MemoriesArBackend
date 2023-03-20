@@ -15,6 +15,7 @@ router.post('/addLike', likes.addLike);
 router.get('/getScrapLikes', likes.getAllScrapLikes);
 router.get('/getUserLikes', likes.getAllUserLikes);
 router.delete('/unLike', likes.unLike);
+router.get('/checkLike', likes.checkLike);
 
 // dislike routes
 router.post('/addDislike', dislikes.addDislike);
@@ -26,6 +27,7 @@ router.delete('/unDislike', dislikes.unDislike);
 router.post('/saveScrapbook', savedScrapbooks.saveScrapbook);
 router.get('/getSavedScrapbooks', savedScrapbooks.getSavedScrapbooks);
 router.delete('/deleteSavedScrapbook', savedScrapbooks.deleteSavedScrapbook);
+router.get('/checkSavedScrapbook', savedScrapbooks.checkSavedScrapbook)
 
 //report scrapbook routes
 router.post('/reportScrapbook', reportScrapbook.reportScrapbook);
