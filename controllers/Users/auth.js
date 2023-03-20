@@ -1,5 +1,7 @@
 const queries = require("../../crudOperations/Users/users");
 const verificationQueries = require("../../crudOperations/Users/otpVerification");
+const profileQueries = require("../../crudOperations/Users/Profile/ProfilePage");
+
 // theme queries
 const themeQueries = require("../../crudOperations/Themes/theme.js");
 
@@ -61,20 +63,23 @@ const loginFunc = async (req, res) => {
 	const data = await queries.getUserByEmail(email);
 	const checkPass = bcrypt.compareSync(checkpassword, data[0].password);
 	if (!checkPass) {
-		return res.status(400).json(false);
-	}
+		return res.status(400).json("Incorrect password.");
+  }
 	// check if the user is verified
-	if (data[0].accStatus == 1) {
-		return res.status(400).json("Account Deactivated!");
-	} else if (data[0].accStatus == 2) {
-		return res.status(400).json("Account Banned!");
+  if (data[0].accStatus == 2) {
+    return res.status(400).json("Account Banned!");
 	}
-	// create a token for creating a session
+  let message = "User logged in successfully."
+  if (data[0].accStatus == 1) {
+    await profileQueries.activateAccount(data[0].id)
+    message = "User account reactivated successfully."
+  }
+	// create a token for creating asuccessfully session
 	const token = jwt.sign({ id: data[0].id }, "secretkey");
 	res
 		.cookie("accessToken", token)
 		.status(200)
-		.json({ token: token, userId: data[0].id });
+		.json({ token: token, userId: data[0].id, message: message });
 };
 
 const sendOTP = async (req, res) => {
