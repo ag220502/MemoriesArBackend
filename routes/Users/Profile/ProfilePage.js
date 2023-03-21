@@ -18,6 +18,10 @@ router.patch('/setAccountPrivate', func.setAccountPrivate);
 router.patch('/setAccountPublic', func.setAccountPublic);
 router.patch('/Ban', func.BanAccount);
 router.patch('/Unban', func.UnBanAccount);
+
+router.get('/getAccVisibility/:id',func.getAccVisibility)
+
+// router.patch('/updatePFP', func.updatePFP);
 router.patch('/updatePFP', func.updatePFP);
 router.delete('/deletePFP', func.deletePFP);
 

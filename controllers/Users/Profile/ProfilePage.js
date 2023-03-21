@@ -302,7 +302,7 @@ const setAccountPrivate = async (req, res) => {
   try {
     const result = await queries.setAccountPrivate(id);
     if (result.affectedRows) {
-      return res.status(200).json("Account set to Private");
+      return res.status(200).json("Private Account");
     }
   } catch (err) {
     return res.status(400).json(err);
@@ -317,12 +317,30 @@ const setAccountPublic = async (req, res) => {
   try {
     const result = await queries.setAccountPublic(id);
     if (result.affectedRows) {
-      return res.status(200).json("Account set to Public");
+      return res.status(200).json("Public Account");
     }
   } catch (err) {
     return res.status(400).json(err);
   }
 };
+
+const getAccVisibility = async (req, res) => {
+  const id = req.params.id;
+  if (!id) {
+    return res.status(400).json({ error: "id is required" });
+  }
+  try {
+    const result = await queries.getAccVisibility(id);
+
+    if (result) {
+
+      return res.status(200).json(result);
+    }
+  } catch (err) {
+    return res.status(400).json(err);
+  }
+};
+
 
 module.exports = {
   getUserProfileData,
@@ -342,4 +360,5 @@ module.exports = {
   UnBanAccount,
   updatePFP,
   deletePFP,
+  getAccVisibility
 };

@@ -42,5 +42,17 @@ db.deleteRequest = (userId,recId)=>{
     })
 }
 
+db.checkRequest = (userId,recId)=>{
+    return new Promise((resolve,reject)=>{
+        pool.query("SELECT * FROM `user_requests` WHERE userId=? AND receiveId=?",[userId,recId],(err,result)=>{
+            if(err)
+            {
+                return reject(err)
+            }
+            return resolve(result)
+        })
+    }
+    )
+}
 
 module.exports = db

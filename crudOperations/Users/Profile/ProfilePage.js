@@ -5,7 +5,7 @@ const db = {};
 db.getProfileData = (id) => {
   return new Promise((resolve, reject) => {
     pool.query(
-      "SELECT id,firstName,lastName,bio,profilePhoto,accVerified FROM `users` WHERE id=?",
+      "SELECT id,firstName,lastName,bio,profilePhoto,accVerified,isPublic FROM `users` WHERE id=?",
       [id],
       (err, result) => {
         if (err) {
@@ -395,6 +395,21 @@ db.deletePFP = (userId) => {
   });
 };
 
+db.getAccVisibility = (id) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      "SELECT isPublic FROM users WHERE id = ?",
+      [id],
+      (err, result) => {
+        if (err) {
+          return reject(err);
+        } else {
+          return resolve(result);
+        }
+      }
+    );
+  });
+};
 
 
 

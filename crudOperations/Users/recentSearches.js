@@ -45,7 +45,7 @@ db.deleteSearch = (userId,searchedUserId) => {
 
 db.userRecentSearches = (userId) => {
     return new Promise((resolve,reject)=>{
-        pool.query("SELECT rs.searchedUserId,u.firstName,u.profilePhoto,rs.statusTime FROM `recent_searches` rs INNER JOIN users u ON u.id=rs.userId WHERE rs.`userId` = ? AND `searchStatus` != 1 ORDER BY rs.statusTime DESC ",[userId],(err,data)=>{
+        pool.query("SELECT DISTINCT(rs.searchedUserId),u.firstName,u.profilePhoto,rs.statusTime FROM `recent_searches` rs INNER JOIN users u ON u.id=rs.userId WHERE rs.`userId` = ? AND `searchStatus` != 1 ORDER BY rs.statusTime DESC ",[userId],(err,data)=>{
             if(err)
             {
                 return reject(err)

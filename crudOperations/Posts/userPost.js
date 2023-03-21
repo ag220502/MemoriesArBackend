@@ -278,8 +278,7 @@ db.getAllDislikedPosts = () => {
 
 db.getPostById = (id) => {
   return new Promise((resolve, reject) => {
-    const findPostQuery = `SELECT user_posts.*, user_post_photos.photo AS image FROM user_posts 
-    INNER JOIN user_post_photos ON user_posts.id = user_post_photos.postId WHERE user_posts.id = ?`;
+    const findPostQuery = `SELECT up.caption,up.uploadTime,up.lattitude,up.longitude,up.flag,u.id AS userId,u.firstName,u.lastName,u.profilePhoto,upp.photo FROM user_posts up INNER JOIN users u INNER JOIN user_post_photos upp ON up.userId=u.id AND upp.postId=up.id WHERE up.id=?`;
     pool.query(findPostQuery, [id], (err, result) => {
       if (err) {
         return reject(err);
