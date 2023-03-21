@@ -112,4 +112,26 @@ db.checkScrapbookExists = async (scrapId) => {
     });
 };
 
+db.getFictionalScrapbooks = async (userId) => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT * FROM `scrapbooks` WHERE `contentFlag` = 0 AND `userId` = ?", [userId] , (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            return resolve(result);
+        });
+    });
+};
+
+db.getOpinionScrapbooks = async (userId) => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT * FROM `scrapbooks` WHERE `contentFlag` = 1 AND `userId` = ?", [userId] , (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            return resolve(result);
+        });
+    });
+};
+
 module.exports = db;

@@ -103,4 +103,13 @@ const unLike = async (req, res) => {
     }
 };
 
-module.exports = {addLike, getAllScrapLikes, getAllUserLikes, unLike}
+const checkLike = async (scrapId, userId) => {
+    try {
+        const result = await queries.checkLike(scrapId, userId);
+        return result;
+    } catch (error) {
+        return error;
+    }
+};
+
+module.exports = {addLike, getAllScrapLikes, getAllUserLikes, unLike, checkLike}

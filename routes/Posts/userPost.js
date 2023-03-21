@@ -28,5 +28,7 @@ router.get("/getAllDislikedPosts", getAllDislikedPosts);
 router.get("/checkLiked/:postId/:userId", checkLiked);
 router.get("/checkDisliked/:postId/:userId", checkDisliked);
 router.get("/checkSaved/:postId/:userId", checkSaved);
+router.get("/getFictionalPosts/:userId", getFictionalPosts);
+router.get("/getOpinionPosts/:userId", getOpinionPosts);
 
 module.exports = router;

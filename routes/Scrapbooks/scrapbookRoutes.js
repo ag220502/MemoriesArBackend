@@ -8,6 +8,7 @@ const image = require('../../controllers/Scrapbooks/images.js');
 router.post('/createTemplate', template.createTemplate);
 router.get('/getTemplateById/:templateId', template.getTemplateById);
 router.get('/getAllTemplates', template.getAllTemplates);
+router.get('/getTemplatesByCategory/:categoryId', template.getTemplatesByCategory)
 router.patch('/updateTemplate/:templateId', template.updateTemplate);
 router.delete('/deleteTemplate/:templateId', template.deleteTemplate);
 
@@ -23,6 +24,8 @@ router.post('/createScrapbook/:userId', scrapbook.createScrapbook);
 router.patch('/updateScrapbook/:scrapId', scrapbook.updateScrapbook);
 router.get('/getScrapbookById/:scrapId', scrapbook.getScrapbook);
 router.get('/getAllScrapbooks/:userId', scrapbook.getAllUserScrapbooks);
+router.get('/getFictionalScrapbooks/:userId', scrapbook.getFictionalScrapbooks);
+router.get('/getOpinionScrapbooks/:userId', scrapbook.getOpinionScrapbooks);
 router.delete('/deleteScrapbook/:scrapId', scrapbook.deleteScrapbook);
 router.delete('/deleteAllScrapbooks/:userId', scrapbook.deleteAllUserScrapbooks);
 

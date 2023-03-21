@@ -22,6 +22,7 @@ router.patch('/Unban', func.UnBanAccount);
 router.get('/getAccVisibility/:id',func.getAccVisibility)
 
 // router.patch('/updatePFP', func.updatePFP);
+router.patch('/updatePFP', func.updatePFP);
 router.delete('/deletePFP', func.deletePFP);
 
 module.exports = router;

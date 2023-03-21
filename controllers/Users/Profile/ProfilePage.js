@@ -1,5 +1,7 @@
 const queries = require("../../../crudOperations/Users/Profile/ProfilePage.js");
-const { updatePFP } = require("../../../functions/index.js");
+const { uploadImage } = require("../../../functions/index.js");
+const UUID = require("uuid-v4");
+
 const getUserProfileData = async (req, res) => {
   const id = req.params.id;
   if (!id) {
@@ -124,6 +126,48 @@ const updatePersonalData = async (req, res) => {
     );
     if (result) {
       return res.status(200).json("Personal Data Updated");
+    }
+  } catch (err) {
+    return res.status(400).json(err);
+  }
+};
+
+const updatePFP = async (req, res) => {
+  const id = req.body.id;
+  let { profilePhoto } = req.body;
+  if (!id) {
+    return res.status(400).json({ error: "id is required" });
+  }
+  if (!profilePhoto) {
+    return res.status(400).json({ error: "profilePhoto is required" });
+  }
+  const uuid = UUID();
+  // Decode the base64-encoded image string
+  profilePhoto = Buffer.from(profilePhoto, "base64");
+
+  // Write the image file to disk
+  fs.writeFile("image.jpg", profilePhoto, (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Error writing image file");
+    } else {
+      console.log("Image file saved successfully");
+    }
+  });
+
+  const downloadUri =
+    "https://firebasestorage.googleapis.com/v0/b/memoriesar-f08a7.appspot.com/o/";
+  let imageUrl = downloadUri + uuid + ".jpg" + "?alt=media&token=" + "1";
+  try {
+    console.log("I'm so stupid",uploadImage(profilePhoto, uuid));
+  } catch (error) {
+    return res.status(400).json(error.message);
+  }
+
+  try {
+    const result = await queries.updatePFP(imageUrl, id);
+    if (result) {
+      return res.status(200).json("PFP Updated");
     }
   } catch (err) {
     return res.status(400).json(err);
@@ -314,6 +358,7 @@ module.exports = {
   setAccountPublic,
   BanAccount,
   UnBanAccount,
-  updatePFP, deletePFP,
+  updatePFP,
+  deletePFP,
   getAccVisibility
 };
