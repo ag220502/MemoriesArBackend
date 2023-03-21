@@ -8,6 +8,7 @@ const image = require('../../controllers/Scrapbooks/images.js');
 router.post('/createTemplate', template.createTemplate);
 router.get('/getTemplateById/:templateId', template.getTemplateById);
 router.get('/getAllTemplates', template.getAllTemplates);
+router.get('/getTemplatesByCategory/:categoryId', template.getTemplatesByCategory)
 router.patch('/updateTemplate/:templateId', template.updateTemplate);
 router.delete('/deleteTemplate/:templateId', template.deleteTemplate);
 

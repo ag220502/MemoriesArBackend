@@ -139,4 +139,26 @@ const deleteTemplate = async (req, res) => {
     }
 };
 
-module.exports = {createTemplate, getTemplateById, getAllTemplates, updateTemplate, deleteTemplate }
+const getTemplatesByCategory = async (req, res) => {
+    const { categoryId } = req.params;
+    try {
+        const template = await queries.getTemplatesByCategory(categoryId);
+        res.status(200).json({
+            status: "success",
+            message: "Template retrieved",
+            body: {
+                template: template
+            }
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: "error",
+            message: "Error retrieving template",
+            body: {
+                error: err.message
+            }
+        });
+    }
+};
+
+module.exports = {createTemplate, getTemplateById, getAllTemplates, updateTemplate, deleteTemplate, getTemplatesByCategory }
