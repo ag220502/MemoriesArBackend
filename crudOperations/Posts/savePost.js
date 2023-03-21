@@ -55,7 +55,7 @@ db.getUsersSavedPosts = (id) => {
         return reject("No user found");
       } else {
         pool.query(
-          "SELECT postId FROM `saved_posts` WHERE userId=?",
+          "SELECT sp.postId,upp.photo FROM `saved_posts` sp INNER JOIN user_posts up INNER JOIN user_post_photos upp ON sp.postId=up.id AND sp.postId=upp.postId WHERE sp.userId=?",
           [id],
           (err, result) => {
             if (err) {

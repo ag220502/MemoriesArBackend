@@ -65,13 +65,7 @@ const getCategory = async (req, res) => {
 const getAllCategories = async (req, res) => {
     try {
         const categories = await queries.getAllCategories();
-        res.status(200).json({
-            status: "success",
-            message: "Categories retrieved",
-            body: {
-                categories: categories
-            }
-        });
+        res.status(200).json(categories);
     } catch (err) {
         res.status(500).json({
             status: "error",

@@ -134,4 +134,32 @@ const unfriendUser = async (req,res)=>{
     }
 }
 
-module.exports = {sendRequest,allRequests,declineRequest,acceptRequest,unfriendUser}
+const checkRequest = async (req,res)=>{
+    const userId = req.params.userId
+    const recId = req.params.recId
+    if(!userId || !recId || userId===recId)
+    {
+        return res.status(400).json("Invalid Details.")
+    }
+    else
+    {
+        try
+        {
+            const result = await queries.checkRequest(userId,recId)
+            console.log(result)
+            if(result.length)
+            {
+                return res.status(200).json("Request Sent")
+            }
+            else
+            {
+                return res.status(400).json("No Data Found.")
+            }
+        }
+        catch(error){
+            return res.status(400).json(error)
+        }
+    }
+}
+
+module.exports = {sendRequest,checkRequest,allRequests,declineRequest,acceptRequest,unfriendUser}

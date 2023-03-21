@@ -30,8 +30,10 @@ const createPost = async (req, res) => {
   
   let imageUrl = downloadUri + uuid + ".jpg" + "?alt=media&token=" + "1";
   try {
-    uploadImage(postImage, uuid);
+   uploadImage(postImage, uuid);
+    console.log("Image uploaded successfully in user post")
   } catch (error) {
+    console.log(error)
     return res.status(400).json(error.message);
   }
   if (!userId || !caption || !lattitude || !longitude) {
@@ -45,17 +47,31 @@ const createPost = async (req, res) => {
         longitude,
         flag ? flag : 0
       );
-      if (tag) {
+      console.log(result)
+      if (tag.length) {
+        console.log(tag)
+        console.log("Hello")
         let tagCopy = tag.slice(1, tag.length - 1).split(",");
         if (tagCopy.length > 0) {
           for (let i = 0; i < tagCopy.length; i++) {
             await tagQueries.tagUser(result.insertId, tagCopy[i]);
-            // console.log("SQL: User " + tag[i] + " tagged.")
+            console.log("SQL: User " + tag[i] + " tagged.")
           }
         }
       }
+      console.log("SQL: after teg")
+     try
+     {
+      console.log("SQL: before upload image")
       await queries.uploadImage(result.insertId, imageUrl);
+      console.log("Data uploaded succesfully")
       return res.status(200).json("Post was created successfully.");
+     }
+     catch(error)
+     {
+        console.log(error)
+     }
+     
     } catch (error) {
       return res.status(400).json(error);
     }
