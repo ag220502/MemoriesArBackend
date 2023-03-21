@@ -86,4 +86,15 @@ db.deleteTemplate = async (templateId) => {
     });
 };
 
+db.getTemplatesByCategory = async (categoryId) => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT * FROM `scrapbook_templates` WHERE categoryId=?", [categoryId], (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            return resolve(result);
+        });
+    });
+};
+
 module.exports = db;

@@ -50,4 +50,22 @@ db.DeleteSavedScrapbook = (userId,scrapId) => {
     });
 };
 
+db.checkSavedScrapbook = (userId,scrapId) => {
+    return new Promise((resolve, reject) => {
+        pool.query(
+            `SELECT * FROM saved_scrapbooks WHERE userId = ? AND scrapId = ?`,
+            [userId,scrapId],
+            (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+                if(results.length === 0){
+                    return resolve(false)
+                }
+                return resolve(true);
+            }
+        );
+    });
+};
+
 module.exports = db;

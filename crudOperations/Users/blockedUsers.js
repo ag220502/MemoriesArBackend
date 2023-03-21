@@ -32,7 +32,7 @@ db.deleteBlockedUser = (userId,blockedUserId)=>{
 //Function to execute query to get the all the blocked users
 db.getAllBlockedUsers = (userId)=>{
     return new Promise((resolve,reject)=>{
-        pool.query("SELECT * FROM `block_users` WHERE userId=? ORDER BY dateBlocked DESC",[userId],(err,result)=>{
+        pool.query("SELECT bu.blockedUserId,u.firstName,u.lastName,u.profilePhoto FROM `block_users` bu INNER JOIN users u ON u.id=bu.blockedUserId WHERE userId=? ORDER BY dateBlocked DESC",[userId],(err,result)=>{
             if(err)
             {
                 return reject(err)

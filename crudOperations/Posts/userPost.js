@@ -290,5 +290,30 @@ db.getPostById = (id) => {
   });
 };
 
+db.getFictionalPosts = (userId) => {
+  return new Promise((resolve, reject) => {
+    const hehehe = `SELECT * FROM user_posts WHERE userId = ? AND status = 0`;
+    pool.query (hehehe, [userId], (err, result) => {
+      if (err) {
+        return reject(err);
+      } else {
+        return resolve(result);
+      }
+    });
+  });
+};
+
+db.getOpinionPosts = (userId) => {
+  return new Promise((resolve, reject) => {
+    const hehehe = `SELECT * FROM user_posts WHERE userId = ? AND status = 1`;
+    pool.query (hehehe, [userId], (err, result) => {
+      if (err) {
+        return reject(err);
+      } else {
+        return resolve(result);
+      }
+    });
+  });
+};
 
 module.exports = db;

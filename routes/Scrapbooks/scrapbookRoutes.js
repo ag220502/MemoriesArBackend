@@ -6,11 +6,14 @@ const image = require("../../controllers/Scrapbooks/images.js");
 const { homePage } = require("../../controllers/Scrapbooks/homePage.js");
 
 //template routes
-router.post("/createTemplate", template.createTemplate);
-router.get("/getTemplateById/:templateId", template.getTemplateById);
-router.get("/getAllTemplates", template.getAllTemplates);
-router.patch("/updateTemplate/:templateId", template.updateTemplate);
-router.delete("/deleteTemplate/:templateId", template.deleteTemplate);
+
+router.post('/createTemplate', template.createTemplate);
+router.get('/getTemplateById/:templateId', template.getTemplateById);
+router.get('/getAllTemplates', template.getAllTemplates);
+router.get('/getTemplatesByCategory/:categoryId', template.getTemplatesByCategory)
+router.patch('/updateTemplate/:templateId', template.updateTemplate);
+router.delete('/deleteTemplate/:templateId', template.deleteTemplate);
+
 
 //category routes
 router.post("/createCategory", category.createCategory);
@@ -20,15 +23,14 @@ router.patch("/updateCategory/:categoryId", category.updateCategory);
 router.delete("/deleteCategory/:categoryId", category.deleteCategory);
 
 //scrapbook routes
-router.post("/createScrapbook/:userId", scrapbook.createScrapbook);
-router.patch("/updateScrapbook/:scrapId", scrapbook.updateScrapbook);
-router.get("/getScrapbookById/:scrapId", scrapbook.getScrapbook);
-router.get("/getAllScrapbooks/:userId", scrapbook.getAllUserScrapbooks);
-router.delete("/deleteScrapbook/:scrapId", scrapbook.deleteScrapbook);
-router.delete(
-  "/deleteAllScrapbooks/:userId",
-  scrapbook.deleteAllUserScrapbooks
-);
+router.post('/createScrapbook/:userId', scrapbook.createScrapbook);
+router.patch('/updateScrapbook/:scrapId', scrapbook.updateScrapbook);
+router.get('/getScrapbookById/:scrapId', scrapbook.getScrapbook);
+router.get('/getAllScrapbooks/:userId', scrapbook.getAllUserScrapbooks);
+router.get('/getFictionalScrapbooks/:userId', scrapbook.getFictionalScrapbooks);
+router.get('/getOpinionScrapbooks/:userId', scrapbook.getOpinionScrapbooks);
+router.delete('/deleteScrapbook/:scrapId', scrapbook.deleteScrapbook);
+router.delete('/deleteAllScrapbooks/:userId', scrapbook.deleteAllUserScrapbooks);
 
 //image routes
 router.post("/addImage", image.addImage);
@@ -39,7 +41,6 @@ router.delete("/deleteImage/:pictureId", image.deleteImage);
 router.delete("/deleteAllScrapImages/:scrapId", image.deleteAllScrapImages);
 
 //home page
-
 router.post("/userFeed/:id", homePage);
 
 module.exports = router;

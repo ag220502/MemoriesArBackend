@@ -192,4 +192,67 @@ const deleteAllUserScrapbooks = async (req, res) => {
     }
 };
 
-module.exports = {createScrapbook, updateScrapbook, getScrapbook, getAllUserScrapbooks, deleteScrapbook, deleteAllUserScrapbooks}
+const getFictionalScrapbooks = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        if(!userId) {
+            return res.status(400).json({
+                status: "error",
+                message: "userId is required",
+                body : {
+                    userId : userId
+                }
+            });
+        }
+        const scrapbooks = await queries.getFictionalScrapbooks(userId);
+        res.status(200).json({
+            status: "success",
+            message: "Scrapbooks fetched successfully",
+            body: {
+                scrapbooks: scrapbooks
+            }
+        });
+    } catch (err) {
+        res.status(400).json({
+            status: "error",
+            message: "Error fetching scrapbooks",
+            body: {
+                error: err.message
+            }
+        });
+    }
+};
+
+const getOpinionScrapbooks = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        if(!userId) {
+            return res.status(400).json({
+                status: "error",
+                message: "userId is required",
+                body : {
+                    userId : userId
+                }
+            });
+        }
+        const scrapbooks = await queries.getOpinionScrapbooks(userId);
+        res.status(200).json({
+            status: "success",
+            message: "Scrapbooks fetched successfully",
+            body: {
+                scrapbooks: scrapbooks
+            }
+        });
+    } catch (err) {
+        res.status(400).json({
+            status: "error",
+            message: "Error fetching scrapbooks",
+            body: {
+                error: err.message
+            }
+        });
+    }
+};
+
+
+module.exports = {createScrapbook, updateScrapbook, getScrapbook, getAllUserScrapbooks, deleteScrapbook, deleteAllUserScrapbooks, getFictionalScrapbooks, getOpinionScrapbooks}
