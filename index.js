@@ -18,7 +18,10 @@ const searchRoute = require("./routes/Users/searchUser.js")
 const users_statistics = require("./routes/Users/users_statistics.js")
 const interest = require("./routes/Users/interests.js")
 const userInterests = require("./routes/Users/userInterests.js")
+
+//home page
 const homePage = require("./routes/Posts/homePage.js")                    //DC - home page
+const homeScrapbooks = require("./routes/Scrapbooks/scrapbookRoutes")
 
 // posts
 const SavedPosts = require("./routes/Posts/savePost.js")                   //DC - saved posts
@@ -97,6 +100,8 @@ app.use("/api/userPlatform",userPlatform);
 
 //themes
 app.use("/api/themes",require("./routes/Themes/theme.js"));
+
+
 
 //Telling app to listen to specific port
 const port = process.env.PORT || 3000
