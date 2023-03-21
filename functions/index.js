@@ -1,7 +1,9 @@
 const admin = require("firebase-admin");
-
+require("dotenv").config();
 // Initialize the Firebase Admin SDK
 const serviceAccount = require("./admin.json");
+
+const fs = require("fs");
 
 const UUID = require("uuid-v4");
 
@@ -63,7 +65,7 @@ const uploadImage = (base64EncodedImageString, uuid) => {
     }
     console.log("Image download URL:", url);
   });
-  const downloadUri  = "https://firebasestorage.googleapis.com/v0/b/memoriesar-f08a7.appspot.com/o/"
+  const downloadUri  = process.env.FIREBASE_STORAGE_LINK
   let imageUrl = downloadUri + uuid + ".jpg" + "?alt=media&token=" + "1";
   return imageUrl
   
