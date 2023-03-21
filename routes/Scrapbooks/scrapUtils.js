@@ -8,7 +8,7 @@ const reportScrapbook = require('../../controllers/Scrapbooks/reportScrapbook.js
 //comment routes
 router.post('/addComment', comments.addComment);
 router.delete('/deleteComment', comments.deleteComment);
-router.get('/getComments', comments.getAllComments);
+router.get('/getComments/:scrapId', comments.getAllComments);
 
 // like routes
 router.post('/addLike', likes.addLike);

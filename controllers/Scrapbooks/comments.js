@@ -61,7 +61,7 @@ const deleteComment = async (req, res) => {
 };
 
 const getAllComments = async (req, res) => {
-    const { scrapId } = req.body;
+    const { scrapId } = req.params;
     if (!scrapId) return res.status(400).json("Missing fields");
     try {
         if (!(await scrapQueries.checkScrapbookExists(scrapId))) {
