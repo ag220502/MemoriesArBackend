@@ -6,10 +6,8 @@ const addComment = async (req, res) => {
     const { scrapId, comment, userId } = req.body;
     if (!scrapId || !userId || !comment)
         return res.status(401).json("Missing fields");
-    if(comment.split(" ").join("") === ""){
-        return res.status(401).json("Comment cannot be empty");
-    }
     try {
+        console.log(userId)
         if (!(await userQueries.checkUserById(userId))) {
             return res.status(404).json("Invalid user ID");
         }

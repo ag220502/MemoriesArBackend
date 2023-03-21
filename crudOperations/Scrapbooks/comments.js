@@ -90,7 +90,7 @@ db.deleteComment = (commentId) => {
 
 db.getAllComments = (scrapId) => {
     return new Promise((resolve, reject) => {
-        const getAllCommentsQuery = "SELECT `userId`, `comment`, `commentTime` FROM `scrapbook_comments` WHERE `scrapId`=?";
+        const getAllCommentsQuery = "SELECT sc.userId,sc.commentId,sc.comment,u.firstName,u.lastName,u.profilePhoto FROM `scrapbook_comments` sc INNER JOIN users u ON u.id=sc.userId WHERE `scrapId`=? ORDER BY sc.commentTime DESC";
         pool.query(getAllCommentsQuery, [scrapId], (err, result) => {
             if (err) {
                 return reject(err);
