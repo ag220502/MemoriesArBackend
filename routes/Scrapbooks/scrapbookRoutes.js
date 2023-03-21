@@ -41,6 +41,6 @@ router.delete("/deleteImage/:pictureId", image.deleteImage);
 router.delete("/deleteAllScrapImages/:scrapId", image.deleteAllScrapImages);
 
 //home page
-router.post("/userFeed/:id", homePage);
+router.get("/userFeed/:id", homePage);
 
 module.exports = router;

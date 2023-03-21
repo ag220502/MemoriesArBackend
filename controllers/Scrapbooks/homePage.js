@@ -2,6 +2,7 @@ const queries = require("../../crudOperations/Scrapbooks/homePage.js");
 
 const homePage = async (req, res) => {
   const userId = req.params.id;
+  console.log(userId)
   if (!userId) {
     return res.status(400).json("Invalid Details");
   }
