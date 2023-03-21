@@ -14,13 +14,7 @@ const addComment = async (req, res) => {
             return res.status(404).json("Invalid user ID");
         }
         const newComment = await queries.addComment(scrapId, userId, comment);
-            return res.status(201).json({
-                status: "success",
-                message: "Comment was posted successfully.",
-                body: {
-                    comment: newComment
-                }
-            });
+            return res.status(201).json(newComment);
     } catch (error) {
         res.status(500).json({
             status: "error",

@@ -7,11 +7,7 @@ const saveScrapbook = async (req, res) => {
         // save the scrapbook
         const savedScrapbook = await queries.SaveScrapbook(userId, scrapId);
         // return a response with the saved scrapbook
-        res.status(200).json({
-            status: "success",
-            message: "Scrapbook saved successfully",
-            data: savedScrapbook,
-        });
+        res.status(200).json(savedScrapbook);
     } catch (err) {
         // return a response with the error
         res.status(500).json({
@@ -29,11 +25,7 @@ const getSavedScrapbooks = async (req, res) => {
         // get the saved scrapbooks
         const savedScrapbooks = await queries.GetSavedScrapbooks(userId);
         // return a response with the saved scrapbooks
-        res.status(200).json({
-            status: "success",
-            message: "Saved scrapbooks retrieved successfully",
-            data: savedScrapbooks,
-        });
+        res.status(200).json(savedScrapbooks);
     } catch (err) {
         // return a response with the error
         res.status(500).json({
@@ -51,11 +43,7 @@ const deleteSavedScrapbook = async (req, res) => {
         // delete the saved scrapbook
         const deletedScrapbook = await queries.DeleteSavedScrapbook(userId, scrapId);
         // return a response with the deleted scrapbook
-        res.status(200).json({
-            status: "success",
-            message: "Saved scrapbook deleted successfully",
-            data: deletedScrapbook,
-        });
+        res.status(200).json("Scrapbook deleted successfully");
     } catch (err) {
         // return a response with the error
         res.status(500).json({

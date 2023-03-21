@@ -13,13 +13,7 @@ const createCategory = async (req, res) => {
     }
     try {
         const newCategory = await queries.createCategory(categoryName);
-        res.status(201).json({
-            status: "success",
-            message: "New category created",
-            body: {
-                category: newCategory
-            }
-        });
+        res.status(201).json(newCategory);
     } catch (err) {
         res.status(500).json({
             status: "error",
@@ -44,13 +38,7 @@ const getCategory = async (req, res) => {
     }
     try {
         const category = await queries.getCategory(categoryId);
-        res.status(200).json({
-            status: "success",
-            message: "Category retrieved",
-            body: {
-                category: category
-            }
-        });
+        res.status(200).json(category);
     } catch (err) {
         res.status(500).json({
             status: "error",
@@ -65,13 +53,7 @@ const getCategory = async (req, res) => {
 const getAllCategories = async (req, res) => {
     try {
         const categories = await queries.getAllCategories();
-        res.status(200).json({
-            status: "success",
-            message: "Categories retrieved",
-            body: {
-                categories: categories
-            }
-        });
+        res.status(200).json(categories);
     } catch (err) {
         res.status(500).json({
             status: "error",
@@ -98,13 +80,7 @@ const updateCategory = async (req, res) => {
     }
     try {
         const updatedCategory = await queries.updateCategory(categoryName, categoryId);
-        res.status(200).json({
-            status: "success",
-            message: "Category updated",
-            body: {
-                category: updatedCategory
-            }
-        });
+        res.status(200).json(updatedCategory);
     } catch (err) {
         res.status(500).json({
             status: "error",
@@ -129,13 +105,7 @@ const deleteCategory = async (req, res) => {
     }
     try {
         const deletedCategory = await queries.deleteCategory(categoryId);
-        res.status(200).json({
-            status: "success",
-            message: "Category deleted",
-            body: {
-                category: deletedCategory
-            }
-        });
+        res.status(200).json("category deleted successfully");
     } catch (err) {
         res.status(500).json({
             status: "error",
