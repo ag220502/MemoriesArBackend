@@ -255,6 +255,26 @@ const checkSaved = async (req, res) => {
   }
 };
 
+const getFictionalPosts = async (req, res) => {
+  try {
+    const userId = req.params;
+    const result = await queries.getFictionalPosts(userId);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json(error.message);
+  }
+};
+
+const getOpinionPosts = async (req, res) => {
+  try {
+    const userId = req.params;
+    const result = await queries.getOpinionPosts(userId);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json(error.message);
+  }
+};
+
 module.exports = {
   createPost,
   editPost,
@@ -268,4 +288,6 @@ module.exports = {
   checkLiked,
   checkDisliked,
   checkSaved,
+  getFictionalPosts,
+  getOpinionPosts
 };
