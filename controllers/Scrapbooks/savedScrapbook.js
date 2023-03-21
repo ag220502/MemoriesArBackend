@@ -57,10 +57,10 @@ const deleteSavedScrapbook = async (req, res) => {
 const checkSavedScrapbook = async (req, res) => {
     try {
         // get the data from the request body
-        const { userId, scrapId } = req.body;
+        const { userId, scrapId } = req.params;
         // check if the scrapbook is saved
         const result = await queries.checkSavedScrapbook(userId, scrapId);
-        return result;   
+        res.status(200).json(result);   
     } catch (err) {
         // return a response with the error
         res.status(500).json({

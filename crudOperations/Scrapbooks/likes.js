@@ -2,7 +2,7 @@ const pool = require("../../connect.js");
 
 const db = {};
 
-db.addLike = (scrapId, userId, time) => {
+db.addLike = (scrapId, userId) => {
     return new Promise((resolve, reject) => {
         pool.query("SELECT * FROM `scrapbook_likes` WHERE scrapId = ? AND userId = ?", [scrapId, userId], (err, results) => {
             if (err) {
@@ -12,7 +12,7 @@ db.addLike = (scrapId, userId, time) => {
                 return reject("Scrapbook already liked by user");
             }
             else{
-                pool.query("INSERT INTO `scrapbook_likes` (scrapId, userId, time) VALUES (?, ?, ?)", [scrapId, userId, time], (err, results) => {
+                pool.query("INSERT INTO `scrapbook_likes` (scrapId, userId) VALUES (?, ? )", [scrapId, userId], (err, results) => {
                     if (err) {
                         return reject(err.message);
                     }
@@ -25,7 +25,7 @@ db.addLike = (scrapId, userId, time) => {
 
 db.getAllScrapLikes = (scrapId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT userId, time FROM `scrapbook_likes` WHERE scrapId = ?", [scrapId], (err, results) => {
+        pool.query("SELECT userId FROM `scrapbook_likes` WHERE scrapId = ?", [scrapId], (err, results) => {
             if (err) {
                 return reject(err.message);
             }
