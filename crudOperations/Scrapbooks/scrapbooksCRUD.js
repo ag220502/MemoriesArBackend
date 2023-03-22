@@ -78,7 +78,7 @@ db.getAllUserScrapbooks = async (userId) => {
 
 db.deleteScrapbookById = async (scrapId) => {
     return new Promise((resolve, reject) => {
-        pool.query("DELETE t1 FROM `scrapbooks` AS t1 INNER JOIN `scrapbook_images` AS t2 ON t1.scrapId = t2.scrapId WHERE t1.scrapId=?", [scrapId], (err, result) => {
+        pool.query("DELETE FROM `scrapbooks` WHERE scrapId=?", [scrapId], (err, result) => {
             if (err) {
                 return reject(err);
             }

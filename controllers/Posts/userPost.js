@@ -6,6 +6,7 @@ const likeQueries = require("../../crudOperations/Posts/likePost.js");
 const dislikeQueries = require("../../crudOperations/Posts/dislikePost.js");
 const savedQueries = require("../../crudOperations/Posts/savePost.js");
 const tagQueries = require("../../crudOperations/Posts/tagPost");
+
 const fs = require("fs");
 const UUID = require("uuid-v4");
 
@@ -43,12 +44,9 @@ const createPost = async (req, res) => {
           }
         }
       }
-      console.log("SQL: after teg")
      try
      {
-      console.log("SQL: before upload image")
       await queries.uploadImage(result.insertId, imageUrl);
-      console.log("Data uploaded succesfully")
       return res.status(200).json("Post was created successfully.");
      }
      catch(error)
@@ -123,18 +121,26 @@ const editPost = async (req, res) => {
 };
 
 const deletePost = async (req, res) => {
-  const { userId, postId } = req.body;
+  console.log("Helloqwe")
+  const { userId, postId } = req.params;
+  console.log(userId, postId)
   if (!userId || !postId) {
+
     return res.status(404).json("Invalid user/post ID");
   }
   try {
     if (await queries.findPostByIdAndUserId(postId, userId)) {
-      await queries.deletePost(postId);
-      await queries.deleteAllPostCommentsById(postId);
-      await queries.deleteAllPostLikesById(postId);
-      await queries.deleteAllPostDisikesById(postId);
-      await queries.deletePostsFromSavedById(postId);
-      return res.status(200).json("Post deleted successfully.");
+      console.log("Hello")
+      try
+      {
+        await queries.deletePost(postId);
+      }
+      catch(error)
+      {
+        console.log(error)
+      }
+      
+      return res.status(200).json("Post deleted successfully");
     } else {
       return res.status(404).json("Post doesn't exist");
     }

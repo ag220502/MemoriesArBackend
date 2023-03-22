@@ -18,7 +18,7 @@ const {
 
 router.post("/create", createPost);
 router.patch("/edit", editPost);
-router.delete("/delete", deletePost);
+router.delete("/delete/:userId/:postId", deletePost);
 router.get("/getPostById/:id", getPostById)
 router.get("/getAllPosts/:id", getAllUserPosts);
 router.get("/getPostlink/:id", getPostImage);

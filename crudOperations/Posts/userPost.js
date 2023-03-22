@@ -55,7 +55,7 @@ db.findAllPostsByUserId = (userId) => {
   console.log(userId);
   return new Promise((resolve, reject) => {
     const findPostQuery =
-      "SELECT up.id AS postId, upp.photo FROM `user_posts` up INNER JOIN user_post_photos upp ON up.id=upp.postId WHERE `userId`=?";
+      "SELECT up.id AS postId, upp.photo,up.userId FROM `user_posts` up INNER JOIN user_post_photos upp ON up.id=upp.postId WHERE `userId`=?";
     pool.query(findPostQuery, [userId], (err, result) => {
       if (err) {
         return reject(err);

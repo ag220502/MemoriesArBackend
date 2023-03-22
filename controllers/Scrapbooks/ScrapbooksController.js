@@ -103,22 +103,10 @@ const getAllUserScrapbooks = async (req, res) => {
     try {
         const { userId } = req.params;
         if(!userId) {
-            return res.status(400).json({
-                status: "error",
-                message: "userId is required",
-                body : {
-                    userId : userId
-                }
-            });
+            return res.status(400).json("userId is required");
         }
         const scrapbooks = await queries.getAllUserScrapbooks(userId);
-        res.status(200).json({
-            status: "success",
-            message: "Scrapbooks fetched successfully",
-            body: {
-                scrapbooks: scrapbooks
-            }
-        });
+        res.status(200).json(scrapbooks);
     } catch (err) {
         res.status(400).json({
             status: "error",
@@ -134,22 +122,15 @@ const deleteScrapbook = async (req, res) => {
     try {
         const { scrapId } = req.params;
         if(!scrapId) {
-            return res.status(400).json({
-                status: "error",
-                message: "scrapId is required",
-                body : {
-                    scrapId : scrapId
-                }
-            });
+            return res.status(400).json("scrapId is required");
         }
         const deletedScrapbook = await queries.deleteScrapbookById(scrapId);
-        res.status(200).json({
-            status: "success",
-            message: "Scrapbook deleted successfully",
-            body: {
-                scrapbook: deletedScrapbook
-            }
-        });
+        console.log(deletedScrapbook);
+        if(deletedScrapbook.affectedRows ==1)
+        {
+            return res.status(200).json("Scrapbook deleted successfully");
+        }
+        
     } catch (err) {
         res.status(400).json({
             status: "error",
