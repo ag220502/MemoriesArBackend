@@ -2,12 +2,12 @@ const pool = require("../../connect.js");
 
 const db = {};
 
-db.AddImage = async (scrapId, link, photoText, textHeading ) => {
+db.AddImage = async (scrapId, link, textHeading ) => {
     return new Promise((resolve, reject) => {
         if(!scrapId || !link) {
             return reject("scrapId and link are required");
         }
-        pool.query("INSERT INTO `scrapbook_images` (`scrapId`, `link`, `photoText`, `textHeading`) VALUES (?, ?, ?, ?)", [scrapId, link, photoText, textHeading], (err, result) => {
+        pool.query("INSERT INTO `scrapbook_images` (`scrapId`, `link`, `textHeading`) VALUES (?, ?, ?)", [scrapId, link, textHeading], (err, result) => {
             if (err) {
                 return reject(err);
             }
@@ -44,21 +44,13 @@ db.GetImageByScrapId = async (scrapId) => {
     });
 };
 
-db.UpdateImage = async ( pictureId , link, photoText, textHeading) => {
+db.UpdateImage = async ( pictureId , link, textHeading) => {
     return new Promise((resolve, reject) => {
         if(!pictureId || !link) {
             return reject("pictureId and link are required");
         }
         if(link){
             pool.query("UPDATE `scrapbook_images` SET `link`=? WHERE `pictureId`=?", [link, pictureId], (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-                return resolve(result);
-            });
-        }
-        if(photoText){
-            pool.query("UPDATE `scrapbook_images` SET `photoText`=? WHERE `pictureId`=?", [photoText, pictureId], (err, result) => {
                 if (err) {
                     return reject(err);
                 }
