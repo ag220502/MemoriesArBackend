@@ -1,5 +1,5 @@
 const queries = require("../../../crudOperations/Users/Profile/ProfilePage.js");
-const { uploadImage } = require("../../../functions/index.js");
+const { uploadImage, decode } = require("../../../functions/index.js");
 const UUID = require("uuid-v4");
 
 const getUserProfileData = async (req, res) => {
@@ -69,7 +69,7 @@ const updateProfileData = async (req, res) => {
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
   const bio = req.body.bio;
-  const profilePhoto = req.body.profilePhoto;
+  // const profilePhoto = req.body.profilePhoto;
   if (!id) {
     return res.status(400).json({ error: "id is required" });
   }
@@ -81,8 +81,8 @@ const updateProfileData = async (req, res) => {
       id,
       firstName,
       lastName,
-      bio,
-      profilePhoto
+      bio
+      // profilePhoto
     );
     if (result) {
       return res.status(200).json("Profile Updated");
@@ -142,27 +142,11 @@ const updatePFP = async (req, res) => {
     return res.status(400).json({ error: "profilePhoto is required" });
   }
   const uuid = UUID();
+
+  // // testing 
+  profilePhoto = require('../../../functions/image.js')
   // Decode the base64-encoded image string
-  profilePhoto = Buffer.from(profilePhoto, "base64");
-
-  // Write the image file to disk
-  fs.writeFile("image.jpg", profilePhoto, (err) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send("Error writing image file");
-    } else {
-      console.log("Image file saved successfully");
-    }
-  });
-
-  const downloadUri =
-    "https://firebasestorage.googleapis.com/v0/b/memoriesar-f08a7.appspot.com/o/";
-  let imageUrl = downloadUri + uuid + ".jpg" + "?alt=media&token=" + "1";
-  try {
-    console.log("I'm so stupid",uploadImage(profilePhoto, uuid));
-  } catch (error) {
-    return res.status(400).json(error.message);
-  }
+  let imageUrl =  uploadImage(decode(profilePhoto), uuid);
 
   try {
     const result = await queries.updatePFP(imageUrl, id);
@@ -170,12 +154,12 @@ const updatePFP = async (req, res) => {
       return res.status(200).json("PFP Updated");
     }
   } catch (err) {
-    return res.status(400).json(err);
+    return res.status(400).json(err.message);
   }
 };
 
 const deletePFP = async (req, res) => {
-  const id = req.body.userId;
+  const id = req.body.id;
   if (!id) {
     return res.status(400).json({ error: "id is required" });
   }
@@ -333,14 +317,12 @@ const getAccVisibility = async (req, res) => {
     const result = await queries.getAccVisibility(id);
 
     if (result) {
-
       return res.status(200).json(result);
     }
   } catch (err) {
     return res.status(400).json(err);
   }
 };
-
 
 module.exports = {
   getUserProfileData,
@@ -360,5 +342,5 @@ module.exports = {
   UnBanAccount,
   updatePFP,
   deletePFP,
-  getAccVisibility
+  getAccVisibility,
 };

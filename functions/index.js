@@ -5,11 +5,9 @@ const serviceAccount = require("./admin.json");
 
 const fs = require("fs");
 
-const UUID = require("uuid-v4");
-
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  storageBucket: "gs://memoriesar-f08a7.appspot.com",
+  storageBucket: process.env.STORAGE_BUCKET,
 });
 
 const bucket = admin.storage().bucket();
@@ -63,11 +61,11 @@ const uploadImage = (base64EncodedImageString, uuid) => {
       console.error(err);
       return;
     }
-    console.log("Image download URL:", url);
   });
   const downloadUri  = process.env.FIREBASE_STORAGE_LINK
-  let imageUrl = downloadUri + uuid + ".jpg" + "?alt=media&token=" + "1";
-  return imageUrl
+  let imageUrl1 = downloadUri + uuid + ".jpg" + "?alt=media&token=" + "1";
+  console.log("Image download URL:", imageUrl1);
+  return imageUrl1
   
 };
 
