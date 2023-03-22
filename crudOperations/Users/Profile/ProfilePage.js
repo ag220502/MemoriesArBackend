@@ -78,8 +78,8 @@ db.updateProfileData = (id, firstName, lastName, bio, profilePhoto) => {
       } else if (result.length == 0) {
         return reject("Account does not exist");
       } else {
-        pool.query(
-          "UPDATE `users` SET firstName=?, lastName=?, bio=?, profilePhoto=? WHERE id=?",
+        pool.query(// removed PFP
+          "UPDATE `users` SET firstName=?, lastName=?, bio=? WHERE id=?",
           [firstName, lastName, bio, profilePhoto, id],
           (err, result) => {
             if (err) {
