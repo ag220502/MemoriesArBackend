@@ -3,21 +3,20 @@ const queries = require("../../crudOperations/Scrapbooks/scrapbooksCRUD.js");
 const createScrapbook = async (req, res) => {
     try {
         const { userId } = req.params;
-        const { name, caption, lattitude, longitude, uploadTime, contentFlag, coverPhoto, templateId } = req.body;
-        if(!userId || !name || !uploadTime || !contentFlag || !templateId ) {
+        const { name, caption, lattitude, longitude, contentFlag, coverPhoto, templateId } = req.body;
+        if(!userId || !name || !contentFlag || !templateId ) {
             return res.status(400).json({
                 status: "error",
-                message: "userId, name, uploadTime, contentType, templateId are required",
+                message: "userId, name, contentType, templateId are required",
                 body : {
                     userId : userId,
                     name : name,
-                    uploadTime : uploadTime,
                     contentFlag : contentFlag,
                     templateId : templateId,
                 }
             });
         }
-        const newScrapbook = await queries.createScrapbook(userId, name, caption, lattitude, longitude, uploadTime, contentFlag, coverPhoto, templateId);
+        const newScrapbook = await queries.createScrapbook(userId, name, caption, lattitude, longitude, contentFlag, coverPhoto, templateId);
         res.status(200).json({
             status: "success",
             message: "Scrapbook created successfully",
@@ -39,7 +38,8 @@ const createScrapbook = async (req, res) => {
 const updateScrapbook = async (req, res) => {
     try {
         const { scrapId } = req.params;
-        const { name, caption, lattitude, longitude, editTime, contentFlag, coverPhoto } = req.body;
+        const { name, caption, lattitude, longitude, contentFlag, coverPhoto } = req.body;
+        let editTime = Date.now();
         if(!scrapId) {
             return res.status(400).json({
                 status: "error",
