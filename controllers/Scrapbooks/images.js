@@ -1,17 +1,12 @@
 const queries = require("../../crudOperations/Scrapbooks/images.js");
-const { uploadImage, decode } = require('../../functions/index.js')
-const UUID = require('uuid-v4')
+const { uploadImage, decode } = require("../../functions/index.js");
+const UUID = require("uuid-v4");
 const addImage = async (req, res) => {
   try {
-    const { scrapId, image, photoText, textHeading } = req.body;
-    const uuid = UUID()
-    link = uploadImage(decode(image), uuid)
-    const result = await queries.AddImage(
-      scrapId,
-      link,
-      photoText,
-      textHeading
-    );
+    const { scrapId, image, textHeading } = req.body;
+    const uuid = UUID();
+    let link = uploadImage(decode(image), uuid);
+    const result = await queries.AddImage(scrapId, link, textHeading);
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({
@@ -59,13 +54,8 @@ const getImageByScrapId = async (req, res) => {
 const updateImage = async (req, res) => {
   try {
     const { pictureId } = req.params;
-    const { link, photoText, textHeading } = req.body;
-    const result = await queries.UpdateImage(
-      pictureId,
-      link,
-      photoText,
-      textHeading
-    );
+    const { link, textHeading } = req.body;
+    const result = await queries.UpdateImage(pictureId, link, textHeading);
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({
