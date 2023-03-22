@@ -2,7 +2,7 @@ const pool = require("../../connect.js");
 
 const db = {};
 
-db.createScrapbook = async (userId, name, caption, lattitude, longitude, uploadTime, contentFlag, coverPhoto, templateId) => {
+db.createScrapbook = async (userId, name, caption, lattitude, longitude, contentFlag, coverPhoto, templateId) => {
     return new Promise((resolve, reject) => {
         pool.query("SELECT * FROM `scrapbooks` WHERE `name` = ? AND `userId` = ?", [name, userId], (err, result) => {
             if (err) {
@@ -13,20 +13,14 @@ db.createScrapbook = async (userId, name, caption, lattitude, longitude, uploadT
             }
             else{
                 if( lattitude && longitude ) {
-                    pool.query("INSERT INTO `scrapbooks` (`userId`, `name`, `caption`, `lattitude`, `longitude`, `uploadTime`, `contentFlag`, `coverPhoto`, `templateId`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [userId, name, caption, lattitude, longitude, uploadTime, contentFlag, coverPhoto, templateId], (err, result) => {
-                        if (err) {
-                            return reject(err);
-                        }
-                        return resolve(result);
-                    });
-                } else {
-                    pool.query("INSERT INTO `scrapbooks` (`userId`, `name`, `caption`, `uploadTime`, `contentFlag`, `coverPhoto`, `templateId`) VALUES (?, ?, ?, ?, ?, ?, ?)", [userId, name, caption, uploadTime, contentFlag, coverPhoto, templateId], (err, result) => {
+                    pool.query("INSERT INTO `scrapbooks` (`userId`, `name`, `caption`, `lattitude`, `longitude`, `contentFlag`, `coverPhoto`, `templateId`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [userId, name, caption, lattitude, longitude, contentFlag, coverPhoto, templateId], (err, result) => {
                         if (err) {
                             return reject(err);
                         }
                         return resolve(result);
                     });
                 }
+                
             }
         });
         
