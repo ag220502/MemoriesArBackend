@@ -1,6 +1,7 @@
 const queries = require("../../crudOperations/Scrapbooks/scrapbooksCRUD.js");
 const { uploadImage, decode } = require("../../functions/index.js");
 
+
 const createScrapbook = async (req, res) => {
     console.log("Hello")
   try {
@@ -15,6 +16,7 @@ const createScrapbook = async (req, res) => {
       templateId,
     } = req.body;
     coverPhoto = uploadImage(decode(coverPhoto), userId);
+
     console.log(coverPhoto);
     if (!userId || !name || !templateId) {
         console.log(name,userId,contentFlag,templateId)
@@ -30,10 +32,9 @@ const createScrapbook = async (req, res) => {
         },
       });
     }
+
     console.log("hello")
-    try
-    
-    {
+    try {
         const newScrapbook = await queries.createScrapbook(
       userId,
       name,
@@ -51,7 +52,7 @@ const createScrapbook = async (req, res) => {
         {
             console.log(err)
         }
-    
+
   } catch (err) {
     res.status(400).json({
       status: "error",
@@ -161,12 +162,15 @@ const deleteScrapbook = async (req, res) => {
     const { scrapId } = req.params;
     if (!scrapId) {
       return res.status(400).json("scrapId is required");
+
+
     }
     const deletedScrapbook = await queries.deleteScrapbookById(scrapId);
     console.log(deletedScrapbook);
     if (deletedScrapbook.affectedRows == 1) {
       return res.status(200).json("Scrapbook deleted successfully");
     }
+
   } catch (err) {
     res.status(400).json({
       status: "error",

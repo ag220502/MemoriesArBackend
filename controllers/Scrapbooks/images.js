@@ -1,6 +1,27 @@
 const queries = require("../../crudOperations/Scrapbooks/images.js");
 const { uploadImage, decode } = require("../../functions/index.js");
 const UUID = require("uuid-v4");
+
+const addImages = async (req, res) => {
+  try {
+    const { array } = req.body;
+    for (let i = 0; i < array.length; i++) {
+      const uuid = UUID();
+      let link = uploadImage(decode(array[i].image), uuid);
+      const result = await queries.AddImage(array[i].scrapId, link, array[i].textHeading);
+    }
+    res.status(200).json("images uploaded successfully");
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Error adding image",
+      body: {
+        error: error,
+      },
+    });
+  }
+};
+
 const addImage = async (req, res) => {
   console.log("Hello in addd image");
   try {
@@ -109,4 +130,5 @@ module.exports = {
   updateImage,
   deleteImage,
   deleteAllScrapImages,
+  addImages,
 };
