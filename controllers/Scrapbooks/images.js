@@ -23,12 +23,14 @@ const addImages = async (req, res) => {
 };
 
 const addImage = async (req, res) => {
+  console.log("Hello in addd image");
   try {
     const { scrapId, image, textHeading } = req.body;
     const uuid = UUID();
     let link = uploadImage(decode(image), uuid);
     const result = await queries.AddImage(scrapId, link, textHeading);
-    res.status(200).json(result);
+    console.log(result)
+    return res.status(200).json(result);
   } catch (error) {
     res.status(500).json({
       status: "error",

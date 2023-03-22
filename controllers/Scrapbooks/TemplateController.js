@@ -3,15 +3,7 @@ const queries = require("../../crudOperations/Scrapbooks/TemplateCRUD.js");
 const createTemplate = async (req, res) => {
     const { templateName, templateDescription, categoryId } = req.body;
     if(!templateName || !templateDescription || !categoryId){
-        res.status(400).json({
-            status: "error",
-            message: "Please provide all required fields",
-            body: {
-                templateName: templateName,
-                templateDescription: templateDescription,
-                categoryId: categoryId
-            }
-        });
+        res.status(400).json( "provide all required fields");
     }
     try {
         const newTemplate = await queries.createTemplate(templateName, templateDescription, categoryId);
@@ -143,21 +135,9 @@ const getTemplatesByCategory = async (req, res) => {
     const { categoryId } = req.params;
     try {
         const template = await queries.getTemplatesByCategory(categoryId);
-        res.status(200).json({
-            status: "success",
-            message: "Template retrieved",
-            body: {
-                template: template
-            }
-        });
+        res.status(200).json(template);
     } catch (err) {
-        res.status(500).json({
-            status: "error",
-            message: "Error retrieving template",
-            body: {
-                error: err.message
-            }
-        });
+        res.status(500).json("Error retrieving template");
     }
 };
 

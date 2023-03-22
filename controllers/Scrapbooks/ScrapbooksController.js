@@ -1,8 +1,11 @@
 const queries = require("../../crudOperations/Scrapbooks/scrapbooksCRUD.js");
 const { uploadImage, decode } = require("../../functions/index.js");
+
+
 const createScrapbook = async (req, res) => {
+    console.log("Hello")
   try {
-    let { coverPhoto } = req.params;
+    let { coverPhoto } = req.body;
     const {
       name,
       caption,
@@ -13,7 +16,11 @@ const createScrapbook = async (req, res) => {
       templateId,
     } = req.body;
     coverPhoto = uploadImage(decode(coverPhoto), userId);
-    if (!userId || !name || !contentFlag || !templateId) {
+
+    console.log(coverPhoto);
+    if (!userId || !name || !templateId) {
+        console.log(name,userId,contentFlag,templateId)
+        console.log("hello in if")
       return res.status(400).json({
         status: "error",
         message: "userId, name, contentType, templateId are required",
@@ -25,7 +32,10 @@ const createScrapbook = async (req, res) => {
         },
       });
     }
-    const newScrapbook = await queries.createScrapbook(
+
+    console.log("hello")
+    try {
+        const newScrapbook = await queries.createScrapbook(
       userId,
       name,
       caption,
@@ -35,13 +45,14 @@ const createScrapbook = async (req, res) => {
       coverPhoto,
       templateId
     );
-    res.status(200).json({
-      status: "success",
-      message: "Scrapbook created successfully",
-      body: {
-        scrapbook: newScrapbook,
-      },
-    });
+        console.log(newScrapbook);
+        return res.status(200).json(newScrapbook);
+        }
+        catch(err)
+        {
+            console.log(err)
+        }
+
   } catch (err) {
     res.status(400).json({
       status: "error",
@@ -151,12 +162,15 @@ const deleteScrapbook = async (req, res) => {
     const { scrapId } = req.params;
     if (!scrapId) {
       return res.status(400).json("scrapId is required");
+
+
     }
     const deletedScrapbook = await queries.deleteScrapbookById(scrapId);
     console.log(deletedScrapbook);
     if (deletedScrapbook.affectedRows == 1) {
       return res.status(200).json("Scrapbook deleted successfully");
     }
+
   } catch (err) {
     res.status(400).json({
       status: "error",
